@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -41,6 +41,11 @@ class Product extends Model
     public function Category(): BelongsTo
     {
         return $this->BelongsTo(Category::class);
+    }
+
+    public function review(): HasMany
+    {
+        return $this->HasMany(Review::class);
     }
 
 }

@@ -1,11 +1,12 @@
 <?php
 
+use App\Models\Product;
+use App\Models\Review;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Review;
-use App\Models\Product;
-use App\Models\User;
+
 return new class extends Migration
 {
     /**
@@ -15,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id()->comment('Mã đánh giá');
-            $table->text('content')->nullable(false)->comment('Nội dung');
+            $table->string('content')->nullable(false)->comment('Nội dung');
             $table->string('image')->nullable()->comment('Hình ảnh');
             $table->integer('rating')->nullable(false)->comment('Chất lượng (sao)');
             $table->integer('like_count')->nullable()->comment('Lượt thích');
