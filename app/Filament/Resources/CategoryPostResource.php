@@ -18,6 +18,7 @@ class CategoryPostResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $label = 'Danh mục bài viết';
+    protected static ?string $navigationGroup = 'Bài viết';
 
     public static function form(Form $form): Form
     {

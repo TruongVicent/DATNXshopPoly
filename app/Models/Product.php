@@ -48,4 +48,8 @@ class Product extends Model
         return $this->HasMany(Review::class);
     }
 
+    public function like(): HasMany
+    {
+        return $this->HasMany(Like::class);
+    }
 }
