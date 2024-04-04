@@ -1,9 +1,13 @@
 <?php
 
+use App\Models\District;
+use App\Models\Province;
+use App\Models\User;
+use App\Models\Ward;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\User;
+
 return new class extends Migration
 {
     /**
@@ -15,9 +19,10 @@ return new class extends Migration
             $table->id()->comment('Mã địa chỉ');
             $table->string('name')->nullable(false)->comment('Tên người dùng');
             $table->string('phone')->nullable(false)->comment('Số điện thoại người dùng');
-            $table->string('city')->nullable(false)->comment('Tỉnh/Thành phố');
-            $table->string('district')->nullable(false)->comment('Huyện/Thị trấn');
-            $table->string('ward')->nullable(false)->comment('Xã/Thị xã');
+            $table->foreignIdFor(Province::class)->nullable()->comment('Id địa chỉ');
+            $table->foreignIdFor(District::class)->nullable()->comment('Id địa chỉ');
+            $table->foreignIdFor(Ward::class)->nullable()->comment('Id địa chỉ');
+            $table->string('address_specific')->nullable()->comment('Địa chỉ cụ thể');
             $table->string('is_default')->nullable()->comment('Địa chỉ mặc định');
             $table->foreignIdFor(User::class)->comment('Mã người dùng');
             $table->timestamps();

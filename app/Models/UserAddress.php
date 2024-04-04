@@ -14,9 +14,10 @@ class UserAddress extends Model
     protected $fillable = [
         'name',
         'phone',
-        'city',
-        'district',
-        'ward',
+        'province_id',
+        'district_id',
+        'ward_id',
+        'address_specific',
         'is_default',
         'user_id',
     ];
@@ -24,5 +25,20 @@ class UserAddress extends Model
     public function user(): BelongsTo
     {
         return $this->BelongsTo(User::class);
+    }
+
+    public function province(): BelongsTo
+    {
+        return $this->BelongsTo(Province::class);
+    }
+
+    public function district(): BelongsTo
+    {
+        return $this->BelongsTo(District::class);
+    }
+
+    public function ward(): BelongsTo
+    {
+        return $this->BelongsTo(Ward::class);
     }
 }
