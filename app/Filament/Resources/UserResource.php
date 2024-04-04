@@ -2,33 +2,44 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\UserRole;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\District;
+use App\Models\Province;
 use App\Models\User;
+use App\Models\Ward;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
     protected static ?string $label = 'Người dùng';
+
+    protected static ?string $navigationGroup = 'Thông tin người dùng';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+
                 FileUpload::make('avatar')
                     ->columnSpan(2)
                     ->label('Ảnh đại diện'),
@@ -56,37 +67,64 @@ class UserResource extends Resource
                 TextInput::make('phone')
                     ->label('SĐT')
                     ->required()
-                    ->Length(16)
+                    ->Length(10)
                     ->regex('/^0\d{9}/'),
                 DatePicker::make('birthday')
-                    ->label('Ngày sinh'),
-                Select::make('gender')
-                    ->options([
-                        'nam' => 'Nam',
-                        'nữ' => 'Nữ',
-                        'gay' => 'Giới tính khác',
-                    ])
-                    ->label('Giới tính'),
-                Select::make('user_address_id')
-                    ->relationship(name: 'UserAddress', titleAttribute: 'city')
                     ->required()
-                    ->label('Địa chỉ'),
+                    ->label('Ngày sinh'),
+
+                Select::make('gender')
+                    ->options(UserRole::class)
+                    ->label('Giới tính')
+                    ->required(),
+
                 Select::make('shop_id')
                     ->relationship(name: 'shop', titleAttribute: 'name')
                     ->required()
                     ->label('Cửa hàng'),
+
                 TextInput::make('verification_code')
                     ->required()
                     ->label('Mã nhân viên')
-                    ->unique()
+                    ->unique(ignoreRecord: true)
                     ->regex('/^[a-zA-Z0-9]{6}$/')
                     ->validationMessages([
                         'unique' => 'Mã nhân viên đã được tạo.',
                     ]),
-                Select::make('payment_method')
-                    ->relationship(name: 'PaymentMethod', titleAttribute: 'method_name')
+
+                Fieldset::make('Địa chỉ')
+                    ->schema([
+                        Select::make('province_id')
+                            ->label('Thành phố/Tỉnh')
+                            ->required()
+                            ->reactive()
+                            ->options(Province::query()
+                                ->pluck('name', 'id'))
+                            ->live(),
+                        Select::make('district_id')
+                            ->required()
+                            ->reactive()
+                            ->label('Quận/Huyện')
+                            ->options(fn(Get $get): Collection => District::query()
+                                ->where('province_id', $get('province_id'))
+                                ->pluck('name', 'id'))
+                            ->live(),
+                        Select::make('ward_id')
+                            ->required()
+                            ->reactive()
+                            ->label('Phường/Xã')
+                            ->options(fn(Get $get): Collection => Ward::query()
+                                ->where('district_id', $get('district_id'))
+                                ->pluck('name', 'id'))
+                            ->nullable()
+                            ->live(),
+                    ])
+                    ->columns(3),
+                Select::make('payment_method_id')
+                    ->relationship(name: 'paymentMethod', titleAttribute: 'method_name')
                     ->required()
-                    ->label('Phương thức thanh toán'),
+                    ->label('Phương thức thanh toán')
+
             ]);
     }
 
@@ -104,15 +142,17 @@ class UserResource extends Resource
                     ->label('Ngày sinh'),
                 TextEntry::make('gender')
                     ->label('Giới tính'),
-                TextEntry::make('user_address_id')
-                    ->label('Địa chỉ'),
-                TextEntry::make('avatar')
-                    ->label('Ảnh đại diện'),
-                TextEntry::make('shop_id')
+                TextEntry::make('province.name')
+                    ->label('Tỉnh/thành'),
+                TextEntry::make('district.name')
+                    ->label('Huận/huyện'),
+                TextEntry::make('ward.name')
+                    ->label('Phường/xã'),
+                TextEntry::make('shop.name')
                     ->label('Cửa hàng'),
                 TextEntry::make('verification_code')
                     ->label('Mã xác thực'),
-                TextEntry::make('payment_method')
+                TextEntry::make('paymentMethod.method_name')
                     ->label('Phương thức thanh toán'),
             ]);
     }
@@ -121,8 +161,9 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('avatar')
+                    ->circular(),
                 TextColumn::make('name')
-                    ->icon('heroicon-m-user-circle')
                     ->label('Tên tài khoản')
                     ->searchable(),
                 TextColumn::make('email')

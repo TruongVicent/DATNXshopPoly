@@ -5,7 +5,6 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -26,8 +25,10 @@ class User extends Authenticatable
         'birthday',
         'gender',
         'phone',
-        'user_address_id',
         'avatar',
+        'province_id',
+        'district_id',
+        'ward_id',
         'shop_id',
         'verification_code',
         'payment_method',
@@ -53,19 +54,34 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function UserAddress(): HasMany
+    public function userAddress(): BelongsTo
     {
-        return $this->HasMany(UserAddress::class);
+        return $this->belongsTo(UserAddress::class);
     }
 
-    public function PaymentMethod(): HasMany
+    public function province(): BelongsTo
     {
-        return $this->HasMany(PaymentMethod::class);
+        return $this->BelongsTo(Province::class);
     }
 
-    public function shop(): HasMany
+    public function district(): BelongsTo
     {
-        return $this->HasMany(Shop::class);
+        return $this->BelongsTo(District::class);
+    }
+
+    public function ward(): BelongsTo
+    {
+        return $this->BelongsTo(Ward::class);
+    }
+
+    public function paymentMethod(): BelongsTo
+    {
+        return $this->belongsTo(PaymentMethod::class);
+    }
+
+    public function shop(): BelongsTo
+    {
+        return $this->belongsTo(Shop::class);
     }
 
     public function post(): BelongsTo

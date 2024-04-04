@@ -28,4 +28,9 @@ class District extends Model
     {
         return $this->BelongsTo(Province::class);
     }
+
+    public function userAddress(): BelongsTo
+    {
+        return $this->BelongsTo(UserAddress::class);
+    }
 }

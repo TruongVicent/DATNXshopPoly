@@ -22,4 +22,9 @@ class Ward extends Model
     {
         return $this->BelongsTo(District::class);
     }
+
+    public function userAddress(): BelongsTo
+    {
+        return $this->BelongsTo(UserAddress::class);
+    }
 }
