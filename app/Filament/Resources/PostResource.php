@@ -27,7 +27,7 @@ class PostResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $label = 'Bài viết';
-
+    protected static ?string $navigationGroup = 'Bài viết';
     public static function form(Form $form): Form
     {
         return $form

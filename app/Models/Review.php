@@ -42,4 +42,13 @@ class Review extends Model
         return $this->BelongsTo(Review::class);
     }
 
+    public function like(): HasMany
+    {
+        return $this->HasMany(Like::class);
+    }
+
+    public function reviewMedia(): HasMany
+    {
+        return $this->HasMany(ReviewMedia::class);
+    }
 }

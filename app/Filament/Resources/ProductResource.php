@@ -4,29 +4,21 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
-use App\Models\Category;
 use App\Models\Product;
-use App\Models\Shop;
-use App\Models\Supplier;
-use Filament\Forms;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\SelectColumn;
-use Filament\Forms\Components\Select;
 use Filament\Support\RawJs;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\RichEditor;
-use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
-
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 
 
 class ProductResource extends Resource
@@ -106,7 +98,7 @@ class ProductResource extends Resource
             ->schema([
                 TextEntry::make('Supplier.name')
                     ->label('Nhà cung cấp'),
-                TextEntry::make('Category.name')
+                TextEntry::make('description')
                     ->label('Danh mục'),
                 TextEntry::make('Shop.name')
                     ->label('Nhà bán'),

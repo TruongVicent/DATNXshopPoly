@@ -24,7 +24,7 @@ class ReviewResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $label = 'Đánh giá';
-
+    protected static ?string $navigationGroup = 'Đánh giá';
     /**
      * @throws \Exception
      */
