@@ -104,7 +104,7 @@ class ProductResource extends Resource
             ->schema([
                 TextEntry::make('Supplier.name')
                     ->label('Nhà cung cấp'),
-                TextEntry::make('description')
+                TextEntry::make('Category.name')
                     ->label('Danh mục'),
                 TextEntry::make('Shop.name')
                     ->label('Nhà bán'),
@@ -141,20 +141,12 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('Supplier.name')
-                    ->searchable()
-                    ->label('Nhà cung cấp'),
-                TextColumn::make('Category.name')
-                    ->searchable()
-                    ->label('Danh mục'),
-                TextColumn::make('Shop.name')
-                    ->searchable()
-                    ->label('Nhà bán'),
                 TextColumn::make('name')
                     ->searchable()
                     ->label('Tên sản phẩm'),
-                TextColumn::make('slug')
-                    ->label('Đường dẫn SP'),
+                TextColumn::make('Category.name')
+                    ->searchable()
+                    ->label('Danh mục'),
                 TextColumn::make('regular_price')
                     ->label('Giá'),
                 TextColumn::make('sale_price')
@@ -167,19 +159,6 @@ class ProductResource extends Resource
                     ->label('Lượt xem'),
                 TextColumn::make('sold_count')
                     ->label('Lượt bán'),
-                TextColumn::make('description')
-                    ->label('Mô tả'),
-                TextColumn::make('origin')
-                    ->label('Nguồn gốc'),
-                TextColumn::make('meta_title')
-                    ->searchable()
-                    ->label('Tiêu đề SEO'),
-                TextColumn::make('meta_description')
-                    ->label('Mô tả SEO'),
-                TextColumn::make('meta_keyword')
-                    ->searchable()
-                    ->label('Từ khóa SEO'),
-
             ])
             ->filters([
                 SelectFilter::make('supplier_id')

@@ -20,7 +20,6 @@ class Product extends Model
         'regular_price',
         'sale_price',
         'sku',
-        'Mã SKU',
         'rating',
         'view_count',
         'sold_count',
