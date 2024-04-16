@@ -9,6 +9,9 @@ use App\Models\Product;
 use App\Models\Voucher;
 use App\Models\OrderStatus;
 use App\Models\User;
+use App\Models\PaymentMethod;
+use App\Models\OrderItem;
+use App\Models\OrderDetail;
 
 return new class extends Migration
 {
@@ -21,13 +24,12 @@ return new class extends Migration
             $table->id()->comment('Mã đơn hàng');
             $table->foreignIdFor(ShippingAddress::class)->comment('Mã địa chỉ người dùng');
             $table->timestamp('delivery_date')->nullable(false)->comment('Ngày vận chuyển');
-            $table->decimal('total_price', 10, 2)->nullable(false)->comment('Tổng tiền');
+            $table->integer('total_price')->nullable()->comment('Tổng tiền');
             $table->string('shipping_unit')->nullable(false)->comment('Đơn vị vận chuyển');
-            $table->foreignIdFor(Product::class)->comment('Mã sản phẩm');
             $table->foreignIdFor(User::class)->comment('Mã người dùng');
             $table->foreignIdFor(Voucher::class)->comment('Mã mã giảm giá');
-            $table->foreignIdFor(OrderStatus::class)->comment('Mã trạng thái đơn hàng');
-            $table->foreignIdFor(VoucherType::class)->comment('Mã phương thức thanh toán');
+            $table->string('status')->comment('Mã trạng thái đơn hàng');
+            $table->foreignIdFor(PaymentMethod::class)->comment('Mã phương thức thanh toán');
             $table->timestamps();
         });
     }
