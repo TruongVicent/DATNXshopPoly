@@ -5,33 +5,32 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\VoucherResource\Pages;
 use App\Filament\Resources\VoucherResource\RelationManagers;
 use App\Models\Voucher;
-use App\Models\VoucherType;
-use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
-use Filament\Support\RawJs;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+
 class VoucherResource extends Resource
 {
     protected static ?string $model = Voucher::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Đơn hàng';
 
-    protected static ?string $label = 'Voucher';
+    protected static ?string $label = 'Phiếu giảm giá';
 
     public static function form(Form $form): Form
     {
@@ -40,7 +39,7 @@ class VoucherResource extends Resource
                 Section::make()
                     ->schema([
                         TextInput::make('name')
-                            ->label('Tên voucher')
+                            ->label('Tên phiếu giảm giá')
                             ->required()
                             ->columnSpan(1),
 
@@ -120,7 +119,7 @@ class VoucherResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Tên voucher')
+                    ->label('Tên phiếu giảm giá')
                     ->searchable(),
 
                 TextColumn::make('code')
@@ -138,18 +137,24 @@ class VoucherResource extends Resource
                     ->suffix('%'),
 
                 TextColumn::make('VoucherType.name')
-                    ->label('Loại Voucher'),
+                    ->label('Loại phiếu giảm giá'),
 
                 TextColumn::make('Shop.name')
-                    ->label('Nhà bán'),
+                    ->label('Cửa hàng'),
             ])
             ->filters([
+                SelectFilter::make('shop_id')
+                    ->label('Cửa hàng')
+                    ->relationship('Shop', 'name'),
+                SelectFilter::make('voucher_type_id')
+                    ->label('Loại phiếu giảm giá')
+                    ->relationship('VoucherType', 'name'),
                 Filter::make('name')
                     ->form([
                         DatePicker::make('start_date')
                             ->label('Ngày bắt đầu'),
                         DatePicker::make('expiration')
-                            ->label('ngày kết thúc'),
+                            ->label('Ngày kết thúc'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
@@ -182,10 +187,10 @@ class VoucherResource extends Resource
         return $infolist
             ->schema([
                 TextEntry::make('Shop.name')
-                    ->label('Nhà bán'),
+                    ->label('Cửa hàng'),
 
                 TextEntry::make('VoucherType.name')
-                    ->label('Loại voucher'),
+                    ->label('Loại phiếu giảm giá'),
 
                 TextEntry::make('name')
                     ->label('Tên voucher'),

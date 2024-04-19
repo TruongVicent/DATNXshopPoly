@@ -15,6 +15,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class LikeResource extends Resource
@@ -22,7 +24,7 @@ class LikeResource extends Resource
     protected static ?string $model = Like::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $label = 'Thích';
+    protected static ?string $label = 'Lượt yêu thích';
     protected static ?string $navigationGroup = 'Đánh giá';
 
     public static function form(Form $form): Form
@@ -72,10 +74,16 @@ class LikeResource extends Resource
                     ->label('Đánh giá'),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('user_id')
+                    ->label('Người thích')
+                    ->relationship('User', 'name'),
+                SelectFilter::make('product_id')
+                    ->label('Sản phẩm')
+                    ->relationship('Product', 'name'),
+            ], layout: FiltersLayout::AboveContentCollapsible)
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

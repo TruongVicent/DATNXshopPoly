@@ -5,27 +5,24 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\VoucherTypeResource\Pages;
 use App\Filament\Resources\VoucherTypeResource\RelationManagers;
 use App\Models\VoucherType;
-use Filament\Forms;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Section;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Table;
 
 class VoucherTypeResource extends Resource
 {
     protected static ?string $model = VoucherType::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    protected static ?string $label = 'Loại voucher';
+    protected static ?string $navigationGroup = 'Đơn hàng';
+    protected static ?string $label = 'Loại phiếu giảm giá';
 
     public static function form(Form $form): Form
     {
@@ -34,7 +31,7 @@ class VoucherTypeResource extends Resource
                 Section::make()
                     ->schema([
                         TextInput::make('name')
-                            ->label('Tên loại voucher')
+                            ->label('Tên loại phiếu giảm giá')
                             ->required()
                             ->columnSpan(1),
 

@@ -7,8 +7,11 @@ use App\Filament\Resources\SupplierResource\RelationManagers;
 use App\Models\Supplier;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -18,6 +21,7 @@ class SupplierResource extends Resource
     protected static ?string $model = Supplier::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Sản phẩm';
     protected static ?string $label = 'Nhà cung cấp';
 
     public static function form(Form $form): Form
@@ -56,6 +60,23 @@ class SupplierResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                TextEntry::make('name')
+                    ->label('Tên nhà cung cấp'),
+                TextEntry::make('email')
+                    ->label('Email nhà cung cấp'),
+                TextEntry::make('phone')
+                    ->label('Số điện thoại'),
+                TextEntry::make('address')
+                    ->label('Địa chỉ'),
+                TextEntry::make('website')
+                    ->label('Tên website'),
+            ]);
+    }
+
     public static function table(Table $table): Table
     {
         return $table
@@ -69,18 +90,14 @@ class SupplierResource extends Resource
                 TextColumn::make('phone')
                     ->label('Số điện thoại')
                     ->searchable(),
-                TextColumn::make('address')
-                    ->label('Địa chỉ')
-                    ->searchable(),
-                TextColumn::make('website')
-                    ->label('Tên website')
-                    ->searchable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

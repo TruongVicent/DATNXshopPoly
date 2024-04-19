@@ -46,6 +46,7 @@ class ShopInfoResource extends Resource
                     ->required(),
                 TextInput::make('profile_number')
                     ->label('Thông tin')
+                    ->columnSpan(2)
                     ->required(),
                 FileUpload::make('front_side')
                     ->columnSpan(2)

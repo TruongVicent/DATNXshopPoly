@@ -7,7 +7,7 @@ use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
 use App\Models\Shop;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
@@ -63,7 +63,7 @@ class CategoryResource extends Resource
                 TagsInput::make('meta_keyword')
                     ->label('Từ khóa SEO')
                     ->required(),
-                RichEditor::make('meta_description')
+                MarkdownEditor::make('meta_description')
                     ->label('Mô tả SEO')
                     ->required()
                     ->columnSpan(2),

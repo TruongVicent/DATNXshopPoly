@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\RatingRole;
 use App\Filament\Resources\ReviewResource\Pages;
 use App\Filament\Resources\ReviewResource\RelationManagers;
-use App\Models\Category;
 use App\Models\Product;
 use App\Models\Review;
+use App\Models\User;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -15,6 +17,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 
@@ -32,44 +35,41 @@ class ReviewResource extends Resource
     {
         return $form
             ->schema([
+                FileUpload::make('image')->columnSpan('full')
+                    ->image()
+                    ->imageEditor()
+                    ->label('Ảnh'),
                 Select::make('review_id')
                     ->relationship(name: 'reviewChild', titleAttribute: 'content')
                     ->options(Review::all()->pluck('content', 'id'))
                     ->searchable()
                     ->label('Chọn đánh giá để phản hồi'),
-                FileUpload::make('image')->columnSpan('full')
-                    ->image()
-                    ->imageEditor()
-                    ->label('Ảnh'),
                 Select::make('user_id')
                     ->relationship(name: 'User', titleAttribute: 'name')
-                    ->options(Category::all()->pluck('name', 'id'))
+                    ->options(User::all()->pluck('name', 'id'))
                     ->searchable()
                     ->required()
                     ->label('Người đánh giá'),
-                TextInput::make('content')
-                    ->label('Nội dung')
-                    ->required(),
+
                 Select::make('rating')
-                    ->options([
-                        '1' => '1 Sao',
-                        '2' => '2 Sao',
-                        '3' => '3 Sao',
-                        '4' => '4 Sao',
-                        '5' => '5 Sao',
-                    ])
+                    ->options(RatingRole::class)
                     ->required()
                     ->label('Đánh giá'),
                 TextInput::make('like_count')
                     ->label('Lượt thích')
-                    ->required(),
+                    ->required()
+                    ->numeric()
+                    ->rules('min:0'),
                 Select::make('product_id')
                     ->relationship(name: 'product', titleAttribute: 'name')
                     ->options(Product::all()->pluck('name', 'id'))
                     ->searchable()
                     ->required()
                     ->label('Sản phẩm'),
-
+                MarkdownEditor::make('content')
+                    ->label('Nội dung')
+                    ->required()
+                    ->columnSpan(2),
             ]);
     }
 
@@ -93,14 +93,19 @@ class ReviewResource extends Resource
                     ->searchable(),
                 TextColumn::make('Product.name')
                     ->searchable()
-                    ->label('Tên người đánh giá'),
+                    ->label('Tên sản phẩm'),
                 TextColumn::make('Review.content')
                     ->searchable()
                     ->label('Phản hồi'),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('user_id')
+                    ->label('Người đánh giá')
+                    ->relationship('User', 'name'),
+                SelectFilter::make('product_id')
+                    ->label('Danh Mục')
+                    ->relationship('Product', 'name'),
+            ],)
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

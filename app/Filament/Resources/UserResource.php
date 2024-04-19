@@ -67,8 +67,7 @@ class UserResource extends Resource
                 TextInput::make('phone')
                     ->label('SĐT')
                     ->required()
-                    ->Length(10)
-                    ->regex('/^0\d{9}/'),
+                    ->tel(),
                 DatePicker::make('birthday')
                     ->required()
                     ->label('Ngày sinh'),

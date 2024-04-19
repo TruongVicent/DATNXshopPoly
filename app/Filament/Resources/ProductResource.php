@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\RatingRole;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
@@ -75,18 +77,22 @@ class ProductResource extends Resource
                     ->label('Lượt xem'),
                 Hidden::make('sold_count')
                     ->label('Lượt bán'),
-                RichEditor::make('description')->columnSpan('full')
+                MarkdownEditor::make('description')->columnSpan('full')
                     ->label('Mô tả'),
-                TextInput::make('rating')
-                    ->numeric()
+                Select::make('rating')
+                    ->options(RatingRole::class)
+                    ->required()
                     ->label('Đánh giá'),
-                TextInput::make('meta_keyword')
-                    ->label('Từ khóa SEO'),
+                TagsInput::make('meta_keyword')
+                    ->label('Từ khóa SEO')
+                    ->required(),
                 TextInput::make('origin')
                     ->label('Nguồn gốc'),
                 TextInput::make('meta_title')
-                    ->label('Tiêu đề SEO'),
-                RichEditor::make('meta_description')->columnSpan('full')
+                    ->label('Tiêu đề SEO')
+                    ->maxLength(100)
+                    ->required(),
+                MarkdownEditor::make('meta_description')->columnSpan('full')
                     ->label('Mô tả SEO'),
 
             ]);

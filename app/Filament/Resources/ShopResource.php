@@ -53,6 +53,11 @@ class ShopResource extends Resource
                 TextInput::make('address')
                     ->label('Địa chỉ')
                     ->required(),
+                TextInput::make('follower')
+                    ->label('Người theo dỏi   ')
+                    ->required()
+                    ->numeric()
+                    ->rules('min:0'),
                 TextInput::make('rating')
                     ->label('Đánh giá')
                     ->required(),
