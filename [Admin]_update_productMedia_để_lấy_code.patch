@@ -1,0 +1,224 @@
+Subject: [PATCH] [Admin] update productMedia để lấy code
+---
+Index: app/Filament/Resources/ProductMediaResource.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/Filament/Resources/ProductMediaResource.php b/app/Filament/Resources/ProductMediaResource.php
+new file mode 100644
+--- /dev/null	(revision 7b8edc7e25567a8ccd87ecdad30a7db7175bdad2)
++++ b/app/Filament/Resources/ProductMediaResource.php	(revision 7b8edc7e25567a8ccd87ecdad30a7db7175bdad2)
+@@ -0,0 +1,103 @@
++<?php
++
++namespace App\Filament\Resources;
++
++use App\Filament\Resources\ProductMediaResource\Pages;
++use App\Models\ProductMedia;
++use Filament\Forms;
++use Filament\Forms\Form;
++use Filament\Resources\Resource;
++use Filament\Tables;
++use Filament\Tables\Table;
++use Illuminate\Database\Eloquent\Builder;
++use Illuminate\Database\Eloquent\SoftDeletingScope;
++use Filament\Tables\Columns\TextColumn;
++use Filament\Tables\Columns\ImageColumn;
++use Filament\Tables\Filters\SelectFilter;
++use Filament\Forms\Components\Select;
++use Filament\Forms\Components\FileUpload;
++use Filament\Forms\Components\Radio;
++use Filament\Tables\Columns\IconColumn;
++
++
++class ProductMediaResource extends Resource
++{
++    protected static ?string $model = ProductMedia::class;
++
++    protected static ?string $navigationGroup = 'Sản phẩm';
++
++    protected static ?string $label = 'Ảnh sản phẩm';
++    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
++
++    public static function form(Form $form): Form
++    {
++        return $form
++            ->schema([
++                FileUpload::make('media')->columnSpan('full')
++                    ->required()
++                    ->label('Ảnh')
++                    ->image()
++                    ->imageEditor(),
++                Select::make('product_id')->columnSpan('full')
++                    ->required()
++                    ->label('Mã sản phẩm')
++                    ->relationship(name: 'Product', titleAttribute: 'name'),
++                Radio::make('is_main')
++                    ->required()
++                    ->label('Chọn ảnh chính')
++                    ->boolean('Có','Không')
++                    ->inline()
++                    ->inlineLabel(false)
++
++            ]);
++    }
++
++    public static function table(Table $table): Table
++    {
++        return $table
++            ->columns([
++                TextColumn::make('Product.name')
++                    ->label('Mã sản phẩm')
++                    ->searchable(),
++                ImageColumn::make('media')
++                    ->label('Ảnh'),
++                IconColumn::make('is_main')
++                    ->boolean()
++                    ->trueIcon('heroicon-o-check-badge')
++                    ->falseIcon('heroicon-o-x-mark')
++                    ->label('Ảnh chính')
++
++            ])
++            ->filters([
++                SelectFilter::make('product_id')
++                    ->label('Mã sản phẩm')
++                    ->relationship('Product', 'name'),
++            ])
++            ->actions([
++                Tables\Actions\EditAction::make(),
++                Tables\Actions\DeleteAction::make()
++
++            ])
++            ->bulkActions([
++                Tables\Actions\BulkActionGroup::make([
++                    Tables\Actions\DeleteBulkAction::make(),
++                ]),
++            ]);
++    }
++
++    public static function getRelations(): array
++    {
++        return [
++            //
++        ];
++    }
++
++    public static function getPages(): array
++    {
++        return [
++            'index' => Pages\ListProductMedia::route('/'),
++            'create' => Pages\CreateProductMedia::route('/create'),
++            'edit' => Pages\EditProductMedia::route('/{record}/edit'),
++        ];
++    }
++}
+Index: app/Filament/Resources/ProductMediaResource/Pages/CreateProductMedia.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/Filament/Resources/ProductMediaResource/Pages/CreateProductMedia.php b/app/Filament/Resources/ProductMediaResource/Pages/CreateProductMedia.php
+new file mode 100644
+--- /dev/null	(revision 7b8edc7e25567a8ccd87ecdad30a7db7175bdad2)
++++ b/app/Filament/Resources/ProductMediaResource/Pages/CreateProductMedia.php	(revision 7b8edc7e25567a8ccd87ecdad30a7db7175bdad2)
+@@ -0,0 +1,12 @@
++<?php
++
++namespace App\Filament\Resources\ProductMediaResource\Pages;
++
++use App\Filament\Resources\ProductMediaResource;
++use Filament\Actions;
++use Filament\Resources\Pages\CreateRecord;
++
++class CreateProductMedia extends CreateRecord
++{
++    protected static string $resource = ProductMediaResource::class;
++}
+Index: app/Filament/Resources/ProductMediaResource/Pages/EditProductMedia.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/Filament/Resources/ProductMediaResource/Pages/EditProductMedia.php b/app/Filament/Resources/ProductMediaResource/Pages/EditProductMedia.php
+new file mode 100644
+--- /dev/null	(revision 7b8edc7e25567a8ccd87ecdad30a7db7175bdad2)
++++ b/app/Filament/Resources/ProductMediaResource/Pages/EditProductMedia.php	(revision 7b8edc7e25567a8ccd87ecdad30a7db7175bdad2)
+@@ -0,0 +1,19 @@
++<?php
++
++namespace App\Filament\Resources\ProductMediaResource\Pages;
++
++use App\Filament\Resources\ProductMediaResource;
++use Filament\Actions;
++use Filament\Resources\Pages\EditRecord;
++
++class EditProductMedia extends EditRecord
++{
++    protected static string $resource = ProductMediaResource::class;
++
++    protected function getHeaderActions(): array
++    {
++        return [
++            Actions\DeleteAction::make(),
++        ];
++    }
++}
+Index: app/Filament/Resources/ProductMediaResource/Pages/ListProductMedia.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/Filament/Resources/ProductMediaResource/Pages/ListProductMedia.php b/app/Filament/Resources/ProductMediaResource/Pages/ListProductMedia.php
+new file mode 100644
+--- /dev/null	(revision 7b8edc7e25567a8ccd87ecdad30a7db7175bdad2)
++++ b/app/Filament/Resources/ProductMediaResource/Pages/ListProductMedia.php	(revision 7b8edc7e25567a8ccd87ecdad30a7db7175bdad2)
+@@ -0,0 +1,19 @@
++<?php
++
++namespace App\Filament\Resources\ProductMediaResource\Pages;
++
++use App\Filament\Resources\ProductMediaResource;
++use Filament\Actions;
++use Filament\Resources\Pages\ListRecords;
++
++class ListProductMedia extends ListRecords
++{
++    protected static string $resource = ProductMediaResource::class;
++
++    protected function getHeaderActions(): array
++    {
++        return [
++            Actions\CreateAction::make(),
++        ];
++    }
++}
+Index: app/Models/ProductMedia.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/Models/ProductMedia.php b/app/Models/ProductMedia.php
+--- a/app/Models/ProductMedia.php	(revision e1c09479d4e46dc5bc166bf17c7181ce0ae68636)
++++ b/app/Models/ProductMedia.php	(revision 7b8edc7e25567a8ccd87ecdad30a7db7175bdad2)
+@@ -4,8 +4,20 @@
+ 
+ use Illuminate\Database\Eloquent\Factories\HasFactory;
+ use Illuminate\Database\Eloquent\Model;
++use Illuminate\Database\Eloquent\Relations\BelongsTo;
+ 
+ class ProductMedia extends Model
+ {
+     use HasFactory;
++    protected $table = 'product_media';
++
++    protected $fillable = [
++        'product_id',
++        'media',
++        'is_main'
++    ];
++    public function Product(): BelongsTo
++    {
++        return $this->BelongsTo(Product::class);
++    }
+ }

@@ -18,9 +18,6 @@ use App\Http\Controllers\Client\Body;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 Route::prefix('/')->group(function (){
     Route::get('/',[Home::class,'index']);
     Route::get('/',[Body::class,'index']);
