@@ -1,0 +1,33 @@
+body{
+    background-color: #F7FAFC;
+
+    header{
+        border-bottom: 1px solid $color-border;
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        background-color: white !important;
+        z-index: 1000; 
+        height: 77px;
+    
+            .box-img{
+                width: 250px;
+                height: 60px;
+    
+                img{
+                    height: 100%;
+                }
+            }
+    
+            .box-right i{
+                color: $color-icon;
+    
+            }
+
+    
+    
+    }
+}
+
+

@@ -1,0 +1,160 @@
+.section-cart {
+    .cart-item {
+        border-bottom: 1px solid #DEE2E7;
+
+        .box-img {
+            @include boxImage(80, 80);
+
+            img {
+                @include coverImage();
+            }
+        }
+
+        .box-content {
+            .title {
+                font-weight: bold;
+            }
+
+            .text {
+                color: $color-icon;
+            }
+        }
+
+        .input-group {
+            margin-top: 1rem;
+        }
+
+        .total {
+            font-weight: bold;
+        }
+    }
+
+
+    .service {
+        .service-icon {
+            background-color: #DEE2E7;
+            width: 50px;
+            height: 50px;
+            border-radius: 50px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            i {
+                color: #8B96A5;
+
+            }
+        }
+
+        .service-content {
+            .title {
+                font-weight: 500;
+            }
+
+            .text {
+                color: $color-icon;
+            }
+        }
+    }
+
+
+    .list-product {
+        padding: 1.25rem;
+        border-radius: 6px;
+        border: 1px solid $color-border;
+        background-color: white;
+
+        .box-img {
+            height: 15rem;
+            overflow: hidden;
+
+            img {
+                @include coverImage();
+            }
+        }
+
+        .info-product {
+            .price {
+                font-weight: bold;
+            }
+
+            .title-product {
+                @include textWidthEllipis(16, 1.5, 2);
+                color: #606060;
+            }
+        }
+    }
+
+
+    .banner {
+        margin: 20px auto;
+        background-image: url("../../image/Mask group.png");
+        background-size: cover;
+        padding: 2rem;
+        border-radius: 6px;
+    }
+ 
+
+
+}
+
+.custom-button {
+    @include  button-variant(
+        $white,
+        $gray-300,
+        $color: $blue,
+        $hover-background: $blue,
+        $hover-border: $blue,
+        $hover-color: $white,
+        $active-background: $blue,
+        $active-border: $blue,
+        $active-color: $red,
+        $disabled-background: $white,
+        $disabled-border: $dark,
+        $disabled-color: $red
+      )
+   
+  }   
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// .btn-custom{
+//     @include button-outline-variant(
+//         $danger,
+//         $color-hover: color-contrast($danger),
+//         $active-background: $warning,
+//         $active-border: $primary,
+//         $active-color: color-contrast($danger)
+//       )
+// } 
