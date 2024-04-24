@@ -125,7 +125,7 @@
     margin-bottom: 0;
 }
 
-.col-md-6 i {
+.switchView i {
     font-size: 1.5rem;
     margin-right: 10px;
     cursor: pointer;
@@ -202,6 +202,7 @@
             margin: 0 0 5px;
             font-size: 20px;
             display: flex;
+            font-weight: bolder;
 
             .product-price-discounted {
                 text-decoration: line-through;
@@ -348,7 +349,6 @@
 
         .dropdown {
             padding-right: 10px;
-
             .dropdown-toggle.n {
                 border: 1px solid #ced4da;
                 border-radius: 8px;
@@ -358,10 +358,15 @@
                 background-color: white;
                 color: #1a1d20;
             }
+
+            .dropdown-item {
+                text-decoration: none;
+            }
         }
 
         .page-link {
             color: #1a1d20;
+            text-decoration: none;
         }
     }
 }

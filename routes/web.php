@@ -1,12 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Client\Home;
-use App\Http\Controllers\Client\Product;
-use App\Http\Controllers\Client\DetailHome;
-use App\Http\Controllers\Client\Checkout;
-use App\Http\Controllers\Client\CartHome;
 use App\Http\Controllers\Client\Body;
+use App\Http\Controllers\Client\CartHome;
+use App\Http\Controllers\Client\Checkout;
+use App\Http\Controllers\Client\DetailHome;
+use App\Http\Controllers\Client\Home;
+use App\Http\Controllers\ProductController;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,11 +19,11 @@ use App\Http\Controllers\Client\Body;
 |
 */
 
-Route::prefix('/')->group(function (){
-    Route::get('/',[Home::class,'index']);
-    Route::get('/',[Body::class,'index']);
-    route::get('/product',[Product::class,'index']);
-    Route::get('/detail',[DetailHome::class,'index']);
-    Route::get('/checkout',[Checkout::class,'index']);
-    Route::get('/cart',[CartHome::class,'index']);
+Route::prefix('/')->group(function () {
+    Route::get('/', [Home::class, 'index']);
+    Route::get('/', [Body::class, 'index']);
+    Route::get('/product', [ProductController::class, 'index',]);
+    Route::get('/detail', [DetailHome::class, 'index']);
+    Route::get('/checkout', [Checkout::class, 'index']);
+    Route::get('/cart', [CartHome::class, 'index']);
 });

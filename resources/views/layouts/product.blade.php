@@ -22,64 +22,41 @@
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#flush-collapseOne" aria-expanded="false"
                                             aria-controls="flush-collapseOne">
-                                        Categories
+                                        Danh mục sản phẩm
                                     </button>
                                 </h2>
+
                                 <div id="flush-collapseOne" class="accordion-collapse collapse"
                                      data-bs-parent="#accordionFlush1">
                                     <div class="accordion-body">
-                                        <a href="">Mobile accessory</a>
-                                        <a href="">Electronics</a>
-                                        <a href="">Smartphones</a>
-                                        <a href="">Modern tech</a>
+                                        @foreach($Categories as $category)
+                                            <a href="">{{ $category->name }}</a>
+                                        @endforeach
                                         <button class="seeAllButton" id="seeAllButtonCategories">See All</button>
                                     </div>
                                 </div>
+
                             </div>
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#flush-collapseTwo" aria-expanded="false"
                                             aria-controls="flush-collapseTwo">
-                                        Brands
+                                        Thương hiệu
                                     </button>
                                 </h2>
                                 <div id="flush-collapseTwo" class="accordion-collapse collapse"
                                      data-bs-parent="#accordionFlush2">
                                     <div class="accordion-body">
+                                        @foreach($Brands as $Brand)
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" value=""
                                                    id="samsungCheckbox">
                                             <label class="form-check-label" for="samsungCheckbox">
-                                                SamSung
+                                                {{ $Brand->name }}
                                             </label>
                                         </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="appleCheckbox">
-                                            <label class="form-check-label" for="appleCheckbox">
-                                                Apple
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value=""
-                                                   id="huaweiCheckbox">
-                                            <label class="form-check-label" for="huaweiCheckbox">
-                                                Huawei
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="poccoCheckbox">
-                                            <label class="form-check-label" for="poccoCheckbox">
-                                                Pocco
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value=""
-                                                   id="lenovoCheckbox">
-                                            <label class="form-check-label" for="lenovoCheckbox">
-                                                Lenovo
-                                            </label>
-                                        </div>
+                                        @endforeach
                                         <button class="seeAllButton" id="seeAllButtonBrands">See All</button>
                                     </div>
                                 </div>
@@ -280,7 +257,7 @@
                                                 <option>Not Featured</option>
                                             </select>
                                         </div>
-                                        <div class="btn-group me-3">
+                                        <div class="btn-group me-3 switchView">
                                             <div id="gridButton" onclick="switchView('grid')"><i
                                                     class="bi bi-grid-3x3-gap-fill"></i></div>
                                             <div id="columnButton" onclick="switchView('column')"><i class="bi bi-list"></i>
@@ -298,16 +275,19 @@
                         <div class="product">
                             <div id="productGrid" class="product-grid">
                                 <div class="row">
+                                    @foreach ($products as $product)
                                     <div class="col-md-4 pb-4">
                                         <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
-                                                                                               alt="Product 1 Image"></a>
+                                            <div class="product-img">
+                                                <img src="{{ asset('storage/' . $product->main_image) }}"
+                                                     alt="Product Image">
                                             </div>
                                             <div class="product-info">
                                                 <div class="product-price-item">
                                                     <div class="price-item">
-                                                        <div class="product-price">$99.99
-                                                            <div class="product-price-discounted">$99.50</div>
+                                                        <div class="product-price">{{ $product->regular_price }}
+                                                            <div
+                                                                class="product-price-discounted">{{ $product->sale_price }}</div>
                                                         </div>
                                                         <div class="rating">
                                                             <div class="star">
@@ -324,257 +304,39 @@
                                                     </div>
 
                                                 </div>
-                                                <p class="product-title">GoPro HERO6 4K</p>
-                                                <p class="product-title">Action Camera - Black</p>
+                                                <p class="product-title">{{ $product->name }}</p>
+                                                <p class="product-title">{{ $product->description }}</p>
 
                                             </div>
                                         </div>
+
                                     </div>
-                                    <div class="col-md-4 pb-4">
-                                        <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
-                                                                                               alt="Product 1 Image"></a>
-                                            </div>
-                                            <div class="product-info">
-                                                <div class="product-price-item">
-                                                    <div class="price-item">
-                                                        <div class="product-price">$99.99
-                                                            <div class="product-price-discounted">$99.50</div>
-                                                        </div>
-                                                        <div class="rating">
-                                                            <div class="star">
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="product-favorite d-flex align-items-center">
-                                                        <a href=""><i class="far fa-heart"></i></a>
-                                                    </div>
-
-                                                </div>
-                                                <p class="product-title">GoPro HERO6 4K</p>
-                                                <p class="product-title">Action Camera - Black</p>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 pb-4">
-                                        <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
-                                                                                               alt="Product 1 Image"></a>
-                                            </div>
-                                            <div class="product-info">
-                                                <div class="product-price-item">
-                                                    <div class="price-item">
-                                                        <div class="product-price">$99.99
-                                                            <div class="product-price-discounted">$99.50</div>
-                                                        </div>
-                                                        <div class="rating">
-                                                            <div class="star">
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="product-favorite d-flex align-items-center">
-                                                        <a href=""><i class="far fa-heart"></i></a>
-                                                    </div>
-
-                                                </div>
-                                                <p class="product-title">GoPro HERO6 4K</p>
-                                                <p class="product-title">Action Camera - Black</p>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 pb-4">
-                                        <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
-                                                                                               alt="Product 1 Image"></a>
-                                            </div>
-                                            <div class="product-info">
-                                                <div class="product-price-item">
-                                                    <div class="price-item">
-                                                        <div class="product-price">$99.99
-                                                            <div class="product-price-discounted">$99.50</div>
-                                                        </div>
-                                                        <div class="rating">
-                                                            <div class="star">
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="product-favorite d-flex align-items-center">
-                                                        <a href=""><i class="far fa-heart"></i></a>
-                                                    </div>
-
-                                                </div>
-                                                <p class="product-title">GoPro HERO6 4K</p>
-                                                <p class="product-title">Action Camera - Black</p>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 pb-4">
-                                        <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
-                                                                                               alt="Product 1 Image"></a>
-                                            </div>
-                                            <div class="product-info">
-                                                <div class="product-price-item">
-                                                    <div class="price-item">
-                                                        <div class="product-price">$99.99
-                                                            <div class="product-price-discounted">$99.50</div>
-                                                        </div>
-                                                        <div class="rating">
-                                                            <div class="star">
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="product-favorite d-flex align-items-center">
-                                                        <a href=""><i class="far fa-heart"></i></a>
-                                                    </div>
-
-                                                </div>
-                                                <p class="product-title">GoPro HERO6 4K</p>
-                                                <p class="product-title">Action Camera - Black</p>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 pb-4">
-                                        <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
-                                                                                               alt="Product 1 Image"></a>
-                                            </div>
-                                            <div class="product-info">
-                                                <div class="product-price-item">
-                                                    <div class="price-item">
-                                                        <div class="product-price">$99.99
-                                                            <div class="product-price-discounted">$99.50</div>
-                                                        </div>
-                                                        <div class="rating">
-                                                            <div class="star">
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="product-favorite d-flex align-items-center">
-                                                        <a href=""><i class="far fa-heart"></i></a>
-                                                    </div>
-
-                                                </div>
-                                                <p class="product-title">GoPro HERO6 4K</p>
-                                                <p class="product-title">Action Camera - Black</p>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 pb-4">
-                                        <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
-                                                                                               alt="Product 1 Image"></a>
-                                            </div>
-                                            <div class="product-info">
-                                                <div class="product-price-item">
-                                                    <div class="price-item">
-                                                        <div class="product-price">$99.99
-                                                            <div class="product-price-discounted">$99.50</div>
-                                                        </div>
-                                                        <div class="rating">
-                                                            <div class="star">
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="product-favorite d-flex align-items-center">
-                                                        <a href=""><i class="far fa-heart"></i></a>
-                                                    </div>
-
-                                                </div>
-                                                <p class="product-title">GoPro HERO6 4K</p>
-                                                <p class="product-title">Action Camera - Black</p>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 pb-4">
-                                        <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
-                                                                                               alt="Product 1 Image"></a>
-                                            </div>
-                                            <div class="product-info">
-                                                <div class="product-price-item">
-                                                    <div class="price-item">
-                                                        <div class="product-price">$99.99
-                                                            <div class="product-price-discounted">$99.50</div>
-                                                        </div>
-                                                        <div class="rating">
-                                                            <div class="star">
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="product-favorite d-flex align-items-center">
-                                                        <a href=""><i class="far fa-heart"></i></a>
-                                                    </div>
-
-                                                </div>
-                                                <p class="product-title">GoPro HERO6 4K</p>
-                                                <p class="product-title">Action Camera - Black</p>
-
-                                            </div>
-                                        </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
+
                             <div id="productColumn" class="product-column">
+                                @foreach ($products as $product)
                                 <div class="product-card mb-3">
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
+                                            <div class="product-img"><a href="index.html"><img
+                                                        src="{{ asset('storage/' . $product->main_image) }}"
                                                                                                alt="Product 1 Image"></a>
                                             </div>
                                         </div>
                                         <div class="col-12 col-lg-9">
                                             <div class="product-info">
                                                 <div class="product-title-item">
-                                                    <p class="product-title">Canon Cmera EOS 2000, Black 10x zoom</p>
+                                                    <p class="product-title">{{ $product->name }}</p>
                                                     <div class="product-favorite d-flex align-items-center">
                                                         <a href=""><i class="far fa-heart"></i></a>
                                                     </div>
                                                 </div>
                                                 <div class="price-item">
-                                                    <div class="product-price">$99.99
-                                                        <div class="product-price-discounted">$99.50</div>
+                                                    <div class="product-price">{{ $product->regular_price }}
+                                                        <div
+                                                            class="product-price-discounted">{{ $product->sale_price }}</div>
                                                     </div>
                                                     <div class="rating">
                                                         <div class="star">
@@ -595,10 +357,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <p class="product-description">Ut enim ad minim veniam, quis nostrud
-                                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                                    Duis
-                                                    aute irure dolor in reprehenderit </p>
+                                                <p class="product-description">{{ $product->description }} </p>
                                                 <div class="view-detail">
                                                     <a href="">View Detail</a>
                                                 </div>
@@ -606,251 +365,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="product-card mb-3">
-                                    <div class="row">
-                                        <div class="col-12 col-lg-3">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
-                                                                                               alt="Product 1 Image"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-lg-9">
-                                            <div class="product-info">
-                                                <div class="product-title-item">
-                                                    <p class="product-title">Canon Cmera EOS 2000, Black 10x zoom</p>
-                                                    <div class="product-favorite d-flex align-items-center">
-                                                        <a href=""><i class="far fa-heart"></i></a>
-                                                    </div>
-                                                </div>
-                                                <div class="price-item">
-                                                    <div class="product-price">$99.99
-                                                        <div class="product-price-discounted">$99.50</div>
-                                                    </div>
-                                                    <div class="rating">
-                                                        <div class="star">
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                        </div>
-                                                        <div class="number-star">
-                                                            7.5
-                                                        </div>
-                                                        <div class="order">
-                                                            145 Orders
-                                                        </div>
-                                                        <div class="shipping">
-                                                            Free Ship
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <p class="product-description">Ut enim ad minim veniam, quis nostrud
-                                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                                    Duis
-                                                    aute irure dolor in reprehenderit </p>
-                                                <div class="view-detail">
-                                                    <a href="">View Detail</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="product-card mb-3">
-                                    <div class="row">
-                                        <div class="col-12 col-lg-3">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
-                                                                                               alt="Product 1 Image"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-lg-9">
-                                            <div class="product-info">
-                                                <div class="product-title-item">
-                                                    <p class="product-title">Canon Cmera EOS 2000, Black 10x zoom</p>
-                                                    <div class="product-favorite d-flex align-items-center">
-                                                        <a href=""><i class="far fa-heart"></i></a>
-                                                    </div>
-                                                </div>
-                                                <div class="price-item">
-                                                    <div class="product-price">$99.99
-                                                        <div class="product-price-discounted">$99.50</div>
-                                                    </div>
-                                                    <div class="rating">
-                                                        <div class="star">
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                        </div>
-                                                        <div class="number-star">
-                                                            7.5
-                                                        </div>
-                                                        <div class="order">
-                                                            145 Orders
-                                                        </div>
-                                                        <div class="shipping">
-                                                            Free Ship
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <p class="product-description">Ut enim ad minim veniam, quis nostrud
-                                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                                    Duis
-                                                    aute irure dolor in reprehenderit </p>
-                                                <div class="view-detail">
-                                                    <a href="">View Detail</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="product-card mb-3">
-                                    <div class="row">
-                                        <div class="col-12 col-lg-3">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
-                                                                                               alt="Product 1 Image"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-lg-9">
-                                            <div class="product-info">
-                                                <div class="product-title-item">
-                                                    <p class="product-title">Canon Cmera EOS 2000, Black 10x zoom</p>
-                                                    <div class="product-favorite d-flex align-items-center">
-                                                        <a href=""><i class="far fa-heart"></i></a>
-                                                    </div>
-                                                </div>
-                                                <div class="price-item">
-                                                    <div class="product-price">$99.99
-                                                        <div class="product-price-discounted">$99.50</div>
-                                                    </div>
-                                                    <div class="rating">
-                                                        <div class="star">
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                        </div>
-                                                        <div class="number-star">
-                                                            7.5
-                                                        </div>
-                                                        <div class="order">
-                                                            145 Orders
-                                                        </div>
-                                                        <div class="shipping">
-                                                            Free Ship
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <p class="product-description">Ut enim ad minim veniam, quis nostrud
-                                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                                    Duis
-                                                    aute irure dolor in reprehenderit </p>
-                                                <div class="view-detail">
-                                                    <a href="">View Detail</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="product-card mb-3">
-                                    <div class="row">
-                                        <div class="col-12 col-lg-3">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
-                                                                                               alt="Product 1 Image"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-lg-9">
-                                            <div class="product-info">
-                                                <div class="product-title-item">
-                                                    <p class="product-title">Canon Cmera EOS 2000, Black 10x zoom</p>
-                                                    <div class="product-favorite d-flex align-items-center">
-                                                        <a href=""><i class="far fa-heart"></i></a>
-                                                    </div>
-                                                </div>
-                                                <div class="price-item">
-                                                    <div class="product-price">$99.99
-                                                        <div class="product-price-discounted">$99.50</div>
-                                                    </div>
-                                                    <div class="rating">
-                                                        <div class="star">
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                        </div>
-                                                        <div class="number-star">
-                                                            7.5
-                                                        </div>
-                                                        <div class="order">
-                                                            145 Orders
-                                                        </div>
-                                                        <div class="shipping">
-                                                            Free Ship
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <p class="product-description">Ut enim ad minim veniam, quis nostrud
-                                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                                    Duis
-                                                    aute irure dolor in reprehenderit </p>
-                                                <div class="view-detail">
-                                                    <a href="">View Detail</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="product-card mb-3">
-                                    <div class="row">
-                                        <div class="col-12 col-lg-3">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
-                                                                                               alt="Product 1 Image"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-lg-9">
-                                            <div class="product-info">
-                                                <div class="product-title-item">
-                                                    <p class="product-title">Canon Cmera EOS 2000, Black 10x zoom</p>
-                                                    <div class="product-favorite d-flex align-items-center">
-                                                        <a href=""><i class="far fa-heart"></i></a>
-                                                    </div>
-                                                </div>
-                                                <div class="price-item">
-                                                    <div class="product-price">$99.99
-                                                        <div class="product-price-discounted">$99.50</div>
-                                                    </div>
-                                                    <div class="rating">
-                                                        <div class="star">
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                        </div>
-                                                        <div class="number-star">
-                                                            7.5
-                                                        </div>
-                                                        <div class="order">
-                                                            145 Orders
-                                                        </div>
-                                                        <div class="shipping">
-                                                            Free Ship
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <p class="product-description">Ut enim ad minim veniam, quis nostrud
-                                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                                    Duis
-                                                    aute irure dolor in reprehenderit </p>
-                                                <div class="view-detail">
-                                                    <a href="">View Detail</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                             <div class="pagination-menu">
                                 <div class="dropdown">

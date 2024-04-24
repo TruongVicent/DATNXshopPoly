@@ -29,6 +29,9 @@ class Product extends Model
         'meta_description',
         'meta_keyword',
     ];
+    protected $casts = [
+        'meta_keyword' => 'array',
+    ];
     public function Supplier(): BelongsTo
     {
         return $this->BelongsTo(Supplier::class);
