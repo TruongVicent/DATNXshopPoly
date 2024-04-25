@@ -8,7 +8,7 @@ use App\Models\CategoryPost;
 use App\Models\Post;
 use App\Models\User;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
@@ -66,7 +66,7 @@ class PostResource extends Resource
                 TagsInput::make('tags')
                     ->label('Nhãn bài viết')
                     ->required(),
-                RichEditor::make('content')
+                MarkdownEditor::make('content')
                     ->label('Nội dung')
                     ->required()
                     ->columnSpan(2),

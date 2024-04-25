@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
@@ -21,8 +22,8 @@ class Dashboard extends BaseWidget
                 ->description('Tổng số sản phẩm')
                 ->descriptionIcon('heroicon-m-arrow-trending-down')
                 ->color('danger'),
-            Stat::make('Average time on page', '3:12')
-                ->description('3% increase')
+            Stat::make('Đơn hàng', Order::query()->count())
+                ->description('Tổng số đơn hàng')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success'),
         ];
