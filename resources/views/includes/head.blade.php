@@ -40,3 +40,4 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/slick-master/slick/slick-theme.css') }}" />
 
 </head>
+{{--update--}}

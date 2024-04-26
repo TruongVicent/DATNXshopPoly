@@ -48,7 +48,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item ">
-                        <button class="btn btn-custom"" type=" button" data-bs-toggle="offcanvas"
+                        <button class="btn btn-custom" type=" button" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
                         <i class="bi bi-list"></i>
                         <span>All category</span>
@@ -116,5 +116,5 @@
         </div>
     </nav>
 </header>
-
+{{--update--}}
 
