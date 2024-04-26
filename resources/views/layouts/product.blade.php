@@ -300,7 +300,7 @@
                                 <div class="row">
                                     <div class="col-md-4 pb-4">
                                         <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('Home/assets/images/products/table/product-1.jpg') }}"
+                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
                                                                                                alt="Product 1 Image"></a>
                                             </div>
                                             <div class="product-info">
@@ -332,7 +332,7 @@
                                     </div>
                                     <div class="col-md-4 pb-4">
                                         <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('Home/assets/images/products/table/product-1.jpg') }}"
+                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
                                                                                                alt="Product 1 Image"></a>
                                             </div>
                                             <div class="product-info">
@@ -364,7 +364,7 @@
                                     </div>
                                     <div class="col-md-4 pb-4">
                                         <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('Home/assets/images/products/table/product-1.jpg') }}"
+                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
                                                                                                alt="Product 1 Image"></a>
                                             </div>
                                             <div class="product-info">
@@ -396,7 +396,7 @@
                                     </div>
                                     <div class="col-md-4 pb-4">
                                         <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('Home/assets/images/products/table/product-1.jpg') }}"
+                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
                                                                                                alt="Product 1 Image"></a>
                                             </div>
                                             <div class="product-info">
@@ -428,7 +428,7 @@
                                     </div>
                                     <div class="col-md-4 pb-4">
                                         <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('Home/assets/images/products/table/product-1.jpg') }}"
+                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
                                                                                                alt="Product 1 Image"></a>
                                             </div>
                                             <div class="product-info">
@@ -460,7 +460,7 @@
                                     </div>
                                     <div class="col-md-4 pb-4">
                                         <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('Home/assets/images/products/table/product-1.jpg') }}"
+                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
                                                                                                alt="Product 1 Image"></a>
                                             </div>
                                             <div class="product-info">
@@ -492,7 +492,7 @@
                                     </div>
                                     <div class="col-md-4 pb-4">
                                         <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('Home/assets/images/products/table/product-1.jpg') }}"
+                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
                                                                                                alt="Product 1 Image"></a>
                                             </div>
                                             <div class="product-info">
@@ -524,7 +524,7 @@
                                     </div>
                                     <div class="col-md-4 pb-4">
                                         <div class="product-card">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('Home/assets/images/products/table/product-1.jpg') }}"
+                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
                                                                                                alt="Product 1 Image"></a>
                                             </div>
                                             <div class="product-info">
@@ -560,7 +560,7 @@
                                 <div class="product-card mb-3">
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('Home/assets/images/products/table/product-1.jpg') }}"
+                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
                                                                                                alt="Product 1 Image"></a>
                                             </div>
                                         </div>
@@ -609,7 +609,7 @@
                                 <div class="product-card mb-3">
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('Home/assets/images/products/table/product-1.jpg') }}"
+                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
                                                                                                alt="Product 1 Image"></a>
                                             </div>
                                         </div>
@@ -658,7 +658,7 @@
                                 <div class="product-card mb-3">
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('Home/assets/images/products/table/product-1.jpg') }}"
+                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
                                                                                                alt="Product 1 Image"></a>
                                             </div>
                                         </div>
@@ -707,7 +707,7 @@
                                 <div class="product-card mb-3">
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('Home/assets/images/products/table/product-1.jpg') }}"
+                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
                                                                                                alt="Product 1 Image"></a>
                                             </div>
                                         </div>
@@ -756,7 +756,7 @@
                                 <div class="product-card mb-3">
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('Home/assets/images/products/table/product-1.jpg') }}"
+                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
                                                                                                alt="Product 1 Image"></a>
                                             </div>
                                         </div>
@@ -805,7 +805,7 @@
                                 <div class="product-card mb-3">
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
-                                            <div class="product-img"><a href="index.html"><img src="{{ asset('Home/assets/images/products/table/product-1.jpg') }}"
+                                            <div class="product-img"><a href="index.html"><img src="{{ asset('image/imgproduct3.png') }}"
                                                                                                alt="Product 1 Image"></a>
                                             </div>
                                         </div>
@@ -852,23 +852,36 @@
                                     </div>
                                 </div>
                             </div>
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item">
-                                        <a class="page-link page-link-prev" href="#" aria-label="Previous" tabindex="-1" aria-disabled="true">
-                                            <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
-                                        </a>
-                                    </li>
-                                    <li class="page-item active" aria-current="page"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link page-link-next" href="#" aria-label="Next">
-                                            Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
+                            <div class="pagination-menu">
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle n" type="button" id="showDropdown2"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        Show 9
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="showDropdown">
+                                        <li><a class="dropdown-item" href="#" data-value="9">Show 9</a></li>
+                                        <li><a class="dropdown-item" href="#" data-value="10">Show 10</a></li>
+                                        <li><a class="dropdown-item" href="#" data-value="12">Show 12</a></li>
+                                    </ul>
+                                </div>
+                                <nav aria-label="Page navigation example pb-4">
+                                    <ul class="pagination">
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
                     </div>
                 </div>

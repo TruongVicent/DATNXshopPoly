@@ -14,7 +14,7 @@ class ProductMedia extends Model
     protected $fillable = [
         'product_id',
         'media',
-        'is_main'
+        'is_main',
     ];
     public function Product(): BelongsTo
     {

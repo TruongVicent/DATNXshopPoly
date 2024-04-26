@@ -1,4 +1,65 @@
+
 .section-cart {
+
+    /* Đặt kích thước của card */
+    .card {
+        width: 100%;
+        /* Cố định kích thước */
+        max-width: 100%;
+        /* Kích thước tối đa */
+        margin: auto;
+        /* Canh giữa */
+
+        /* Style for delete button */
+        .delete a i {
+            color: black;
+            /* Set default color */
+            transition: color 0.3s ease;
+            /* Add transition */
+        }
+
+        /* Hover effect for delete button */
+        .delete a:hover i {
+            color: red;
+            /* Change color on hover */
+        }
+
+        .quantity {
+
+            /* CSS tùy chỉnh để kiểm soát kích thước của nhóm input */
+            .input-group {
+                width: 120px;
+                /* Đặt chiều rộng */
+            }
+
+        }
+
+        /* CSS tùy chỉnh để kiểm soát kích thước của nút */
+        .input-group-prepend button,
+        .input-group-append button {
+            padding: 0.375rem 0.75rem;
+            /* Điều chỉnh độ dày lề */
+            font-size: 0.875rem;
+            /* Điều chỉnh kích thước chữ */
+        }
+
+        /* CSS tùy chỉnh để kiểm soát kích thước của input */
+        .form-control {
+            padding: 0.375rem 0.75rem;
+            /* Điều chỉnh độ dày lề */
+            font-size: 0.875rem;
+            /* Điều chỉnh kích thước chữ */
+        }
+    }
+
+    /* Thu nhỏ lại card trên thiết bị di động */
+    @media (max-width: 767.98px) {
+        .card {
+            width: 100%;
+            /* Thu nhỏ card */
+        }
+    }
+
     .cart-item {
         border-bottom: 1px solid #DEE2E7;
 
@@ -83,6 +144,7 @@
                 @include textWidthEllipis(16, 1.5, 2);
                 color: #606060;
             }
+
         }
     }
 
@@ -94,14 +156,14 @@
         padding: 2rem;
         border-radius: 6px;
     }
- 
+
 
 
 }
 
+
 .custom-button {
-    @include  button-variant(
-        $white,
+    @include button-variant($white,
         $gray-300,
         $color: $blue,
         $hover-background: $blue,
@@ -112,14 +174,12 @@
         $active-color: $red,
         $disabled-background: $white,
         $disabled-border: $dark,
-        $disabled-color: $red
-      )
-   
-  }   
+        $disabled-color: $red )
+}
 
 
 
- 
+
 
 
 

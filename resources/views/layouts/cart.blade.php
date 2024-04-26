@@ -1,167 +1,101 @@
 @extends('index')
 @section('main')
-    <main class="main">
-
-        <nav aria-label="breadcrumb" class="breadcrumb-nav">
-            <div class="container">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
-                </ol>
-            </div><!-- End .container -->
-        </nav><!-- End .breadcrumb-nav -->
-
-        <div class="page-content">
-            <div class="cart">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-9">
-                            <table class="table table-cart table-mobile">
-                                <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Total</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-
-                                <tbody>
-                                <tr>
-                                    <td class="product-col">
-                                        <div class="product">
-                                            <figure class="product-media">
-                                                <a href="#">
-                                                    <img src="{{ asset('Home/assets/images/products/table/product-1.jpg') }}" alt="Product image">
-                                                </a>
-                                            </figure>
-
-                                            <h3 class="product-title">
-                                                <a href="#">Beige knitted elastic runner shoes</a>
-                                            </h3><!-- End .product-title -->
-                                        </div><!-- End .product -->
-                                    </td>
-                                    <td class="price-col">$84.00</td>
-                                    <td class="quantity-col">
-                                        <div class="cart-product-quantity">
-                                            <input type="number" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
-                                        </div><!-- End .cart-product-quantity -->
-                                    </td>
-                                    <td class="total-col">$84.00</td>
-                                    <td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
-                                </tr>
-                                <tr>
-                                    <td class="product-col">
-                                        <div class="product">
-                                            <figure class="product-media">
-                                                <a href="#">
-                                                    <img src="{{ asset('Home/assets/images/products/table/product-2.jpg') }}" alt="Product image">
-                                                </a>
-                                            </figure>
-
-                                            <h3 class="product-title">
-                                                <a href="#">Blue utility pinafore denim dress</a>
-                                            </h3><!-- End .product-title -->
-                                        </div><!-- End .product -->
-                                    </td>
-                                    <td class="price-col">$76.00</td>
-                                    <td class="quantity-col">
-                                        <div class="cart-product-quantity">
-                                            <input type="number" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
-                                        </div><!-- End .cart-product-quantity -->
-                                    </td>
-                                    <td class="total-col">$76.00</td>
-                                    <td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
-                                </tr>
-                                </tbody>
-                            </table><!-- End .table table-wishlist -->
-
-                            <div class="cart-bottom">
-                                <div class="cart-discount">
-                                    <form action="#">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" required placeholder="coupon code">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button>
-                                            </div><!-- .End .input-group-append -->
-                                        </div><!-- End .input-group -->
-                                    </form>
-                                </div><!-- End .cart-discount -->
-
-                                <a href="#" class="btn btn-outline-dark-2"><span>UPDATE CART</span><i class="icon-refresh"></i></a>
-                            </div><!-- End .cart-bottom -->
-                        </div><!-- End .col-lg-9 -->
-                        <aside class="col-lg-3">
-                            <div class="summary summary-cart">
-                                <h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
-
-                                <table class="table table-summary">
-                                    <tbody>
-                                    <tr class="summary-subtotal">
-                                        <td>Subtotal:</td>
-                                        <td>$160.00</td>
-                                    </tr><!-- End .summary-subtotal -->
-                                    <tr class="summary-shipping">
-                                        <td>Shipping:</td>
-                                        <td>&nbsp;</td>
-                                    </tr>
-
-                                    <tr class="summary-shipping-row">
-                                        <td>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" id="free-shipping" name="shipping" class="custom-control-input">
-                                                <label class="custom-control-label" for="free-shipping">Free Shipping</label>
-                                            </div><!-- End .custom-control -->
-                                        </td>
-                                        <td>$0.00</td>
-                                    </tr><!-- End .summary-shipping-row -->
-
-                                    <tr class="summary-shipping-row">
-                                        <td>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" id="standart-shipping" name="shipping" class="custom-control-input">
-                                                <label class="custom-control-label" for="standart-shipping">Standart:</label>
-                                            </div><!-- End .custom-control -->
-                                        </td>
-                                        <td>$10.00</td>
-                                    </tr><!-- End .summary-shipping-row -->
-
-                                    <tr class="summary-shipping-row">
-                                        <td>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" id="express-shipping" name="shipping" class="custom-control-input">
-                                                <label class="custom-control-label" for="express-shipping">Express:</label>
-                                            </div><!-- End .custom-control -->
-                                        </td>
-                                        <td>$20.00</td>
-                                    </tr><!-- End .summary-shipping-row -->
-
-                                    <tr class="summary-shipping-estimate">
-                                        <td>Estimate for Your Country<br> <a href="dashboard.html">Change address</a></td>
-                                        <td>&nbsp;</td>
-                                    </tr><!-- End .summary-shipping-estimate -->
-
-                                    <tr class="summary-total">
-                                        <td>Total:</td>
-                                        <td>$160.00</td>
-                                    </tr><!-- End .summary-total -->
-                                    </tbody>
-                                </table><!-- End .table table-summary -->
-
-                                <a href="checkout.html" class="btn btn-primary btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
-                            </div><!-- End .summary -->
-
-                            <a href="category.html" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
-                        </aside><!-- End .col-lg-3 -->
-                    </div><!-- End .row -->
-                </div><!-- End .container -->
-            </div><!-- End .cart -->
-        </div><!-- End .page-content -->
-
+    <div class="main">
         <div class="section-cart pt-4">
             <div class="container">
+                <h4 class="mb-4">My Cart</h4>
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-9">
+                        <div class="card px-3">
+                            <div class="cart-item py-3">
+                                <div class="row align-items-center">
+                                    <div class="col-12 col-md-8 col-lg-9">
+                                        <div class="d-flex">
+                                            <div class="box-img me-3">
+                                                <img src="{{ asset('image/img2.jpg') }}" alt="" class="rounded-1">
+                                            </div>
+                                            <div class="box-content">
+                                                <div class="title">T-shirts with multiple colors, for men and lady</div>
+                                                <div class="text mb-2">
+                                                    Size: medium, Color: blue, Material: Plastic <br> Seller: Artel
+                                                    Market
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-3 col-lg-2">
+                                        <div class="price">5500000đ</div>
+                                        <div class="quantity">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <button class="btn btn-outline-secondary" id="decrease-btn"
+                                                            type="button">-</button>
+                                                </div>
+                                                <input type="number" class="form-control text-center" id="quantity"
+                                                       value="1" min="1">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" id="increase-btn"
+                                                            type="button">+</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="col-6 col-md-1 col-lg-1 d-flex justify-content-center">
+                                        <div class="delete">
+                                            <a href="#"><i class="bi bi-x-lg fs-4"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between py-3">
+                                <button class="btn btn-primary"><i class="bi bi-arrow-left me-2"></i>Back to
+                                    shop</button>
+                                <button class="btn btn-outline-primary">Remove All</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="card mb-3 p-3">
+                            <h6>Have a coupon?</h6>
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" placeholder="Add coupon"
+                                       aria-label="Recipient's username" aria-describedby="button-addon2">
+                                <button class="btn btn-outline-primary" type="button" id="button-addon2">Button</button>
+                            </div>
+                        </div>
+                        <div class="card p-3">
+                            <table class="table table-borderless mb-0">
+                                <tr>
+                                    <td>Subtotal:</td>
+                                    <td class="price text-end">100000000000đ</td>
+                                </tr>
+                                <tr>
+                                    <td>Discount:</td>
+                                    <td class="price text-end">100000000000đ</td>
+                                </tr>
+                                <tr>
+                                    <td>Tax:</td>
+                                    <td class="price text-end">100000000000đ</td>
+                                </tr>
+                            </table>
+                            <hr>
+                            <div class="total d-flex justify-content-between">
+                                <div class="p-2">Total</div>
+                                <div class="price text-end p-2">100000000000đ</div>
+                            </div>
+                            <button type="button" class="btn btn-primary">Checkout</button>
+                            <div class="payment d-flex justify-content-center">
+                                <img class="mt-3 mx-2" src="{{ asset('image/payment/payment-1.png') }}" alt="">
+                                <img class="mt-3 mx-2" src="{{ asset('image/payment/payment-2.png') }}" alt="">
+                                <img class="mt-3 mx-2" src="{{ asset('image/payment/payment-3.png') }}" alt="">
+                                <img class="mt-3 mx-2" src="{{ asset('image/payment/payment-4.png') }}" alt="">
+                                <img class="mt-3 mx-2" src="{{ asset('image/payment/payment-5.png') }}" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="service">
                     <div class="row justify-content-center my-4">
                         <div class="col-12 col-md-6 col-lg-3 j">
@@ -217,6 +151,49 @@
                 </div>
             </div>
         </div>
-    </main><!-- End .main -->
+    </div>
+    <script>
+        // Lấy phần tử đầu vào và các nút
+        var input = document.getElementById('quantity');
+        var decreaseBtn = document.getElementById('decrease-btn');
+        var increaseBtn = document.getElementById('increase-btn');
+
+        // Thêm trình xử lý sự kiện vào nút giảm
+        decreaseBtn.addEventListener('click', function () {
+            // Lấy giá trị hiện tại của đầu vào
+            var value = parseInt(input.value);
+            // Đảm bảo giá trị ít nhất là 1
+            if (value > 1) {
+                // Giảm giá trị đi 1
+                input.value = value - 1;
+            }
+        });
+
+        // Thêm trình xử lý sự kiện vào nút tăng
+        increaseBtn.addEventListener('click', function () {
+            // Lấy giá trị hiện tại của đầu vào
+            var value = parseInt(input.value);
+            // Tăng giá trị lên 1
+            input.value = value + 1;
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Select all elements with class "price"
+            var prices = document.querySelectorAll('.price');
+
+            // Loop through each price element
+            prices.forEach(function (priceElement) {
+                // Parse the price as a float number
+                var price = parseFloat(priceElement.textContent);
+
+                // Format the price with Vietnamese dong symbol and thousand separator
+                var formattedPrice = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+
+                // Update the content of the price element with the formatted price
+                priceElement.textContent = formattedPrice;
+            });
+        });
+
+    </script>
 
 @endsection

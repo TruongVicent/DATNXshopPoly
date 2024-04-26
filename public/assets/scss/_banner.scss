@@ -1,18 +1,32 @@
 .section-banner {
-    padding: 1.25rem 0px;
+    padding: 1.25rem 0;
     background-color: white;
- 
+
     .group {
-        grid-template-columns: 20% 60% 20%;
+        display: grid;
+        grid-template-columns: 20% 58% 18%; /* Initial grid template columns */
+        grid-template-areas:
+      "category image-banner box" /* Grid area names */
+      "category category category" /* Span category across 3 columns */
+      "image-banner image-banner image-banner" /* Span image-banner across 3 columns */
+      "box box box"; /* Span box across 3 columns */
+        gap: 1rem;
+
+        @media (max-width: 767.98px) {
+            grid-template-columns: 1fr;
+            .category {
+                display: none;
+            }
+            .image-banner .box {
+                order: 2;
+            }
+        }
 
         .category {
             max-height: 368px;
-            overflow: hidden;
 
             .list-group-item {
-                // border: none;
-                // border-radius: inherit;
-                margin: auto 1.25rem;
+                margin: 0 1.25rem;
             }
         }
 
@@ -21,8 +35,9 @@
 
             .content {
                 position: absolute;
-                top: 50px;
+                top: 50%;
                 left: 40px;
+                transform: translateY(-50%);
             }
 
             .box-img {
@@ -39,47 +54,38 @@
         }
 
         .box {
-             
+            gap: 5px;
+            .box-1,
+            .box-2,
+            .box-3 {
+                margin: 1rem 0;
+                padding: 0.75rem;
+                background-color: #eee;
+            }
 
             .box-1 {
-                background-color: #E3F0FF;
-                margin: auto 1.25rem;
-                padding: .75rem;
-
                 .avatar {
                     width: 44px;
                     height: 44px;
-                    margin-right: 10px; 
-                    // margin-bottom: 13px;
+                    margin-right: 10px;
 
                     img {
-                        width: 100%px;
+                        width: 100%;
                         height: 100%;
                         object-fit: cover;
                     }
                 }
-
             }
 
             .box-2 {
                 background-color: #F38332;
-                margin: .75rem 1.25rem;
-                padding: .75rem;
                 color: white;
             }
 
             .box-3 {
                 background-color: #55BDC3;
-                margin: auto 1.25rem;
-                padding: .75rem;
                 color: white;
             }
-
         }
-
-
-
     }
-
-
 }
