@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\ProductResource\RelationManagers;
 
-use App\Filament\Resources\ProductMediaResource\Pages;
-use App\Models\ProductMedia;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
@@ -16,17 +14,13 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
-
-class ProductMediaResource extends Resource
+class ProductMediaRelationManager extends RelationManager
 {
-    protected static ?string $model = ProductMedia::class;
-
-    protected static ?string $navigationGroup = 'Sản phẩm';
-
-    protected static ?string $label = 'Ảnh sản phẩm';
+    protected static string $relationship = 'productMedia';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $label = 'Ảnh sản phẩm';
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -52,9 +46,10 @@ class ProductMediaResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
+            ->recordTitleAttribute('media')
             ->columns([
                 TextColumn::make('Product.name')
                     ->label('Mã sản phẩm')
@@ -83,21 +78,5 @@ class ProductMediaResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListProductMedia::route('/'),
-            'create' => Pages\CreateProductMedia::route('/create'),
-            'edit' => Pages\EditProductMedia::route('/{record}/edit'),
-        ];
     }
 }

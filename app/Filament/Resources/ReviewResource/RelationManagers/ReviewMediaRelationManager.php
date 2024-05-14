@@ -1,29 +1,23 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\ReviewResource\RelationManagers;
 
-use App\Filament\Resources\ReviewMediaResource\Pages;
-use App\Filament\Resources\ReviewMediaResource\RelationManagers;
 use App\Models\Review;
-use App\Models\ReviewMedia;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class ReviewMediaResource extends Resource
+class ReviewMediaRelationManager extends RelationManager
 {
-    protected static ?string $model = ReviewMedia::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string $relationship = 'reviewMedia';
     protected static ?string $label = 'Hình ảnh đánh giá';
-    protected static ?string $navigationGroup = 'Đánh giá';
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -41,9 +35,10 @@ class ReviewMediaResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
+            ->recordTitleAttribute('media')
             ->columns([
                 ImageColumn::make('review_media')
                     ->label('Ảnh đánh giá'),
@@ -63,21 +58,5 @@ class ReviewMediaResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListReviewMedia::route('/'),
-            'create' => Pages\CreateReviewMedia::route('/create'),
-            'edit' => Pages\EditReviewMedia::route('/{record}/edit'),
-        ];
     }
 }

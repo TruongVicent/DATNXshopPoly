@@ -54,4 +54,9 @@ class Product extends Model
     {
         return $this->HasMany(Like::class);
     }
+
+    public function productMedia(): HasMany
+    {
+        return $this->HasMany(ProductMedia::class);
+    }
 }

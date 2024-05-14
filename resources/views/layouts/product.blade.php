@@ -32,6 +32,7 @@
                                         @foreach($Categories as $category)
                                             <a href="">{{ $category->name }}</a>
                                         @endforeach
+
                                         <button class="seeAllButton" id="seeAllButtonCategories">See All</button>
 
                                     </div>
@@ -75,13 +76,13 @@
                                      data-bs-parent="#accordionFlushFeatures">
                                     <div class="accordion-body">
                                         @foreach($productVariations as $productVariation)
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value=""
-                                                   id="metallicCheckbox">
-                                            <label class="form-check-label" for="metallicCheckbox">
-                                                {{ $productVariation->variation_name }}
-                                            </label>
-                                        </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="metallicCheckbox">
+                                                <label class="form-check-label" for="metallicCheckbox">
+                                                    {{ $productVariation->variation_name }}
+                                                </label>
+                                            </div>
                                         @endforeach
                                         <button class="seeAllButton" id="seeAllButtonFeatures">See All</button>
                                     </div>
@@ -236,13 +237,13 @@
                                             <input class="form-check-input" type="checkbox" value=""
                                                    id="verifiedCheckbox">
                                             <label class="form-check-label" for="verifiedCheckbox">
-                                                Verified only
+                                                Chọn
                                             </label>
                                         </div>
                                         <div class="form-group me-3">
                                             <select class="form-select" id="featuredSelect">
-                                                <option>Featured</option>
-                                                <option>Not Featured</option>
+                                                <option>Đặc trưng</option>
+                                                <option>Không đăc trưng</option>
                                             </select>
                                         </div>
                                         <div class="btn-group me-3 switchView">
@@ -359,7 +360,7 @@
                             </div>
                             <div class="pagination-menu">
                                 <div class="dropdown">
-                                    <button class="btn dropdown-toggle" type="button" id="showDropdown"
+                                    <button class="btn dropdown-toggle" type="button" id="showDropdown2"
                                             data-bs-toggle="dropdown" aria-expanded="false">
                                         Show {{ $itemsPerPage }}
                                     </button>

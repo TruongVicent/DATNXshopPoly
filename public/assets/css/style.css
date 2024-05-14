@@ -13502,7 +13502,7 @@ a:-webkit-any-link {
     color: black
 }
 
-.breadcrumb {
+q .breadcrumb {
     font-size: 16px;
     margin: 10px 0
 }
@@ -13656,6 +13656,10 @@ a:-webkit-any-link {
 
 .filter-btn:hover {
     border-color: #007bff
+}
+
+#productColumn {
+    display: none
 }
 
 .product .product-grid {

@@ -80,6 +80,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 });
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelector('#productColumn').style.display = 'block';
+    document.querySelector('#productGrid').style.display = 'none';
+});
 //Chuyển đổi hiển thị dạng cột và dạng mảng
 window.addEventListener('DOMContentLoaded', function () {
     var gridButton = document.getElementById('gridButton');
@@ -112,10 +116,40 @@ document.addEventListener("DOMContentLoaded", function () {
         item.addEventListener('click', function (event) {
             event.preventDefault();
             var itemsPerPage = this.getAttribute('data-value');
-            window.location.href = "{{ route('products.index') }}?items_per_page=" + itemsPerPage;
+            var currentUrl = window.location.href;
+            var newUrl = currentUrl.replace(/(\?|&)items_per_page=\d+/gi, '');
+            if (newUrl.includes('?')) {
+                newUrl += '&items_per_page=' + itemsPerPage;
+            } else {
+                newUrl += '?items_per_page=' + itemsPerPage;
+            }
+            window.location.href = newUrl;
         });
     });
 });
+var categoryList = document.querySelector('.categories-list');
+var categoryItems = categoryList.querySelectorAll('li');
+
+categoryItems.forEach(function (item) {
+    item.addEventListener('click', function () {
+        var categoryId = this.getAttribute('data-category');
+        filterProductsByCategory(categoryId);
+    });
+});
+
+function filterProductsByCategory(categoryId) {
+    var productCards = document.getElementsByClassName('product-card');
+    for (var i = 0; i < productCards.length; i++) {
+        var productCard = productCards[i];
+        var category = productCard.getAttribute('data-category');
+
+        if (categoryId === 'all' || category === categoryId) {
+            productCard.style.display = 'block';
+        } else {
+            productCard.style.display = 'none';
+        }
+    }
+}
 
 
 
