@@ -8,9 +8,10 @@ use App\Models\CategoryPost;
 use App\Models\Post;
 use App\Models\User;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
@@ -33,6 +34,7 @@ class PostResource extends Resource
         return $form
             ->schema([
                 FileUpload::make('thumbnail')
+                    ->required()
                     ->columnSpan(2)
                     ->label('Ảnh đại diện'),
                 Select::make('category_post_id')
@@ -66,7 +68,12 @@ class PostResource extends Resource
                 TagsInput::make('tags')
                     ->label('Nhãn bài viết')
                     ->required(),
-                MarkdownEditor::make('content')
+                Textarea::make('meta_description')
+                    ->label('Mô tả SEO')
+                    ->required()
+                    ->maxLength(155)
+                    ->columnSpan(2),
+                RichEditor::make('content')
                     ->label('Nội dung')
                     ->required()
                     ->columnSpan(2),

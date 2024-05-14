@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\CategoryPostController;
 use App\Http\Controllers\Client\Body;
 use App\Http\Controllers\Client\CartHome;
 use App\Http\Controllers\Client\Checkout;
 use App\Http\Controllers\Client\DetailHome;
 use App\Http\Controllers\Client\Home;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,4 +28,5 @@ Route::prefix('/')->group(function () {
     Route::get('/detail', [DetailHome::class, 'index']);
     Route::get('/checkout', [Checkout::class, 'index']);
     Route::get('/cart', [CartHome::class, 'index']);
+    Route::get('/post', [PostController::class, 'index']);
 });
