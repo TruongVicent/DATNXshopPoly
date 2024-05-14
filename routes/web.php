@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryPostController;
 use App\Http\Controllers\Client\Body;
 use App\Http\Controllers\Client\CartHome;
 use App\Http\Controllers\Client\Checkout;
@@ -30,4 +31,5 @@ Route::prefix('/')->group(function () {
     Route::get('/cart', [CartHome::class, 'index']);
     Route::get('/post', [PostController::class, 'index']);
     Route::get('/post-detail/{id}', [PostController::class, 'detail'])->name('detailPost');
+    Route::get('/category-post/{id}', [CategoryPostController::class, 'postByCategory'])->name('postByCategory');
 });
