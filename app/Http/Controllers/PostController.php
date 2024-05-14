@@ -29,5 +29,23 @@ class PostController extends Controller
         ]);
     }
 
+    public function detail($id)
+    {
+        $categoryAll = CategoryPost::all();
+
+        //hiển th bài viết chi tiết
+        $detail = Post::find($id);
+
+        //hiển thị bài viết mới nhất
+        $relatedPosts = Post::with('user')
+            ->latest()->limit(6)->get();
+
+        return view('layouts.post-detail', [
+            'detail' => $detail,
+            'relatedPosts' => $relatedPosts,
+            'categoryAll' => $categoryAll,
+        ]);
+    }
+
 
 }
