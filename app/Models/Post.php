@@ -21,6 +21,7 @@ class Post extends Model
         'meta_keyword',
         'user_id',
         'tags',
+        'meta_description',
     ];
     protected $casts = [
         'tags' => 'array',
