@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('/')->group(function () {
     Route::get('/', [Home::class, 'index']);
     Route::get('/', [Body::class, 'index']);
-    Route::get('/product', [ProductController::class, 'index',]);
+    Route::get('/product', [ProductController::class, 'index',])->name('products.index');
     Route::get('/detail', [DetailHome::class, 'index']);
     Route::get('/checkout', [Checkout::class, 'index']);
     Route::get('/cart', [CartHome::class, 'index']);

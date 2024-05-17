@@ -56,12 +56,67 @@ function padNumber(number) {
 // ---------------
 // change image
 // ---------------
-function changeImg(pic){
+function changeImg(pic) {
     document.getElementById('change_image').src = pic;
 }
- 
 
- 
+document.addEventListener('DOMContentLoaded', function () {
+    const minRangeInput = document.getElementById('minRangeInput');
+    const maxRangeInput = document.getElementById('maxRangeInput');
+    const applyButton = document.querySelector('.apply-button');
+
+    applyButton.addEventListener('click', function () {
+        const minValue = parseFloat(minRangeInput.value);
+        const maxValue = parseFloat(maxRangeInput.value);
+
+        if (isNaN(minValue) || isNaN(maxValue) || minValue < 0 || maxValue < 0 || minValue > maxValue) {
+            alert('Invalid input! Please enter valid price range.');
+            return;
+        }
+        filterProductsByPrice(minValue, maxValue);
+    });
+
+    function filterProductsByPrice(minValue, maxValue) {
+
+    }
+});
+//Chuyển đổi hiển thị dạng cột và dạng mảng
+window.addEventListener('DOMContentLoaded', function () {
+    var gridButton = document.getElementById('gridButton');
+    var columnButton = document.getElementById('columnButton');
+    var productGrid = document.getElementById('productGrid');
+    var productColumn = document.getElementById('productColumn');
+
+    gridButton.disabled = true;
+    columnButton.disabled = false;
+    productGrid.style.display = 'block';
+    productColumn.style.display = 'none';
+
+    gridButton.addEventListener('click', function () {
+        gridButton.disabled = true;
+        columnButton.disabled = false;
+        productGrid.style.display = 'block';
+        productColumn.style.display = 'none';
+    });
+
+    columnButton.addEventListener('click', function () {
+        gridButton.disabled = false;
+        columnButton.disabled = true;
+        productGrid.style.display = 'none';
+        productColumn.style.display = 'block';
+    });
+});
+//Phân trang
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.dropdown-item').forEach(function (item) {
+        item.addEventListener('click', function (event) {
+            event.preventDefault();
+            var itemsPerPage = this.getAttribute('data-value');
+            window.location.href = "{{ route('products.index') }}?items_per_page=" + itemsPerPage;
+        });
+    });
+});
+
 
 
 

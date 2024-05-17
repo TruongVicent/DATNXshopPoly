@@ -124,7 +124,5 @@
 <!-- Main JS File -->
 <script src="{{ asset('Home/assets/js/main.js') }}"></script>
 <script src="{{ asset('Home/assets/js/demos/demo-3.js') }}"></script>
-</body>
 
-</html>
 {{--update--}}

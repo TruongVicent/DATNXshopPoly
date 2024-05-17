@@ -33,6 +33,7 @@
                                             <a href="">{{ $category->name }}</a>
                                         @endforeach
                                         <button class="seeAllButton" id="seeAllButtonCategories">See All</button>
+
                                     </div>
                                 </div>
 
@@ -49,13 +50,13 @@
                                      data-bs-parent="#accordionFlush2">
                                     <div class="accordion-body">
                                         @foreach($Brands as $Brand)
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value=""
-                                                   id="samsungCheckbox">
-                                            <label class="form-check-label" for="samsungCheckbox">
-                                                {{ $Brand->name }}
-                                            </label>
-                                        </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="samsungCheckbox">
+                                                <label class="form-check-label" for="samsungCheckbox">
+                                                    {{ $Brand->name }}
+                                                </label>
+                                            </div>
                                         @endforeach
                                         <button class="seeAllButton" id="seeAllButtonBrands">See All</button>
                                     </div>
@@ -67,42 +68,21 @@
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#flush-collapseFeatures" aria-expanded="false"
                                             aria-controls="flush-collapseFeatures">
-                                        Features
+                                        Đặc trưng
                                     </button>
                                 </h2>
                                 <div id="flush-collapseFeatures" class="accordion-collapse collapse"
                                      data-bs-parent="#accordionFlushFeatures">
                                     <div class="accordion-body">
+                                        @foreach($productVariations as $productVariation)
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="metallicCheckbox">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                   id="metallicCheckbox">
                                             <label class="form-check-label" for="metallicCheckbox">
-                                                Metallic
+                                                {{ $productVariation->variation_name }}
                                             </label>
                                         </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="plasticCheckbox">
-                                            <label class="form-check-label" for="plasticCheckbox">
-                                                Plastic cover
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="ramCheckbox">
-                                            <label class="form-check-label" for="ramCheckbox">
-                                                8GB Ram
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="powerCheckbox">
-                                            <label class="form-check-label" for="powerCheckbox">
-                                                Super power
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="memoryCheckbox">
-                                            <label class="form-check-label" for="memoryCheckbox">
-                                                Large Memory
-                                            </label>
-                                        </div>
+                                        @endforeach
                                         <button class="seeAllButton" id="seeAllButtonFeatures">See All</button>
                                     </div>
                                 </div>
@@ -112,7 +92,7 @@
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#flush-collapsePrice" aria-expanded="false"
                                             aria-controls="flush-collapsePrice">
-                                        Price range
+                                        Giá
                                     </button>
                                 </h2>
                                 <div id="flush-collapsePrice" class="accordion-collapse collapse"
@@ -120,13 +100,16 @@
                                     <div class="accordion-body">
 
                                         <div class="range-slider">
-                                            <input type="range" class="form-range" min="0" max="5" value="0" step="1" id="customRange2">
+                                            <input type="range" class="form-range" min="0" max="5" value="0" step="1"
+                                                   id="customRange2">
                                         </div>
                                         <div class="range-inputs">
-                                            <input type="number" class="form-control small-input" id="minRangeInput" placeholder="0">
-                                            <input type="number" class="form-control small-input" id="maxRangeInput" placeholder="999999999 ">
+                                            <input type="number" class="form-control small-input" id="minRangeInput"
+                                                   placeholder="0">
+                                            <input type="number" class="form-control small-input" id="maxRangeInput"
+                                                   placeholder="999999999 ">
                                         </div>
-                                        <button class="apply-button">Apply</button>
+                                        <button id="applyButton" class="apply-button">Apply</button>
                                     </div>
 
                                 </div>
@@ -136,32 +119,36 @@
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#flush-collapseCondition" aria-expanded="false"
                                             aria-controls="flush-collapseCondition">
-                                        Condition
+                                        Tình trạng
                                     </button>
                                 </h2>
                                 <div id="flush-collapseCondition" class="accordion-collapse collapse"
                                      data-bs-parent="#accordioncollapseCondition">
                                     <div class="accordion-body">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                                   id="flexRadioDefault1">
                                             <label class="form-check-label" for="flexRadioDefault1">
                                                 Any
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                                   id="flexRadioDefault2" checked>
                                             <label class="form-check-label" for="flexRadioDefault2">
                                                 Refurbished
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                                   id="flexRadioDefault3">
                                             <label class="form-check-label" for="flexRadioDefault3">
                                                 Brand new
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault4">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                                   id="flexRadioDefault4">
                                             <label class="form-check-label" for="flexRadioDefault4">
                                                 Old items
                                             </label>
@@ -174,7 +161,7 @@
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#flush-collapseRating" aria-expanded="false"
                                             aria-controls="flush-collapseRating">
-                                        Ratings
+                                        Xếp hạng
                                     </button>
                                 </h2>
                                 <div id="flush-collapseRating" class="accordion-collapse collapse"
@@ -246,7 +233,8 @@
                                 <div class="col-md-6">
                                     <div class="d-flex align-items-center justify-content-end">
                                         <div class="form-check me-3">
-                                            <input class="form-check-input" type="checkbox" value="" id="verifiedCheckbox">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                   id="verifiedCheckbox">
                                             <label class="form-check-label" for="verifiedCheckbox">
                                                 Verified only
                                             </label>
@@ -260,7 +248,8 @@
                                         <div class="btn-group me-3 switchView">
                                             <div id="gridButton" onclick="switchView('grid')"><i
                                                     class="bi bi-grid-3x3-gap-fill"></i></div>
-                                            <div id="columnButton" onclick="switchView('column')"><i class="bi bi-list"></i>
+                                            <div id="columnButton" onclick="switchView('column')"><i
+                                                    class="bi bi-list"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -276,14 +265,63 @@
                             <div id="productGrid" class="product-grid">
                                 <div class="row">
                                     @foreach ($products as $product)
-                                    <div class="col-md-4 pb-4">
-                                        <div class="product-card">
-                                            <div class="product-img">
-                                                <img src="{{ asset('storage/' . $product->main_image) }}"
-                                                     alt="Product Image">
+                                        <div class="col-md-4 pb-4">
+                                            <div class="product-card">
+                                                <div class="product-img">
+                                                    <img src="{{ asset('storage/' . $product->main_image) }}"
+                                                         alt="Product Image">
+                                                </div>
+                                                <div class="product-info">
+                                                    <div class="product-price-item">
+                                                        <div class="price-item">
+                                                            <div class="product-price">{{ $product->regular_price }}
+                                                                <div
+                                                                    class="product-price-discounted">{{ $product->sale_price }}</div>
+                                                            </div>
+                                                            <div class="rating">
+                                                                <div class="star">
+                                                                    <i class="bi bi-star-fill"></i>
+                                                                    <i class="bi bi-star-fill"></i>
+                                                                    <i class="bi bi-star-fill"></i>
+                                                                    <i class="bi bi-star-fill"></i>
+                                                                    <i class="bi bi-star-fill"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="product-favorite d-flex align-items-center">
+                                                            <a href=""><i class="far fa-heart"></i></a>
+                                                        </div>
+
+                                                    </div>
+                                                    <p class="product-title">{{ $product->name }}</p>
+                                                    <p class="product-title">{{ $product->description }}</p>
+
+                                                </div>
                                             </div>
-                                            <div class="product-info">
-                                                <div class="product-price-item">
+
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div id="productColumn" class="product-column">
+                                @foreach ($products as $product)
+                                    <div class="product-card mb-3">
+                                        <div class="row">
+                                            <div class="col-12 col-lg-3">
+                                                <div class="product-img"><a href="checkout.blade.php"><img
+                                                            src="{{ asset('storage/' . $product->main_image) }}"
+                                                            alt="Product 1 Image"></a>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-9">
+                                                <div class="product-info">
+                                                    <div class="product-title-item">
+                                                        <p class="product-title">{{ $product->name }}</p>
+                                                        <div class="product-favorite d-flex align-items-center">
+                                                            <a href=""><i class="far fa-heart"></i></a>
+                                                        </div>
+                                                    </div>
                                                     <div class="price-item">
                                                         <div class="product-price">{{ $product->regular_price }}
                                                             <div
@@ -297,100 +335,61 @@
                                                                 <i class="bi bi-star-fill"></i>
                                                                 <i class="bi bi-star-fill"></i>
                                                             </div>
+                                                            <div class="number-star">
+                                                                7.5
+                                                            </div>
+                                                            <div class="order">
+                                                                145 Orders
+                                                            </div>
+                                                            <div class="shipping">
+                                                                Free Ship
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div class="product-favorite d-flex align-items-center">
-                                                        <a href=""><i class="far fa-heart"></i></a>
+                                                    <p class="product-description">{{ $product->description }} </p>
+                                                    <div class="view-detail">
+                                                        <a href="">View Detail</a>
                                                     </div>
-
-                                                </div>
-                                                <p class="product-title">{{ $product->name }}</p>
-                                                <p class="product-title">{{ $product->description }}</p>
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div>
-
-                            <div id="productColumn" class="product-column">
-                                @foreach ($products as $product)
-                                <div class="product-card mb-3">
-                                    <div class="row">
-                                        <div class="col-12 col-lg-3">
-                                            <div class="product-img"><a href="index.html"><img
-                                                        src="{{ asset('storage/' . $product->main_image) }}"
-                                                                                               alt="Product 1 Image"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-lg-9">
-                                            <div class="product-info">
-                                                <div class="product-title-item">
-                                                    <p class="product-title">{{ $product->name }}</p>
-                                                    <div class="product-favorite d-flex align-items-center">
-                                                        <a href=""><i class="far fa-heart"></i></a>
-                                                    </div>
-                                                </div>
-                                                <div class="price-item">
-                                                    <div class="product-price">{{ $product->regular_price }}
-                                                        <div
-                                                            class="product-price-discounted">{{ $product->sale_price }}</div>
-                                                    </div>
-                                                    <div class="rating">
-                                                        <div class="star">
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                        </div>
-                                                        <div class="number-star">
-                                                            7.5
-                                                        </div>
-                                                        <div class="order">
-                                                            145 Orders
-                                                        </div>
-                                                        <div class="shipping">
-                                                            Free Ship
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <p class="product-description">{{ $product->description }} </p>
-                                                <div class="view-detail">
-                                                    <a href="">View Detail</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                                 @endforeach
+                                {{--                                    {{ $products->links() }}--}}
                             </div>
                             <div class="pagination-menu">
                                 <div class="dropdown">
-                                    <button class="btn dropdown-toggle n" type="button" id="showDropdown2"
+                                    <button class="btn dropdown-toggle" type="button" id="showDropdown"
                                             data-bs-toggle="dropdown" aria-expanded="false">
-                                        Show 9
+                                        Show {{ $itemsPerPage }}
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="showDropdown">
                                         <li><a class="dropdown-item" href="#" data-value="9">Show 9</a></li>
-                                        <li><a class="dropdown-item" href="#" data-value="10">Show 10</a></li>
                                         <li><a class="dropdown-item" href="#" data-value="12">Show 12</a></li>
+                                        <li><a class="dropdown-item" href="#" data-value="15">Show 15</a></li>
                                     </ul>
                                 </div>
                                 <nav aria-label="Page navigation example pb-4">
                                     <ul class="pagination">
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Previous">
+                                        <li class="page-item {{ $products->currentPage() == 1 ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ $products->previousPageUrl() }}"
+                                               aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
-                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Next">
+                                        @php
+                                            $startPage = max(1, $products->currentPage() - 1);
+                                            $endPage = min($startPage + 2, $products->lastPage());
+                                        @endphp
+                                        @for ($i = $startPage; $i <= $endPage; $i++)
+                                            <li class="page-item {{ $i == $products->currentPage() ? 'active' : '' }}">
+                                                <a class="page-link" href="{{ $products->url($i) }}">{{ $i }}</a>
+                                            </li>
+                                        @endfor
+
+                                        <li class="page-item {{ $products->currentPage() == $products->lastPage() ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ $products->nextPageUrl() }}"
+                                               aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
                                         </li>
@@ -399,36 +398,10 @@
                             </div>
                         </div>
                     </div>
+                    ss
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        window.addEventListener('DOMContentLoaded', function () {
-            var gridButton = document.getElementById('gridButton');
-            var columnButton = document.getElementById('columnButton');
-            var productGrid = document.getElementById('productGrid');
-            var productColumn = document.getElementById('productColumn');
-
-            gridButton.disabled = true;
-            columnButton.disabled = false;
-            productGrid.style.display = 'block';
-            productColumn.style.display = 'none';
-
-            gridButton.addEventListener('click', function () {
-                gridButton.disabled = true;
-                columnButton.disabled = false;
-                productGrid.style.display = 'block';
-                productColumn.style.display = 'none';
-            });
-
-            columnButton.addEventListener('click', function () {
-                gridButton.disabled = false;
-                columnButton.disabled = true;
-                productGrid.style.display = 'none';
-                productColumn.style.display = 'block';
-            });
-        });
-    </script>
 @endsection
 {{--update--}}
