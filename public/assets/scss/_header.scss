@@ -56,10 +56,6 @@ form {
     width: 100%;
 }
 
-input[type="text" i] {
-    padding-block: 1px;
-    padding-inline: 2px;
-}
 
 /* input:not([type="file" i], [type="image" i], [type="checkbox" i], [type="radio" i]) {}
 
@@ -322,4 +318,24 @@ a:-webkit-any-link {
 .nav-item a{
     text-decoration: none;
     color: black;
+}
+
+.offcanvas-backdrop.show {
+    opacity: .0;
+}
+
+.offcanvas.offcanvas-start {
+    top: 180px;
+    left: 0;
+    width: 300px;
+}
+
+.offcanvas-body {
+    height: calc(100vh - 60px); /* Điều chỉnh giá trị 60px tương ứng với chiều cao của header */
+    overflow-y: auto;
+}
+
+.main {
+    padding-top: 100px; /* Khoảng cách từ đỉnh trang đến phần nội dung bên dưới header */
+    /* Điều chỉnh giá trị 100px tùy thuộc vào chiều cao của header */
 }
