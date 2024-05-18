@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
             event.preventDefault();
             var itemsPerPage = this.getAttribute('data-value');
             var currentUrl = window.location.href;
-            var newUrl = currentUrl.replace(/(\?|&)items_per_page=\d+/gi, ''); // Xóa tham số items_per_page hiện tại trong URL
+            var newUrl = currentUrl.replace(/(\?|&)items_per_page=\d+/gi, '');
             if (newUrl.includes('?')) {
                 newUrl += '&items_per_page=' + itemsPerPage;
             } else {

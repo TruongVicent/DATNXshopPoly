@@ -97,6 +97,7 @@ class ShopResource extends Resource
 
                 TextEntry::make('description')
                     ->label('Mô tả')
+                    ->html()
                     ->columnSpanFull(),
 
             ]);
