@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
 class ShopInfo extends Model
 {
@@ -26,5 +27,15 @@ class ShopInfo extends Model
     public function Shop(): BelongsTo
     {
         return $this->belongsTo(Shop::class);
+    }
+    protected static function booted()
+    {
+        static::created(function ($shopinfo) {
+            $user = Auth::user();
+            if ($user) {
+                $shopinfo->shop_id = $user->shop_id;
+                $shopinfo->save();
+            }
+        });
     }
 }
