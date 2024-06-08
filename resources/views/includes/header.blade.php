@@ -12,37 +12,38 @@
             <div class="search-category">
                 <p> All category</p><img width="24px" height="24px"
                                          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACzSURBVHgB7Y+xDkExFIb/cwd3MfRRvILHEItVDBhY1XpFrkXYOgkbb+AVPIrNIFqnJuGW9s7nS5o2+U//rwUEQQiijVHF9jD8N1esd72yNCqUZ6GgecuPZB+rxWY/C80sOSOCueeNU7LAOjfm7QpndZXEl1vOyPkZjEI9hB/w91v8wjMfFSjTk35n/llugfZ00L3UElRJstfv4sqjBF8SfymyPFrwLuFyxJYn4yV+QRCEJJ4dZFRfSSCAagAAAABJRU5ErkJggg=="
-                                         alt="expand"></div>
-            <button class="search-button" type="submit">Search</button>
+                                         alt="expand">
+            </div>
+            <button class="search-button">Search</button>
         </form>
         <div class="icons mt-3">
-            <div class="desktop-icons"><img width="20px" height="19px"
-                                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAE8SURBVHgBvZNPToNAFMbfm9Y2Ji44AkfgCPQEujXGWJbEuKSJK2DVpInRjWFJG2NcegTxBhyhR2BnRJjPGVdqhj+txN/ywfzmwfseUwvL5MEd0yhkCQdMFhFnADaLy7N10xluenCTPIUSMjKfElHgn8a9hav7xzkzpdRGLWfB1Xn2uyyMtzBfUBejUWgqC/PbcKkTODsIqaBurB2EnFMnnPUXcm2c4HfA2PQWBr6aHmSjVMUpXvjmLDbmULNKVHygJw6XQQWE/hV1/HXhf9HYYZSm1uHbVHUGCyRtXRPgogLy96Mqjzyv6BSqDXFYiGMC5uozbWonV/v9WlN5d+172x/CZZLaB5jcguiE9kCt6fqDyliLWcvGmLyouk1/Y1txORNK9jyATKMam6Y6hw4NBlxBA6OE5hXaBz2cT0/HciFVJBOhAAAAAElFTkSuQmCC"
-                                            alt="icon">
+            <div class="desktop-icons">
+                <img width="20px" height="19px"
+                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAE8SURBVHgBvZNPToNAFMbfm9Y2Ji44AkfgCPQEujXGWJbEuKSJK2DVpInRjWFJG2NcegTxBhyhR2BnRJjPGVdqhj+txN/ywfzmwfseUwvL5MEd0yhkCQdMFhFnADaLy7N10xluenCTPIUSMjKfElHgn8a9hav7xzkzpdRGLWfB1Xn2uyyMtzBfUBejUWgqC/PbcKkTODsIqaBurB2EnFMnnPUXcm2c4HfA2PQWBr6aHmSjVMUpXvjmLDbmULNKVHygJw6XQQWE/hV1/HXhf9HYYZSm1uHbVHUGCyRtXRPgogLy96Mqjzyv6BSqDXFYiGMC5uozbWonV/v9WlN5d+172x/CZZLaB5jcguiE9kCt6fqDyliLWcvGmLyouk1/Y1txORNK9jyATKMam6Y6hw4NBlxBA6OE5hXaBz2cT0/HciFVJBOhAAAAAElFTkSuQmCC"
+                     alt="icon">
+                @php
+                    use Illuminate\Support\Str;
+                @endphp
 
-
-                @if(!Auth::check())
-                    <p class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        User
-                    </p>
-                    <ul class="dropdown-menu" style="--bs-dropdown-min-width: 5rem;">
-                        <li><a class="dropdown-item" href="{{ url('login') }}">Đăng nhập</a></li>
-                        <li><a class="dropdown-item" href="{{ url('register') }}">Đăng ký</a></li>
-
+                @auth
+                    <p class="nav-link dropdown-toggle"
+                       data-bs-toggle="dropdown">{{ Str::title(Auth::user()->name) }}</p>
+                    <ul class="dropdown-menu user-menu">
+                        <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Xem hồ sơ</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('logout') }}">Thoát</a></li>
                     </ul>
-                @else
-                    <p class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        {{ Auth::user()->name }}
-                    </p>
-                    <ul class="dropdown-menu" style="--bs-dropdown-min-width: 5rem;">
-                        <li><a class="dropdown-item" href="{{ route('profile') }}">Profile</a></li>
-                        <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+                @endauth
 
+                @guest
+                    <p class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Tài khoản</p>
+                    <ul class="dropdown-menu user-menu">
+                        <li><a class="dropdown-item" href="{{ route('login') }}">Đăng nhập</a></li>
+                        <li><a class="dropdown-item" href="{{ route('register') }}">Đăng ký</a></li>
                     </ul>
-
-                @endif
+                @endguest
             </div>
             <div class="desktop-icons"><img width="20px" height="19px"
                                             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACmSURBVHgB7ZOxDcIwEEXvLhkgI4SNaCkYADEAonMqFFFAQygpEDAWHoGSgvijUCAIEQTll3mVdbKe/GxZ8+I4jIAdVBLphtdInZlgRZBVpCixtmohPBITMnF9cFMbzCcjLy1YbE9pjHB+nTWc8Crt+dyry+IAIdInf09uSqzzZ/Lv66An038KW+hpQoVcoGX29soBIZtNx046YEzZU8iSPcg3eydE7rDFSy8sJIitAAAAAElFTkSuQmCC"
@@ -64,7 +65,7 @@
             </div>
         </div>
     </div>
-    <nav class="navbar navbar-expand-lg border-top border-bottom">
+    <nav class="navbar navbar-expand-lg border-top">
         <div class="container">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -143,42 +144,4 @@
     </nav>
 </header>
 {{--update--}}
-<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
-     aria-labelledby="offcanvasWithBothOptionsLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">All Category</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item d-flex justify-content-between align-items-start">
-            <div class="ms-2 me-auto">
-                <div class="fw-bold">Subheading</div>
-                Content for list item
-            </div>
-            <span class="badge text-bg-primary rounded-pill">14</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-start">
-            <div class="ms-2 me-auto">
-                <div class="fw-bold">Subheading</div>
-                Content for list item
-            </div>
-            <span class="badge text-bg-primary rounded-pill">14</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-start">
-            <div class="ms-2 me-auto">
-                <div class="fw-bold">Subheading</div>
-                Content for list item
-            </div>
-            <span class="badge text-bg-primary rounded-pill">14</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-start">
-            <div class="ms-2 me-auto">
-                <div class="fw-bold">Subheading</div>
-                Content for list item
-            </div>
-            <span class="badge text-bg-primary rounded-pill">14</span>
-        </li>
 
-
-    </ul>
-</div>

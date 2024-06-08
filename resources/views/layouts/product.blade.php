@@ -541,9 +541,9 @@
                                         Show {{ $itemsPerPage }}
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="showDropdown">
-                                        <li><a class="dropdown-item" href="#" data-value="9">Show 9</a></li>
-                                        <li><a class="dropdown-item" href="#" data-value="12">Show 12</a></li>
-                                        <li><a class="dropdown-item" href="#" data-value="15">Show 15</a></li>
+                                        <li><a class="dropdown-item phanTrang" href="#" data-value="9">Show 9</a></li>
+                                        <li><a class="dropdown-item phanTrang" href="#" data-value="12">Show 12</a></li>
+                                        <li><a class="dropdown-item phanTrang" href="#" data-value="15">Show 15</a></li>
                                     </ul>
                                 </div>
                                 <nav aria-label="Page navigation example pb-4">

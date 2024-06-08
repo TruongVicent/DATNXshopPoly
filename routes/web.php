@@ -1,16 +1,16 @@
 <?php
 
 use App\Http\Controllers\Auth\Logout;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Client\Body;
 use App\Http\Controllers\Client\GoogleController;
 use App\Http\Controllers\Client\Home;
-use App\Http\Controllers\Client\Profile;
 use App\Http\Controllers\Gmail\OrderController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +25,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('/')->group(function () {
     Route::get('/', [HomeController::class, 'home']);
-
     Route::get('/search', [ProductController::class, 'search'])->name('search');
     Route::get('/product', [ProductController::class, 'index',]);
     Route::get('/products/category/{category}', [ProductController::class, 'showByCategory'])->name('products.category');
@@ -34,10 +33,6 @@ Route::prefix('/')->group(function () {
     Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
     Route::post('/update-cart', [CartController::class, 'updateCart'])->name('cart.update');
     Route::delete('/cart/remove/{product_id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
-
-
-
-
 
 
 });
@@ -54,9 +49,11 @@ Route::prefix('/dashboard')->group(function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [Profile::class, 'index'])->name('profile');
-    Route::put('/profile/update', [Profile::class, 'update'])->name('profile.update');
-    Route::post('/profile/update-avatar', [Profile::class, 'updateAvatar'])->name('profile.update.avatar');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
+
 });
 
 /// login google
@@ -64,4 +61,3 @@ Route::get('/auth/google', [GoogleController::class, 'googlepage']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
 
 require __DIR__ . '/auth.php';
-

@@ -94,7 +94,7 @@ window.addEventListener('DOMContentLoaded', function () {
 });
 //Phân trang
 document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll('.dropdown-item').forEach(function (item) {
+    document.querySelectorAll('.phanTrang').forEach(function (item) {
         item.addEventListener('click', function (event) {
             event.preventDefault();
             var itemsPerPage = this.getAttribute('data-value');

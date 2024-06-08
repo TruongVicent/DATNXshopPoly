@@ -56,6 +56,10 @@ form {
     width: 100%;
 }
 
+//input[type="text" i] {
+//    padding-block: 1px;
+//    padding-inline: 2px;
+//}
 
 /* input:not([type="file" i], [type="image" i], [type="checkbox" i], [type="radio" i]) {}
 
@@ -173,9 +177,9 @@ img {
 }
 
 .header-wrapper .icons div p {
-    color: #8b96a5;
-    font-family: Inter;
-    font-size: 12px;
+    color: black;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 14px;
     margin-top: 7px;
 }
 
@@ -195,6 +199,7 @@ p {
 }
 
 .header-wrapper .icons div a {
+    color: black;
     align-items: center;
     display: flex;
     flex-direction: column;
@@ -319,6 +324,14 @@ a:-webkit-any-link {
     text-decoration: none;
     color: black;
 }
+
+.user-menu {
+    min-width: auto;
+
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 14px;
+}
+
 
 .offcanvas-backdrop.show {
     opacity: .0;

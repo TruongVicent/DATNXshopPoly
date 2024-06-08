@@ -11,8 +11,14 @@
 @import "detail";
 @import "cart";
 @import "checkout";
+@import "profile";
+
+body {
+    color: black;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
 @import "post";
 @import "listPost";
 @import "postDetail";
 @import "postByCategory";
-@import "profile";
+
