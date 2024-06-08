@@ -7,12 +7,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class User extends Authenticatable
+
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable;
-
+    use HasRoles;
+    use HasPanelShield;
     /**
      * The attributes that are mass assignable.
      *
@@ -32,6 +40,8 @@ class User extends Authenticatable
         'shop_id',
         'verification_code',
         'payment_method',
+        'created_by'
+
     ];
 
     /**
@@ -83,7 +93,6 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Shop::class);
     }
-
     public function post(): BelongsTo
     {
         return $this->BelongsTo(Category::class);
@@ -97,5 +106,28 @@ class User extends Authenticatable
     public function like(): HasMany
     {
         return $this->HasMany(Like::class);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        if ($panel->getId() === 'staff') {
+            return str_ends_with($this->email, '@gamil.com') && $this->hasVerifiedEmail();
+        }
+
+        return true;
+    }
+
+    /**
+     * model life cycle event listeners
+     */
+
+    public static function boot()
+    {
+        parent::boot(); // Call parent's boot method first
+
+        static::creating(function ($shop) {
+
+            $shop->created_by = Auth::id();
+        });
     }
 }

@@ -83,13 +83,8 @@ class UserResource extends Resource
                     ->label('Cửa hàng'),
 
                 TextInput::make('verification_code')
-                    ->required()
-                    ->label('Mã nhân viên')
-                    ->unique(ignoreRecord: true)
-                    ->regex('/^[a-zA-Z0-9]{6}$/')
-                    ->validationMessages([
-                        'unique' => 'Mã nhân viên đã được tạo.',
-                    ]),
+                    ->hidden()
+                    ->label('Mã xác thực tài khoản'),
 
                 Fieldset::make('Địa chỉ')
                     ->schema([
@@ -122,7 +117,12 @@ class UserResource extends Resource
                 Select::make('payment_method_id')
                     ->relationship(name: 'paymentMethod', titleAttribute: 'method_name')
                     ->required()
-                    ->label('Phương thức thanh toán')
+                    ->label('Phương thức thanh toán'),
+               Select::make('roles')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable()
 
             ]);
     }
@@ -168,6 +168,10 @@ class UserResource extends Resource
                 TextColumn::make('email')
                     ->icon('heroicon-m-envelope')
                     ->label('Email'),
+                TextColumn::make('roles.name')
+                    ->badge()
+                    ->label('Vai trò')
+                    ->separator(','),
                 TextColumn::make('phone')
                     ->label('SĐT')
                     ->searchable(),
