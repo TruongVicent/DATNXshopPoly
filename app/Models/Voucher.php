@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
 class Voucher extends Model
 {
@@ -33,5 +34,15 @@ class Voucher extends Model
     public function VoucherType(): BelongsTo
     {
         return $this->belongsTo(VoucherType::class);
+    }
+    protected static function booted()
+    {
+        static::created(function ($voucher) {
+            $user = Auth::user();
+            if ($user) {
+                $voucher->shop_id = $user->shop_id;
+                $voucher->save();
+            }
+        });
     }
 }

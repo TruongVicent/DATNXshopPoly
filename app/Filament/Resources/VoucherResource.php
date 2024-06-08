@@ -79,13 +79,6 @@ class VoucherResource extends Resource
                             ->required()
                             ->columnSpan(1),
 
-                        Select::make('shop_id')
-                            ->relationship(name: 'Shop', titleAttribute: 'name', modifyQueryUsing: fn(Builder $query) => $query->where('status', true),)
-                            ->searchable()
-                            ->required()
-                            ->label('Mã nhà bán')
-                            ->columnSpan(1),
-
                         Select::make('voucher_type_id')
                             ->relationship(name: 'VoucherType', titleAttribute: 'name', modifyQueryUsing: fn(Builder $query) => $query->where('status', true),)
                             ->searchable()
