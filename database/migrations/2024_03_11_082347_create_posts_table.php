@@ -5,6 +5,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\User;
 use App\Models\CategoryPost;
+use App\Models\Shop;
+
 return new class extends Migration
 {
     /**
@@ -14,6 +16,7 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Shop::class)->nullable()->comment('Danh mục thuộc shop');
             $table->foreignIdFor(CategoryPost::class)->comment('Mã danh mục bài viết');
             $table->string('title')->nullable(false)->comment('Tiêu đề bài viết');
             $table->string('slug')->nullable(false)->comment('Đường dẫn bài viết');
