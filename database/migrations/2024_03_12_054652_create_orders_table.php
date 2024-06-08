@@ -9,9 +9,11 @@ use App\Models\Product;
 use App\Models\Voucher;
 use App\Models\OrderStatus;
 use App\Models\User;
+use App\Models\Shop;
 use App\Models\PaymentMethod;
 use App\Models\OrderItem;
 use App\Models\OrderDetail;
+use App\Models\UserAddress;
 
 return new class extends Migration
 {
@@ -22,7 +24,10 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id()->comment('Mã đơn hàng');
-            $table->foreignIdFor(ShippingAddress::class)->comment('Mã địa chỉ người dùng');
+            $table->foreignIdFor(Shop::class)->nullable()->comment('Đơn hàng thuộc shop');
+            $table->foreignIdFor(ShippingAddress::class)->nullable()->comment('Mã địa chỉ người dùng Mới');
+            $table->foreignIdFor(UserAddress::class)->nullable()->comment('Mã địa chỉ người dùng Cũ');
+            $table->string('address')->nullable()->nullable(false)->comment('Địa chỉ chính thưc');
             $table->timestamp('delivery_date')->nullable(false)->comment('Ngày vận chuyển');
             $table->integer('total_price')->nullable()->comment('Tổng tiền');
             $table->string('shipping_unit')->nullable(false)->comment('Đơn vị vận chuyển');

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->double('discount')->nullable(false)->comment('Giảm giá');
             $table->date('start_date')->nullable(false)->comment('Ngày bắt đầu');
             $table->date('expiration')->nullable(false)->comment('Ngày hết hạn');
-            $table->foreignIdFor(Shop::class)->comment('Mã nhà bán');
+            $table->foreignIdFor(Shop::class)->nullable()->comment('Mã nhà bán');
             $table->foreignIdFor(VoucherType::class)->comment('Mã loại voucher');
             $table->timestamps();
         });
