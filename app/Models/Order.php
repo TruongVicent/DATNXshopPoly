@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 
 class Order extends Model
 {
@@ -13,7 +14,7 @@ class Order extends Model
     protected $table = 'orders';
 
     protected $fillable = [
-        'shipping_address_id',
+        'user_address_id',
         'delivery_date',
         'total_price',
         'shipping_unit',
@@ -23,13 +24,18 @@ class Order extends Model
         'payment_method_id',
         'code',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'shop_id'
     ];
     public function ShippingAddress(): BelongsTo
     {
         return $this->BelongsTo(ShippingAddress::class);
     }
 
+    public function UserAddress(): BelongsTo
+    {
+        return $this->BelongsTo(UserAddress::class);
+    }
     public function User(): BelongsTo
     {
         return $this->BelongsTo(User::class);
@@ -49,5 +55,15 @@ class Order extends Model
     public function OrderDetail(): BelongsTo
     {
         return $this->BelongsTo(OrderDetail::class);
+    }
+    protected static function booted()
+    {
+        static::created(function ($order) {
+            $user = Auth::user();
+            if ($user) {
+                $order->shop_id = $user->shop_id;
+                $order->save();
+            }
+        });
     }
 }

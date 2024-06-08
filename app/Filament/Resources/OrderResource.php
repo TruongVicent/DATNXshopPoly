@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Enums\OrderStatus;
 use App\Filament\Resources\OrderResource\Pages;
+use App\Models\UserAddress;
+use Filament\Forms\Components\MorphToSelect;
 //use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -39,64 +41,86 @@ class OrderResource extends Resource
     protected static ?string $navigationGroup = 'Đơn hàng';
 
     protected static ?string $label = 'Đơn hàng';
+
     public static function form(Form $form): Form
     {
         return $form
-        ->schema([
-            Forms\Components\Wizard::make([
-                Forms\Components\Wizard\Step::make('Order')
-                    ->label('Đơn hàng')
-                    ->schema([
-                        Forms\Components\TextInput::make('code')
-                            ->default('OR-' . random_int(100000, 999999))
-                            ->disabled()
-                            ->dehydrated()
-                            ->required()
-                            ->maxLength(32)
-                            ->label('Mã đơn hàng')
-                            ->unique(Order::class, 'code', ignoreRecord: true),
-                        Select::make('shipping_address_id')
-                            ->required()
-                            ->relationship(name: 'ShippingAddress', titleAttribute: 'name')
-                            ->label('Địa chỉ người dùng'),
-                        TextInput::make('shipping_unit')
-                            ->required()
-                            ->label('Đơn vị vận chuyển'),
+            ->schema([
+                Forms\Components\Wizard::make([
+                    Forms\Components\Wizard\Step::make('Order')
+                        ->label('Đơn hàng')
+                        ->schema([
+                            Forms\Components\TextInput::make('code')
+                                ->default('OR-' . random_int(100000, 999999))
+                                ->disabled()
+                                ->dehydrated()
+                                ->required()
+                                ->maxLength(32)
+                                ->label('Mã đơn hàng')
+                                ->unique(Order::class, 'code', ignoreRecord: true),
 
-                        Select::make('user_id')
-                            ->required()
-                            ->relationship(name: 'User', titleAttribute: 'name')
-                            ->label('Người dùng'),
+                            Select::make('user_address_id')
+                                ->relationship(name: 'UserAddress', titleAttribute: 'address_specific')
+                                ->default(function () {
+                                    $address = UserAddress::where('id', true)->first();
+                                    return $address ? $address->id : null;
+                                })
+                                ->label('Địa chỉ đơn hàng')
+                                ->createOptionForm([
+                                    Forms\Components\Select::make('user_id')
+//                                        ->default(function () {
+//                                            return auth()->user()->name ?? '';
+//                                        })
+                                        ->relationship(name: 'user', titleAttribute: 'name')
+                                        ->required(),
+                                    Forms\Components\TextInput::make('name')
+                                        ->required(),
+                                    Forms\Components\TextInput::make('phone')
+                                        ->required(),
+                                    Forms\Components\TextInput::make('address_specific')
+                                        ->required()
+                                       ->label('Địa chỉ'),
+                                ]),
 
-                        Select::make('voucher_id')
-                            ->required()
-                            ->relationship(name: 'Voucher', titleAttribute: 'name')
-                            ->label('Mã giảm giá'),
 
-                        ToggleButtons::make('status')->columnSpanFull()
-                            ->required()
-                            ->inline()
-                            ->options(OrderStatus::class)
-                            ->label('Trạng thái đơn hàng'),
-                        Select::make('payment_method_id')
-                            ->required()
-                            ->relationship(name: 'PaymentMethod', titleAttribute: 'method_name')
-                            ->label('Phương thức thanh toán'),
-                        TextInput::make('total_price')
-                            ->numeric()
-                            ->hidden()
-                            ->mask(RawJs::make('$money($input)'))
-                            ->stripCharacters(',')
-                            ->label('Tổng tiền'),
-                    ])->columns(2),
-                Forms\Components\Wizard\Step::make('Product items')
-                    ->label('Chi tiết')
-                    ->schema([
-                        static::getItemsRepeater(),
-                    ])
-            ])  ->columnSpan(['lg' => fn (?Order $record) => $record === null ? 3 : 2]),
+                            TextInput::make('shipping_unit')
+                                ->required()
+                                ->label('Đơn vị vận chuyển'),
 
-        ]);
+                            Select::make('user_id')
+                                ->required()
+                                ->relationship(name: 'User', titleAttribute: 'name')
+                                ->label('Người dùng'),
+
+                            Select::make('voucher_id')
+                                ->required()
+                                ->relationship(name: 'Voucher', titleAttribute: 'name')
+                                ->label('Mã giảm giá'),
+
+                            ToggleButtons::make('status')->columnSpanFull()
+                                ->required()
+                                ->inline()
+                                ->options(OrderStatus::class)
+                                ->label('Trạng thái đơn hàng'),
+                            Select::make('payment_method_id')
+                                ->required()
+                                ->relationship(name: 'PaymentMethod', titleAttribute: 'method_name')
+                                ->label('Phương thức thanh toán'),
+                            TextInput::make('total_price')
+                                ->numeric()
+                                ->hidden()
+                                ->mask(RawJs::make('$money($input)'))
+                                ->stripCharacters(',')
+                                ->label('Tổng tiền'),
+                        ])->columns(2),
+                    Forms\Components\Wizard\Step::make('Product items')
+                        ->label('Chi tiết')
+                        ->schema([
+                            static::getItemsRepeater(),
+                        ])
+                ])->columnSpan(['lg' => fn(?Order $record) => $record === null ? 3 : 2]),
+
+            ]);
 
     }
 
@@ -203,7 +227,7 @@ class OrderResource extends Resource
                     ->options(Product::query()->pluck('name', 'id'))
                     ->required()
                     ->reactive()
-                    ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('product_price', Product::find($state)?->regular_price ?? 0))
+                    ->afterStateUpdated(fn($state, Forms\Set $set) => $set('product_price', Product::find($state)?->regular_price ?? 0))
                     ->distinct()
                     ->disableOptionsWhenSelectedInSiblingRepeaterItems()
                     ->columnSpan([
@@ -251,13 +275,13 @@ class OrderResource extends Resource
 
                         $product = Product::find($itemData['product_id']);
 
-                        if (! $product) {
+                        if (!$product) {
                             return null;
                         }
 
                         return ProductResource::getUrl('edit', ['record' => $product]);
                     }, shouldOpenInNewTab: true)
-                    ->hidden(fn (array $arguments, Repeater $component): bool => blank($component->getRawItemState($arguments['item'])['product_id'])),
+                    ->hidden(fn(array $arguments, Repeater $component): bool => blank($component->getRawItemState($arguments['item'])['product_id'])),
             ])
             ->orderColumn('sort')
             ->defaultItems(1)
