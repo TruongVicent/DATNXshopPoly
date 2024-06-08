@@ -49,6 +49,10 @@ class CategoryResource extends Resource
                     ->required(),
                 TextInput::make('category_slug')
                     ->label('Slug Danh mục')
+                    ->unique()
+                    ->validationMessages([
+                        'unique' => 'Slug này đã được thêm rồi',
+                    ])
                     ->required(),
                 Select::make('shop_id')
                     ->relationship(name: 'shop', titleAttribute: 'name')
