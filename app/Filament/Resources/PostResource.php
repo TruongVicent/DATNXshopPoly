@@ -60,11 +60,6 @@ class PostResource extends Resource
                 TagsInput::make('meta_keyword')
                     ->label('Từ khóa SEO')
                     ->required(),
-                Select::make('user_id')
-                    ->relationship(name: 'User', titleAttribute: 'name')
-                    ->options(User::all()->pluck('name', 'id'))
-                    ->searchable()
-                    ->label('Người viết'),
                 TagsInput::make('tags')
                     ->label('Nhãn bài viết')
                     ->required(),
