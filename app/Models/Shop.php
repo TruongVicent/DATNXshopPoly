@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
+use Illuminate\Support\Facades\Auth;
 class Shop extends Model
 {
     protected $table = 'shops';
@@ -15,6 +15,7 @@ class Shop extends Model
 
     protected $fillable = [
         'name',
+        'user_id',
         'avatar',
         'email',
         'phone',
@@ -38,6 +39,26 @@ class Shop extends Model
     public function shopInfo(): HasMany
     {
         return $this->HasMany(ShopInfo::class);
+    }
+    public static function boot()
+    {
+        parent::boot(); // Call parent's boot method first
+
+        static::creating(function ($shop) {
+
+            $shop->user_id = Auth::id();
+        });
+    }
+    protected static function booted()
+    {
+        static::created(function ($shop) {
+            // Find the user and update their shop_id
+            $user = User::find($shop->user_id);
+            if ($user) {
+                $user->shop_id = $shop->id;
+                $user->save();
+            }
+        });
     }
 
 }
