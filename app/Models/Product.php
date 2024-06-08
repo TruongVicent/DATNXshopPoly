@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 
 class Product extends Model
 {
@@ -15,7 +16,6 @@ class Product extends Model
         'supplier_id',
         'category_id',
         'shop_id',
-        'brand_id',
         'name',
         'slug',
         'regular_price',
@@ -60,6 +60,24 @@ class Product extends Model
     {
         return $this->HasMany(Like::class);
     }
+
+    protected static function booted()
+    {
+        static::created(function ($product) {
+            $user = Auth::user();
+            if ($user) {
+                $product->shop_id = $user->shop_id;
+                $product->save();
+            }
+        });
+        static::created(function ($product) {
+            if ($product->shop_id) {
+                $product->supplier->shop_id = $product->shop_id;
+                $product->supplier->save();
+            }
+        });
+    }
+
 
     public function productMedia(): HasMany
     {

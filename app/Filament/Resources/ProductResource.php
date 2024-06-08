@@ -43,6 +43,7 @@ class ProductResource extends Resource
                     ->label('Nhà bán'),
                 Select::make('supplier_id')
                     ->required()
+                    ->searchable()
                     ->relationship(name: 'Supplier', titleAttribute: 'name')
                     ->label('Nhà cung cấp'),
                 Select::make('category_id')
