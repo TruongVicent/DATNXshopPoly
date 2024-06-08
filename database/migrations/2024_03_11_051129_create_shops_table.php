@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\User;
 
 return new class extends Migration
 {
@@ -13,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('shops', function (Blueprint $table) {
             $table->id()->comment('Mã cửa hàng');
+            $table->foreignIdFor(User::class)->nullable()->comment('Người sở hữu cửa hàng');
             $table->string('name')->nullable(false)->comment('Tên cửa hàng');
             $table->string('avatar')->nullable(false)->comment('Avatar cửa hàng');
             $table->string('email')->nullable(false)->comment('Email cửa hàng');

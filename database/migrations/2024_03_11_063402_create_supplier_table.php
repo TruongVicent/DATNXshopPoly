@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Shop;
+
 
 return new class extends Migration
 {
@@ -14,6 +16,7 @@ return new class extends Migration
         Schema::create('supplier', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable(false)->comment('Tên NCC');
+            $table->foreignIdFor(Shop::class)->nullable()->comment('Các shop đã cung cấp');
             $table->string('email')->nullable(false)->comment('Email NCC');
             $table->string('phone')->nullable(false)->comment('SĐT NCC');
             $table->string('address')->nullable(false)->comment('Địa chỉ NCC');

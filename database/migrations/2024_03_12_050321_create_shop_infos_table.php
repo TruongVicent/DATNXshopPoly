@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('shop_infos', function (Blueprint $table) {
             $table->id()->comment('Mã thông tin shop');
-            $table->foreignIdFor(Shop::class)->comment('Mã nhà bán');
+            $table->foreignIdFor(Shop::class)->nullable()->comment('Mã nhà bán');
             $table->string('name_bank')->nullable()->comment('Tên ngân hàng');
             $table->string('user_name_bank')->nullable()->comment('Tên tài khoản');
             $table->string('number_bank')->nullable()->comment('Số tài khoản ngân hàng');
