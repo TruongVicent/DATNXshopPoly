@@ -35,6 +35,7 @@ Route::prefix('/')->group(function () {
     Route::get('/post-detail/{id}', [PostController::class, 'detail'])->name('detailPost');
     Route::get('/category-post/{id}', [CategoryPostController::class, 'postByCategory'])->name('postByCategory');
 });
+Route::post('/orders/{orderId}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 //Dashboard
 Route::prefix('/dashboard')->group(function () {
     Route::get('/', function () {
