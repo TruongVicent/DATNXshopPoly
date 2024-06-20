@@ -35,6 +35,7 @@ return new class extends Migration
             $table->foreignIdFor(Voucher::class)->comment('Mã mã giảm giá');
             $table->string('status')->comment('Mã trạng thái đơn hàng');
             $table->foreignIdFor(PaymentMethod::class)->comment('Mã phương thức thanh toán');
+            $table->string('cancel_reason')->nullable()->comment('Lý do hủy đơn hàng');
             $table->timestamps();
         });
     }
