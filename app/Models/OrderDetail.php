@@ -15,19 +15,20 @@ class OrderDetail extends Model
     protected $fillable = [
         'order_id',
         'shop_id',
+        'product_image',
+        'product_price',
+        'product_id',
+        'product_quantity'
     ];
-    public function Order(): BelongsTo
+    public function order()
     {
-        return $this->BelongsTo(Order::class);
+        return $this->belongsTo(Order::class);
     }
     public function Shop(): BelongsTo
     {
         return $this->BelongsTo(Shop::class);
     }
-    public function items(): HasMany
-    {
-        return $this->hasMany(OrderItem::class, 'order_detail_id');
-    }
+
     public function Product(): BelongsTo
     {
         return $this->BelongsTo(Product::class);
