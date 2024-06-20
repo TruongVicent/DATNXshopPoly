@@ -8,6 +8,7 @@ use App\Http\Controllers\Client\DetailHome;
 use App\Http\Controllers\Client\GoogleController;
 use App\Http\Controllers\Client\Home;
 use App\Http\Controllers\Client\Profile;
+use App\Http\Controllers\Gmail\OrderController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,7 @@ Route::prefix('/')->group(function () {
     Route::get('/post-detail/{id}', [PostController::class, 'detail'])->name('detailPost');
     Route::get('/category-post/{id}', [CategoryPostController::class, 'postByCategory'])->name('postByCategory');
 });
+Route::post('/orders/{orderId}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 Route::post('/orders/{orderId}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 //Dashboard
 Route::prefix('/dashboard')->group(function () {
