@@ -4,17 +4,28 @@ namespace App\Filament\App\Resources;
 
 use App\Filament\App\Resources\OrderResource\Pages;
 use App\Filament\App\Resources\OrderResource\RelationManagers;
+use App\Filament\Resources\ProductResource;
+use App\Mail\OrderDeliveredMail;
+use App\Mail\OrderNewMail;
+use App\Mail\OrderOnHoldMail;
+use App\Mail\OrderPaidMail;
+use App\Mail\OrderProcessingMail;
+use App\Mail\OrderShippedMail;
 use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\UserAddress;
 use Filament\Forms;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
-
+use Filament\Tables\Columns\IconColumn;
 use App\Enums\OrderStatus;
+use App\Enums\PaymentStatus;
 use App\Models\Product;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -28,15 +39,26 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Actions\Action;
+use Illuminate\Support\Facades\Mail;
+use Filament\Infolists\Components\IconEntry;
+use Illuminate\Support\Carbon;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\ImageEntry;
+use mysql_xdevapi\Schema;
+
+
 class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
+    protected static ?string $recordTitleAttribute = 'number';
+    protected static ?int $navigationSort = 1;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
     protected static ?string $navigationGroup = 'Đơn hàng';
 
     protected static ?string $label = 'Đơn hàng';
+
 
     public static function form(Form $form): Form
     {
@@ -55,35 +77,122 @@ class OrderResource extends Resource
                                 ->label('Mã đơn hàng')
                                 ->unique(Order::class, 'code', ignoreRecord: true),
 
+                            Select::make('user_address_id')
+                                ->relationship(name: 'UserAddress', titleAttribute: 'address_specific')
+                                ->disabled()
+//                                ->default(function () {
+//                                    $address = UserAddress::where('id', true)->first();
+//                                    return $address ? $address->id : null;
+//                                })
+                                ->label('Địa chỉ đơn hàng')
+                                ->createOptionForm([
+                                    Forms\Components\Select::make('user_id')
+                                        ->relationship(name: 'user', titleAttribute: 'name')
+                                        ->required(),
+                                    Forms\Components\TextInput::make('name')
+                                        ->required(),
+                                    Forms\Components\TextInput::make('phone')
+                                        ->required(),
+                                    Forms\Components\TextInput::make('address_specific')
+                                        ->required()
+                                        ->label('Địa chỉ'),
+                                ]),
+
+
                             TextInput::make('shipping_unit')
                                 ->required()
+                                ->disabled()
                                 ->label('Đơn vị vận chuyển'),
 
                             Select::make('user_id')
                                 ->required()
+                                ->disabled()
                                 ->relationship(name: 'User', titleAttribute: 'name')
                                 ->label('Người dùng'),
 
                             Select::make('voucher_id')
                                 ->required()
+                                ->disabled()
                                 ->relationship(name: 'Voucher', titleAttribute: 'name')
                                 ->label('Mã giảm giá'),
 
-                            ToggleButtons::make('status')->columnSpanFull()
-                                ->required()
-                                ->inline()
-                                ->options(OrderStatus::class)
-                                ->label('Trạng thái đơn hàng'),
+                            Forms\Components\Section::make('Trạng thái')
+                                ->description('Gồm có các trạng thái và thanh toán của đơn hàng')
+                                ->schema([
+                                    ToggleButtons::make('status')
+                                        ->columnSpanFull()
+                                        ->required()
+                                        ->inline()
+                                        ->options(OrderStatus::class)
+                                        ->reactive()
+                                        ->label('Trạng thái đơn hàng')
+                                        ->afterStateUpdated(function ($state, callable $set, callable $get, $record) {
+                                            if ($state === OrderStatus::Cancelled->value) {
+                                                $set('cancel_reason', '');
+                                            }
+
+                                            if ($state === OrderStatus::New->value) {
+                                                // Gửi email khi đơn hàng mới được tạo
+                                                Mail::to($record->user->email)->send(new OrderNewMail($record));
+                                            }
+
+                                            if ($state === OrderStatus::Processing->value) {
+                                                // Gửi email khi đơn hàng đang được xử lý
+                                                Mail::to($record->user->email)->send(new OrderProcessingMail($record));
+                                            }
+
+                                            if ($state === OrderStatus::Shipped->value) {
+                                                // Gửi email khi đơn hàng đã được giao
+                                                Mail::to($record->user->email)->send(new OrderShippedMail($record));
+                                            }
+
+                                            if ($state === OrderStatus::Delivered->value) {
+                                                // Gửi email khi đơn hàng đã được giao thành công
+                                                Mail::to($record->user->email)->send(new OrderDeliveredMail($record));
+                                            }
+                                            $record->status = $state;
+                                            $record->save();
+                                        }),
+                                    ToggleButtons::make('is_paid')
+                                        ->columnSpanFull()
+                                        ->required()
+                                        ->default(false)
+                                        ->inline()
+                                        ->options(PaymentStatus::class)
+                                        ->reactive()
+                                        ->label('Trạng thái thanh toán')
+                                        ->afterStateUpdated(function ($state, callable $set, callable $get, $record) {
+                                            if ($state === PaymentStatus::Paid->value) {
+                                                $record->is_paid = true;
+                                                $record->on_hold = false;
+                                                Mail::to($record->user->email)->send(new OrderPaidMail($record));
+                                            } else {
+                                                $record->is_paid = false;
+                                                $record->on_hold = true;
+                                                Mail::to($record->user->email)->send(new OrderOnHoldMail($record));
+                                            }
+                                            $record->save();
+                                        }),
+                                    Textarea::make('cancel_reason')
+                                        ->label('Lý do hủy đơn hàng')
+                                        ->visible(fn($get) => $get('status') === OrderStatus::Cancelled->value)
+                                        ->required(fn($get) => $get('status') === OrderStatus::Cancelled->value),
+                                ])->columns('1'),
+
                             Select::make('payment_method_id')
                                 ->required()
+                                ->disabled()
                                 ->relationship(name: 'PaymentMethod', titleAttribute: 'method_name')
                                 ->label('Phương thức thanh toán'),
+
                             TextInput::make('total_price')
                                 ->numeric()
-                                ->hidden()
+                                ->disabled()
+//                                ->hidden()
                                 ->mask(RawJs::make('$money($input)'))
                                 ->stripCharacters(',')
                                 ->label('Tổng tiền'),
+
                         ])->columns(2),
                     Forms\Components\Wizard\Step::make('Product items')
                         ->label('Chi tiết')
@@ -91,8 +200,20 @@ class OrderResource extends Resource
                             static::getItemsRepeater(),
                         ])
                 ])->columnSpan(['lg' => fn(?Order $record) => $record === null ? 3 : 2]),
+                Forms\Components\Section::make('Ngày tạo đơn')
+                    ->schema([
+                        Forms\Components\Placeholder::make('created_at')
+                            ->label('Thời gian tạo đơn')
+                            ->content(fn(Order $record): ?string => $record->created_at?->format('Y-m-d H:i:s')),
 
-            ]);
+                        Forms\Components\Placeholder::make('updated_at')
+                            ->label('Thời gian cập nhật')
+                            ->content(fn(Order $record): ?string => $record->updated_at?->diffForHumans()),
+                    ])
+                    ->columnSpan(['lg' => 1])
+                    ->hidden(fn(?Order $record) => $record === null),
+            ])->columns(3);
+
 
     }
 
@@ -100,23 +221,48 @@ class OrderResource extends Resource
     {
         return $infolist
             ->schema([
-                TextEntry::make('code')
-                    ->badge()
-                    ->label('Mã đơn hàng'),
-                TextEntry::make('ShippingAddress.name')
-                    ->label('Địa chỉ người dùng'),
-                TextEntry::make('total_price')
-                    ->label('Tổng tiền'),
-                TextEntry::make('shipping_unit')
-                    ->label('Đơn vị vận chuyển'),
-                TextEntry::make('User.name')
-                    ->label('Người dùng'),
-                TextEntry::make('Voucher.name')
-                    ->label('Mã giảm giá'),
-                TextEntry::make('status')
-                    ->label('Trạng thái đơn hàng'),
-                TextEntry::make('PaymentMethod.method_name')
-                    ->label('Trạng thái đơn hàng'),
+                Section::make('Thông tin đơn hàng')
+                    ->schema([
+                        TextEntry::make('code')
+                            ->badge()
+                            ->label('Mã đơn hàng'),
+                        TextEntry::make('address')
+                            ->label('Địa chỉ người dùng'),
+                        TextEntry::make('shipping_unit')
+                            ->label('Đơn vị vận chuyển'),
+                        TextEntry::make('User.name')
+                            ->label('Người dùng'),
+                        TextEntry::make('Voucher.name')
+                            ->label('Mã giảm giá'),
+                        IconEntry::make('is_paid')
+                            ->boolean()
+                            ->trueIcon('heroicon-o-check-badge')
+                            ->falseIcon('heroicon-o-x-mark')
+                            ->label('Trạng thái thanh toán'),
+                        TextEntry::make('status')
+                            ->label('Trạng thái đơn hàng'),
+                        TextEntry::make('PaymentMethod.method_name')
+                            ->label('Phương thức thanh toán'),
+                        TextEntry::make('day_paid')
+                            ->dateTime('d-m-Y H:i:s')
+                            ->label('Ngày giờ thanh toán đơn hàng'),
+                        TextEntry::make('created_at')
+                            ->dateTime('d-m-Y H:i:s')
+                            ->label('Ngày giờ đặt hàng')
+                    ])->columns(4),
+                Section::make('Sản phẩm trong giỏ hàng')
+                    ->schema(function (Model $record) {
+                        $OrderDetails = [];
+                        $record->loadMissing('OrderDetail.product');
+                        foreach ($record->OrderDetail as $OrderDetail) {
+                            $OrderDetails[] = TextEntry::make($OrderDetail->product->name);
+                            $OrderDetails[] = TextEntry::make($OrderDetail->product_quantity);
+                            // Định dạng giá sử dụng number_format
+                            $formattedPrice = number_format($OrderDetail->product_price, 0, ',') . 'VND';
+                            $OrderDetails[] = TextEntry::make($formattedPrice);
+                        }
+                        return $OrderDetails;
+                    })->columns(3)
             ]);
     }
 
@@ -124,9 +270,18 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('ShippingAddress.street')
+                TextColumn::make('code')
+                    ->label('Mã đơn hàng'),
+                TextColumn::make('shipping_unit')
+                    ->label('Đơn vị vận chuyển'),
+                TextColumn::make('User.name')
+                    ->label('Người dùng'),
+                TextColumn::make('Voucher.name')
+                    ->label('Giảm giá'),
+                TextColumn::make('status')
                     ->searchable()
-                    ->label('Địa chỉ người dùng'),
+                    ->badge()
+                    ->label('Trạng thái đơn hàng'),
                 TextColumn::make('total_price')
                     ->searchable()
                     ->money('VND')
@@ -136,24 +291,19 @@ class OrderResource extends Resource
                         Tables\Columns\Summarizers\Sum::make()
                             ->money('VND'),
                     ]),
-                TextColumn::make('shipping_unit')
-                    ->label('Đơn vị vận chuyển'),
-                TextColumn::make('User.name')
-                    ->label('Người dùng'),
-                TextColumn::make('Voucher.name')
-                    ->label('Giảm giá'),
-                TextColumn::make('status')
-                    ->searchable()
-                    ->icon(fn(string $state): string => match ($state) {
-                        'Mới' => 'heroicon-m-sparkles',
-                        'Đang xử lý' => 'heroicon-m-arrow-path',
-                        'Đã vận chuyển' => 'heroicon-m-truck',
-                        'Đã giao hàng' => 'heroicon-m-check-badge',
-                        'Đã hủy bỏ' => 'heroicon-m-x-circle',
-                    })
-                    ->badge()
-                    ->label('Trạng thái đơn hàng'),
-
+                TextColumn::make('created_at')
+                    ->label('Đã đặt')
+                    ->date('d-m-Y'),
+                IconColumn::make('on_hold')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-badge')
+                    ->falseIcon('heroicon-o-clock')
+                    ->label('Tạm giữ'),
+                IconColumn::make('is_paid')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-badge')
+                    ->falseIcon('heroicon-o-clock')
+                    ->label('Đã thanh toán'),
 
             ])
             ->filters([
@@ -166,7 +316,38 @@ class OrderResource extends Resource
                 SelectFilter::make('payment_method_id')
                     ->relationship(name: 'PaymentMethod', titleAttribute: 'method_name')
                     ->label('Phương thức thanh toán'),
-            ], layout: FiltersLayout::AboveContent)
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')
+                            ->label('Tạo từ ngày')
+                            ->placeholder(fn($state): string => 'Dec 18, ' . now()->subYear()->format('Y')),
+                        Forms\Components\DatePicker::make('created_until')
+                            ->label('Cho đến ngày')
+                            ->placeholder(fn($state): string => now()->format('M d, Y')),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'] ?? null,
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'] ?? null,
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['created_from'] ?? null) {
+                            $indicators['created_from'] = 'Order from ' . Carbon::parse($data['created_from'])->toFormattedDateString();
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators['created_until'] = 'Order until ' . Carbon::parse($data['created_until'])->toFormattedDateString();
+                        }
+
+                        return $indicators;
+                    }),
+            ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -189,12 +370,13 @@ class OrderResource extends Resource
 
     public static function getItemsRepeater(): Repeater
     {
-        return Repeater::make('items')
+        return Repeater::make('OrderDetail')
             ->label('Thêm sản phẩm')
             ->relationship()
             ->schema([
                 Forms\Components\Select::make('product_id')
                     ->label('Sản phẩm')
+                    ->disabled()
                     ->required()
                     ->options(Product::query()->pluck('name', 'id'))
                     ->required()
@@ -211,6 +393,7 @@ class OrderResource extends Resource
                     ->label('Số lượng')
                     ->required()
                     ->numeric()
+                    ->disabled()
                     ->default(1)
                     ->columnSpan([
                         'md' => 2,
@@ -220,6 +403,7 @@ class OrderResource extends Resource
                 Forms\Components\TextInput::make('product_price')
                     ->label('Tổng tiền')
                     ->required()
+                    ->disabled()
                     ->disabled()
                     ->mask(RawJs::make('$money($input)'))
                     ->stripCharacters(',')
@@ -238,23 +422,23 @@ class OrderResource extends Resource
                     ->label('Ảnh sản phẩm'),
 
             ])
-//            ->extraItemActions([
-//                Action::make('openProduct')
-//                    ->tooltip('Open product')
-//                    ->icon('heroicon-m-arrow-top-right-on-square')
-//                    ->url(function (array $arguments, Repeater $component): ?string {
-//                        $itemData = $component->getRawItemState($arguments['item']);
-//
-//                        $product = Product::find($itemData['product_id']);
-//
-//                        if (!$product) {
-//                            return null;
-//                        }
-//
-//                        return ProductResource::getUrl('edit', ['record' => $product]);
-//                    }, shouldOpenInNewTab: true)
-//                    ->hidden(fn(array $arguments, Repeater $component): bool => blank($component->getRawItemState($arguments['item'])['product_id'])),
-//            ])
+            ->extraItemActions([
+                Action::make('openProduct')
+                    ->tooltip('Open product')
+                    ->icon('heroicon-m-arrow-top-right-on-square')
+                    ->url(function (array $arguments, Repeater $component): ?string {
+                        $itemData = $component->getRawItemState($arguments['item']);
+
+                        $product = Product::find($itemData['product_id']);
+
+                        if (!$product) {
+                            return null;
+                        }
+
+                        return ProductResource::getUrl('edit', ['record' => $product]);
+                    }, shouldOpenInNewTab: true)
+                    ->hidden(fn(array $arguments, Repeater $component): bool => blank($component->getRawItemState($arguments['item'])['product_id'])),
+            ])
             ->orderColumn('sort')
             ->defaultItems(1)
             ->hiddenLabel()
@@ -263,6 +447,7 @@ class OrderResource extends Resource
             ])
             ->required();
     }
+
 
     public static function getPages(): array
     {
