@@ -114,10 +114,6 @@ class UserResource extends Resource
                             ->live(),
                     ])
                     ->columns(3),
-                Select::make('payment_method_id')
-                    ->relationship(name: 'paymentMethod', titleAttribute: 'method_name')
-                    ->required()
-                    ->label('Phương thức thanh toán'),
                Select::make('roles')
                     ->relationship('roles', 'name')
                     ->multiple()

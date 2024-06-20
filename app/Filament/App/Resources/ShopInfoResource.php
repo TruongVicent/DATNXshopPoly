@@ -26,6 +26,9 @@ class ShopInfoResource extends Resource
     protected static ?string $model = ShopInfo::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?string $navigationGroup = 'Cửa hàng';
+
     protected static ?string $label = 'Thông tin cửa hàng';
 
     public static function form(Form $form): Form
