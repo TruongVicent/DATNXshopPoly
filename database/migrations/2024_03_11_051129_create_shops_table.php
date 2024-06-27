@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->nullable(false)->comment('Tên cửa hàng');
             $table->string('avatar')->nullable(false)->comment('Avatar cửa hàng');
             $table->string('email')->nullable(false)->comment('Email cửa hàng');
-            $table->integer('phone')->nullable(false)->comment('Số điện thoại cửa hàng');
+            $table->string('phone')->nullable(false)->comment('Số điện thoại cửa hàng');
             $table->string('address')->nullable(false)->comment('Địa chỉ cửa hàng');
             $table->text('description')->nullable(true)->comment('Mô tả cửa hàng');
             $table->integer('rating')->nullable(true)->comment('Đánh giá cửa hàng');

@@ -1,11 +1,13 @@
 <?php
 
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Shop;
+use App\Models\Supplier;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Category;
-use App\Models\Supplier;
-use App\Models\Shop;
+
 return new class extends Migration
 {
     /**
@@ -18,6 +20,7 @@ return new class extends Migration
             $table->foreignIdFor(Supplier::class)->comment('Mã NCC');
             $table->foreignIdFor(Category::class)->comment('Mã danh mục');
             $table->foreignIdFor(Shop::class)->comment('Mã nhà bán');
+            $table->foreignIdFor(Brand::class)->comment('Mã thương hiệu');
             $table->string('name')->nullable(false)->comment('Tên sản phẩm');
             $table->string('slug')->nullable()->comment('Đường dẫn sản phẩm ');
             $table->string('regular_price')->nullable(false)->comment('Giá');
