@@ -5,7 +5,6 @@ use App\Http\Controllers\Client\Body;
 use App\Http\Controllers\Client\CartHome;
 use App\Http\Controllers\Client\Checkout;
 use App\Http\Controllers\Client\DetailHome;
-use App\Http\Controllers\Client\GoogleController;
 use App\Http\Controllers\Client\Home;
 use App\Http\Controllers\Client\Profile;
 use App\Http\Controllers\PostController;
@@ -27,6 +26,7 @@ Route::prefix('/')->group(function () {
     Route::get('/', [Home::class, 'index']);
     Route::get('/', [Body::class, 'index']);
     Route::get('/product', [ProductController::class, 'index',])->name('products.index');
+    Route::get('/products/filter', 'ProductController@filter')->name('products.filter');
     Route::get('/detail', [DetailHome::class, 'index']);
     Route::get('/checkout', [Checkout::class, 'index']);
     Route::get('/cart', [CartHome::class, 'index']);
@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
 });
 
 /// login google
-Route::get('/auth/google', [GoogleController::class, 'googlepage']);
-Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
+//Route::get('/auth/google', [GoogleController::class, 'googlepage']);
+//Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
 
-require __DIR__ . '/auth.php';
+//require __DIR__ . '/auth.php';

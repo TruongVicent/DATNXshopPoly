@@ -1,4 +1,4 @@
-q
+
 .breadcrumb {
     font-size: 16px;
     margin: 10px 0;
@@ -21,88 +21,85 @@ q
 .sidebar {
     border-top: 1px solid #ccc;
     background-color: #f8f9fa;
-}
 
-.accordion-item {
-    border: none;
-}
+    .accordion-item {
+        border: none;
 
-.accordion-button {
-    background-color: #f8f9fa;
-    font-weight: bold;
-}
+        .accordion-button {
+            background-color: #f8f9fa;
+            font-weight: bold;
 
-.accordion-body {
-    font-weight: initial;
-}
+        }
 
-.seeAllButton {
-    color: #007bff; /* Màu xanh */
-    background-color: transparent;
-    border: none;
-}
+        .accordion-body {
+            font-weight: initial;
 
+            .seeAllButton {
+                color: #007bff;
+                background-color: transparent;
+                border: none;
+            }
 
-.accordion-body {
-    padding: 10px;
-}
+            .accordion-body button.seeAllButton:hover {
+                text-decoration: underline;
+            }
 
-.accordion-body a {
-    display: block;
-    padding: 5px 0;
-    color: #333;
-    text-decoration: none;
-}
+            .list-group {
+                list-style-type: none;
 
-.accordion-body a:hover {
-    color: #007bff;
-}
+            }
 
-.accordion-body button.seeAllButton:hover {
-    text-decoration: underline;
-}
+            .list-group a {
+                display: block;
+                padding: 5px 0;
+                color: #333;
+                text-decoration: none;
+            }
+        }
 
-.accordion-body {
-    padding: 10px;
-    background-color: #f8f9fa;
-    .star {
-        color: orange;
+        .accordion-body {
+            padding: 10px;
+            background-color: #f8f9fa;
+
+            .star {
+                color: orange;
+            }
+
+            .star-gray {
+                color: #8B96A5;
+            }
+
+            .range-inputs {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
+
+            .small-input {
+                width: 120px;
+            }
+
+            .apply-button {
+                display: block;
+                width: 100%;
+                padding: 10px;
+                margin-top: 20px;
+                background-color: #ffffff;
+                color: #007bff;
+                border: 1px solid #a7acb1;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+        }
+
+        .accordion-button:focus,
+        .accordion-button:active {
+            background-color: #f8f9fa;
+            border: none;
+        }
     }
-    .star-gray {
-        color: #8B96A5;
-    }
-    .range-inputs {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
-    }
-
-    .small-input {
-        width: 120px;
-    }
-    .apply-button {
-        display: block;
-        width: 100%;
-        padding: 10px;
-        margin-top: 20px;
-        background-color: #ffffff;
-        color: #007bff;
-        border: 1px solid #a7acb1;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-
-    }
-
-
 }
-
-.accordion-button:focus,
-.accordion-button:active {
-    background-color: #f8f9fa;
-    border: none;
-}
-
 .content-top {
     background-color: white;
 }
@@ -132,29 +129,38 @@ q
     cursor: pointer;
 }
 
+#Clearallfilter {
+    display: none;
+}
 .filters-applied {
     padding-top: 20px;
     display: flex;
     gap: 5px;
     align-items: center;
-}
 
-.filter-btn {
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 5px 10px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
+    .filter-btn {
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
 
-.filter-btn i {
-    margin-left: 5px;
-}
+    .filter-btn i {
+        margin-left: 5px;
+    }
 
-.filter-btn:hover {
-    border-color: #007bff;
+    .filter-btn:hover {
+        border-color: #007bff;
+    }
+
+    .seeAllButton {
+        color: #007bff;
+        background-color: transparent;
+        border: none;
+    }
 }
 
 #productColumn {
@@ -178,7 +184,7 @@ q
             margin: 10px;
             display: flex;
             width: calc(100% - 20px);
-            height: 250px;
+            height: 280px;
             justify-content: center;
             align-items: center;
         }
@@ -191,7 +197,7 @@ q
 
 
         .product-img:hover img {
-            transform: scale(1.2);
+            transform: scale(1.1);
         }
 
         .product-info {
@@ -209,12 +215,18 @@ q
             font-size: 20px;
             display: flex;
             font-weight: bolder;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+
+            @include truncate-text(20, 20);
 
             .product-price-discounted {
                 text-decoration: line-through;
                 color: #999;
                 font-size: 16px;
-                margin: 5px;
+                margin-left: 5px;
             }
         }
 
@@ -348,6 +360,21 @@ q
         }
     }
 
+    .no-product-message {
+        height: 500px;
+        text-align: center;
+        color: #dc3545; /* Màu sắc cho thông báo */
+        font-size: 18px; /* Kích thước chữ */
+        margin-top: 10px; /* Khoảng cách từ trên xuống */
+    }
+
+    .no-product-message p {
+        padding-top: 250px; /* Khoảng cách giữa icon và văn bản */
+    }
+
+    .no-product-message i {
+        margin-right: 5px; /* Khoảng cách giữa icon và văn bản */
+    }
     .pagination-menu {
         padding-top: 50px;
         display: flex;

@@ -1,19 +1,18 @@
 @extends('index')
 @section('main')
-
     <div class="main">
         <div class="container pb-5">
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                        <li class="breadcrumb-item"><a href="">Trang chủ</a></li>
                         <li class="breadcrumb-item"><a href="#">Cửa hàng</a></li>
                     </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav -->
+                </div>
+            </nav>
             <div class="container-fluid">
                 <div class="row">
-                    <!-- Sidebar -->
+
                     <div class="col-md-3 sidebar">
                         <div class="accordion accordion-flush" id="accordionFlush">
                             <div class="accordion-item">
@@ -24,19 +23,27 @@
                                         Danh mục sản phẩm
                                     </button>
                                 </h2>
-
                                 <div id="flush-collapseOne" class="accordion-collapse collapse"
                                      data-bs-parent="#accordionFlush1">
                                     <div class="accordion-body">
-                                        @foreach($Categories as $category)
-                                            <a href="">{{ $category->name }}</a>
-                                        @endforeach
-
-                                        <button class="seeAllButton" id="seeAllButtonCategories">See All</button>
-
+                                        <ul class="list-group">
+                                            @php
+                                                $displayedCategories = 0;
+                                            @endphp
+                                            @foreach($Categories as $category)
+                                                <li class="category-item" data-category="{{ $category->id }}"
+                                                    style="{{ $displayedCategories < 5 ? '' : 'display:none;' }}">
+                                                    <a href="#" class="category-link">{{ $category->name }}</a>
+                                                </li>
+                                                @php
+                                                    $displayedCategories++;
+                                                @endphp
+                                            @endforeach
+                                        </ul>
+                                        <button class="seeAllButton" id="seeAllButtonCategories">Xem Tất Cả</button>
+                                        <button class="seeAllButton" id="backToTopCategories">Quay lại</button>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
@@ -50,15 +57,49 @@
                                      data-bs-parent="#accordionFlush2">
                                     <div class="accordion-body">
                                         @foreach($Brands as $Brand)
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="samsungCheckbox">
-                                                <label class="form-check-label" for="samsungCheckbox">
+                                            <div class="form-check"
+                                                 style="{{ $loop->index < 5 ? '' : 'display:none;' }}">
+                                                <input class="form-check-input brand-checkbox" type="checkbox"
+                                                       value="{{ $Brand->id }}" id="brand{{ $Brand->id }}">
+                                                <label class="form-check-label" for="brand{{ $Brand->id }}">
                                                     {{ $Brand->name }}
                                                 </label>
                                             </div>
                                         @endforeach
-                                        <button class="seeAllButton" id="seeAllButtonBrands">See All</button>
+                                        <button class="seeAllButton" id="seeAllButtonBrands">Xem Tất Cả</button>
+                                        <button class="seeAllButton" id="backToTopBrands">Quay lại</button>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#flush-collapsePrice" aria-expanded="false"
+                                            aria-controls="flush-collapsePrice">
+                                        Giá
+                                    </button>
+                                </h2>
+                                <div id="flush-collapsePrice" class="accordion-collapse collapse"
+                                     data-bs-parent="#accordioncollapsePrice">
+                                    <div class="accordion-body">
+                                        <div class="range-slider">
+                                            <label for="customRange2"></label><input type="range" class="form-range"
+                                                                                     min="0" max="1000" value="0"
+                                                                                     step="1"
+                                                                                     id="customRange2">
+                                        </div>
+                                        <div class="range-inputs">
+                                            <label for="minRangeInput"></label><input type="number"
+                                                                                      class="form-control small-input"
+                                                                                      id="minRangeInput"
+                                                                                      placeholder="0">
+                                            <label for="maxRangeInput"></label><input type="number"
+                                                                                      class="form-control small-input"
+                                                                                      id="maxRangeInput"
+                                                                                      placeholder="1000">
+                                        </div>
+                                        <button id="applyButton" class="apply-button">Apply</button>
                                     </div>
                                 </div>
 
@@ -68,7 +109,7 @@
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#flush-collapseFeatures" aria-expanded="false"
                                             aria-controls="flush-collapseFeatures">
-                                        Đặc trưng
+                                        Đặt trưng
                                     </button>
                                 </h2>
                                 <div id="flush-collapseFeatures" class="accordion-collapse collapse"
@@ -85,33 +126,6 @@
                                         @endforeach
                                         <button class="seeAllButton" id="seeAllButtonFeatures">See All</button>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#flush-collapsePrice" aria-expanded="false"
-                                            aria-controls="flush-collapsePrice">
-                                        Giá
-                                    </button>
-                                </h2>
-                                <div id="flush-collapsePrice" class="accordion-collapse collapse"
-                                     data-bs-parent="#accordioncollapsePrice">
-                                    <div class="accordion-body">
-
-                                        <div class="range-slider">
-                                            <input type="range" class="form-range" min="0" max="5" value="0" step="1"
-                                                   id="customRange2">
-                                        </div>
-                                        <div class="range-inputs">
-                                            <input type="number" class="form-control small-input" id="minRangeInput"
-                                                   placeholder="0">
-                                            <input type="number" class="form-control small-input" id="maxRangeInput"
-                                                   placeholder="999999999 ">
-                                        </div>
-                                        <button id="applyButton" class="apply-button">Apply</button>
-                                    </div>
-
                                 </div>
                             </div>
                             <div class="accordion-item">
@@ -222,6 +236,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                     <div class="col-md-9 content">
                         <div class="content-top">
@@ -241,8 +256,8 @@
                                         </div>
                                         <div class="form-group me-3">
                                             <select class="form-select" id="featuredSelect">
-                                                <option>Đặc trưng</option>
-                                                <option>Không đăc trưng</option>
+                                                <option>Đặt trưng</option>
+                                                <option>Không đặt trưng</option>
                                             </select>
                                         </div>
                                         <div class="btn-group me-3 switchView">
@@ -257,16 +272,18 @@
                             </div>
                         </div>
                         <div class="filters-applied">
-                            <button class="filter-btn">Samsung <i class="bi bi-x"></i></button>
-                            <button class="filter-btn">Apple <i class="bi bi-x"></i></button>
-                            <button class="seeAllButton" id="Clearallfilter">Clear all filter</button>
+                            <button class="seeAllButton" id="Clearallfilter">Xóa tất cả bộ lọc</button>
                         </div>
                         <div class="product">
+
                             <div id="productGrid" class="product-grid">
                                 <div class="row">
                                     @foreach ($products as $product)
-                                        <div class="col-md-4 pb-4">
-                                            <div class="product-card">
+                                        <div class="col-md-4 pb-4 product-item"
+                                             data-category="{{ $product->category_id }}"
+                                             data-brand="{{ $product->brand_id }}"
+                                             data-price="{{ $product->price }}">
+                                            <div class="product-card h-100">
                                                 <div class="product-img">
                                                     <img src="{{ asset('storage/' . $product->main_image) }}"
                                                          alt="Product Image">
@@ -274,9 +291,10 @@
                                                 <div class="product-info">
                                                     <div class="product-price-item">
                                                         <div class="price-item">
-                                                            <div class="product-price">{{ $product->regular_price }}
+                                                            <div
+                                                                class="product-price">{{ $product->regular_price ? number_format($product->regular_price, 2) : 'Price not available' }}
                                                                 <div
-                                                                    class="product-price-discounted">{{ $product->sale_price }}</div>
+                                                                    class="product-price-discounted">{{ $product->sale_price ? number_format($product->sale_price, 2) : '' }}</div>
                                                             </div>
                                                             <div class="rating">
                                                                 <div class="star">
@@ -294,19 +312,22 @@
 
                                                     </div>
                                                     <p class="product-title">{{ $product->name }}</p>
-                                                    <p class="product-title">{{ $product->description }}</p>
-
+                                                    <p class="product-description">{{ $product->description }}</p>
                                                 </div>
                                             </div>
-
                                         </div>
+
                                     @endforeach
                                 </div>
                             </div>
 
                             <div id="productColumn" class="product-column">
                                 @foreach ($products as $product)
-                                    <div class="product-card mb-3">
+
+                                    <div class="product-card mb-3 product-item"
+                                         data-category="{{ $product->category_id }}"
+                                         data-brand="{{ $product->brand_id }}"
+                                         data-price="{{ $product->price }}">
                                         <div class="row">
                                             <div class="col-12 col-lg-3">
                                                 <div class="product-img"><a href="checkout.blade.php"><img
@@ -355,7 +376,12 @@
                                         </div>
                                     </div>
                                 @endforeach
-                                {{--                                    {{ $products->links() }}--}}
+
+                            </div>
+
+                            <div id="noProductMessage" class="no-product-message" style="display: none;">
+
+                                <p><i class="fas fa-exclamation-circle"></i>Không có sản phẩm nào</p>
                             </div>
                             <div class="pagination-menu">
                                 <div class="dropdown">
