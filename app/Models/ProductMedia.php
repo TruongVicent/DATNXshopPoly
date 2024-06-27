@@ -14,10 +14,17 @@ class ProductMedia extends Model
     protected $fillable = [
         'product_id',
         'media',
+        'name_media',
         'is_main',
     ];
-    public function Product(): BelongsTo
+
+    public function product(): BelongsTo
     {
         return $this->BelongsTo(Product::class);
+    }
+
+    public function productStock(): BelongsTo
+    {
+        return $this->BelongsTo(ProductStock::class);
     }
 }

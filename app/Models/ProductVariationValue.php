@@ -14,13 +14,16 @@ class ProductVariationValue extends Model
         'variation_value_name'
     ];
 
-    public function productStock(): HasMany
-    {
-        return $this->HasMany(ProductStock::class);
-    }
+
 
     public function productVariation(): BelongsTo
     {
         return $this->BelongsTo(ProductVariation::class);
     }
+
+    public function productAttribute(): HasMany
+    {
+        return $this->HasMany(ProductAttribute::class);
+    }
+
 }

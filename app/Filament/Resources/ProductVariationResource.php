@@ -20,7 +20,7 @@ class ProductVariationResource extends Resource
     protected static ?string $model = ProductVariation::class;
 
     protected static ?string $navigationGroup = 'Sản phẩm';
-    protected static ?string $label = 'Sản phẩm biến thể';
+    protected static ?string $label = 'Biến thể';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -28,13 +28,13 @@ class ProductVariationResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('variation_name')
-                    ->required()
-                    ->label('Tên biến thể'),
                 Select::make('product_id')
                     ->required()
                     ->label('Mã sản phẩm')
                     ->relationship(name: 'Product', titleAttribute: 'name'),
+                TextInput::make('variation_name')
+                    ->required()
+                    ->label('Tên biến thể'),
             ]);
     }
 
@@ -42,11 +42,11 @@ class ProductVariationResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('variation_name')
-                    ->label('Tên biến thể')
-                    ->searchable(),
                 TextColumn::make('Product.name')
                     ->label('Mã sản phẩm')
+                    ->searchable(),
+                TextColumn::make('variation_name')
+                    ->label('Tên biến thể')
                     ->searchable(),
             ])
             ->filters([

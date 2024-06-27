@@ -37,6 +37,10 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
+                Select::make('shop_id')
+                    ->required()
+                    ->relationship(name: 'Shop', titleAttribute: 'name')
+                    ->label('Nhà bán'),
                 Select::make('supplier_id')
                     ->required()
                     ->relationship(name: 'Supplier', titleAttribute: 'name')
@@ -45,10 +49,11 @@ class ProductResource extends Resource
                     ->required()
                     ->relationship(name: 'Category' ,titleAttribute: 'name')
                     ->label('Danh mục'),
-                Select::make('shop_id')
+                Select::make('brand_id')
                     ->required()
-                    ->relationship(name: 'Shop', titleAttribute: 'name')
-                    ->label('Nhà bán'),
+                    ->relationship(name: 'Brand', titleAttribute: 'name')
+                    ->label('Thương hiệu'),
+
                 TextInput::make('name')
                     ->required()
                     ->label('Tên sản phẩm'),
@@ -102,12 +107,14 @@ class ProductResource extends Resource
     {
         return $infolist
             ->schema([
-                TextEntry::make('Supplier.name')
-                    ->label('Nhà cung cấp'),
-                TextEntry::make('Category.name')
-                    ->label('Danh mục'),
                 TextEntry::make('Shop.name')
                     ->label('Nhà bán'),
+                TextEntry::make('Supplier.name')
+                    ->label('Nhà cung cấp'),
+                TextEntry::make('Brand.name')
+                    ->label('Thương hiệu'),
+                TextEntry::make('Category.name')
+                    ->label('Danh mục'),
                 TextEntry::make('name')
                     ->label('Tên sản phẩm'),
                 TextEntry::make('slug')
@@ -147,12 +154,13 @@ class ProductResource extends Resource
                 TextColumn::make('Category.name')
                     ->searchable()
                     ->label('Danh mục'),
+                TextColumn::make('Brand.name')
+                    ->searchable()
+                    ->label('Thương hiệu'),
                 TextColumn::make('regular_price')
                     ->label('Giá'),
                 TextColumn::make('sale_price')
                     ->label('Giá giảm'),
-                TextColumn::make('sku')
-                    ->label('Mã SKU'),
                 TextColumn::make('rating')
                     ->label('Đánh giá'),
                 TextColumn::make('view_count')
@@ -164,6 +172,9 @@ class ProductResource extends Resource
                 SelectFilter::make('supplier_id')
                     ->label('Nhà cung cấp')
                     ->relationship('Supplier', 'name'),
+                SelectFilter::make('Brand_id')
+                    ->label('Thương hiệu')
+                    ->relationship('Brand', 'name'),
                 SelectFilter::make('category_id')
                     ->label('Danh Mục')
                     ->relationship('Category', 'name'),
@@ -187,6 +198,7 @@ class ProductResource extends Resource
     {
         return [
             RelationManagers\ProductMediaRelationManager::class,
+            RelationManagers\ProductStockRelationManager::class,
         ];
     }
 

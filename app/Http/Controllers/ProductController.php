@@ -31,5 +31,30 @@ class ProductController extends Controller
             'productVariations' => $productVariations],
             compact('products', 'itemsPerPage'));
     }
+
+    public function filter(Request $request)
+    {
+        $categoryId = $request->input('category_id');
+        $brandId = $request->input('brand_id');
+
+        $query = Product::query();
+
+        if ($categoryId) {
+            $query->whereHas('category', function ($q) use ($categoryId) {
+                $q->where('id', $categoryId);
+            });
+        }
+
+        if ($brandId) {
+            $query->whereHas('brand', function ($q) use ($brandId) {
+                $q->where('id', $brandId);
+            });
+        }
+
+        $products = $query->paginate(9);
+
+        return view('layouts.product', compact('products', 'Categories', 'Brands'));
+    }
+
 }
 

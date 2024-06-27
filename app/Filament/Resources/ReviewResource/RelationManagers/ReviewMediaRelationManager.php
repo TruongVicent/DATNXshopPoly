@@ -15,7 +15,7 @@ use Filament\Tables\Table;
 class ReviewMediaRelationManager extends RelationManager
 {
     protected static string $relationship = 'reviewMedia';
-    protected static ?string $label = 'Hình ảnh đánh giá';
+    protected static ?string $title = 'Ảnh đánh giá';
 
     public function form(Form $form): Form
     {
@@ -48,6 +48,9 @@ class ReviewMediaRelationManager extends RelationManager
             ])
             ->filters([
                 //
+            ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

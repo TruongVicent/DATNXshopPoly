@@ -4,7 +4,7 @@ namespace App\Filament\Resources\ProductResource\RelationManagers;
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -18,7 +18,7 @@ class ProductMediaRelationManager extends RelationManager
 {
     protected static string $relationship = 'productMedia';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $label = 'Ảnh sản phẩm';
+    protected static ?string $title = 'Ảnh sản phẩm';
 
     public function form(Form $form): Form
     {
@@ -29,10 +29,9 @@ class ProductMediaRelationManager extends RelationManager
                     ->label('Ảnh')
                     ->image()
                     ->imageEditor(),
-                Select::make('product_id')->columnSpan('full')
+                TextInput::make('name_media')
                     ->required()
-                    ->label('Mã sản phẩm')
-                    ->relationship(name: 'Product', titleAttribute: 'name'),
+                    ->label('Tên ảnh'),
                 Radio::make('is_main')
                     ->required()
                     ->label('Chọn ảnh chính')
@@ -51,10 +50,10 @@ class ProductMediaRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('media')
             ->columns([
-                TextColumn::make('Product.name')
-                    ->label('Mã sản phẩm')
-                    ->searchable(),
+                TextColumn::make('name_media')
+                    ->label('Tên ảnh'),
                 ImageColumn::make('media')
+                    ->square()
                     ->label('Ảnh'),
                 IconColumn::make('is_main')
                     ->boolean()
@@ -68,6 +67,9 @@ class ProductMediaRelationManager extends RelationManager
                     ->label('Mã sản phẩm')
                     ->relationship('Product', 'name'),
             ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
@@ -78,5 +80,6 @@ class ProductMediaRelationManager extends RelationManager
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+
     }
 }

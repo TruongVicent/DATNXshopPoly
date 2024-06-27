@@ -102,6 +102,8 @@ class CategoryResource extends Resource
         return $table
             ->columns([
                 ImageColumn::make('image')
+                    ->width(100)
+                    ->height(100)
                     ->label('Ảnh đại diện'),
                 TextColumn::make('category.name')
                     ->label('Thuộc danh mục')

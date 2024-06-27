@@ -15,6 +15,7 @@ class Product extends Model
         'supplier_id',
         'category_id',
         'shop_id',
+        'brand_id',
         'name',
         'slug',
         'regular_price',
@@ -45,6 +46,11 @@ class Product extends Model
         return $this->BelongsTo(Category::class);
     }
 
+    public function Brand(): BelongsTo
+    {
+        return $this->BelongsTo(Category::class);
+    }
+
     public function review(): HasMany
     {
         return $this->HasMany(Review::class);
@@ -58,5 +64,15 @@ class Product extends Model
     public function productMedia(): HasMany
     {
         return $this->HasMany(ProductMedia::class);
+    }
+
+    public function productVariation(): HasMany
+    {
+        return $this->HasMany(ProductVariation::class);
+    }
+
+    public function productStock(): HasMany
+    {
+        return $this->HasMany(ProductStock::class);
     }
 }

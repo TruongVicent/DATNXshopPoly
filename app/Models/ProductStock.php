@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProductStock extends Model
 {
@@ -17,11 +18,22 @@ class ProductStock extends Model
         'retail_price',
         'wholesale_price',
         'qty_inventory',
-        'product_variation_value_id',
+        'product_id',
+        'media'
     ];
 
-    public function productVariationValue(): BelongsTo
+    public function productAttribute(): HasMany
     {
-        return $this->BelongsTo(ProductVariationValue::class);
+        return $this->HasMany(ProductAttribute::class);
+    }
+
+    public function Product(): BelongsTo
+    {
+        return $this->BelongsTo(Product::class);
+    }
+
+    public function productMedia(): BelongsTo
+    {
+        return $this->BelongsTo(ProductMedia::class);
     }
 }
