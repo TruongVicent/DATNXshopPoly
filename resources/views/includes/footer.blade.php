@@ -110,4 +110,32 @@
 
 <script src="{{ asset('assets/js/script.js') }}"></script>
 <script src="{{ asset('assets/js/slick.js') }}"></script>
+<!-- Plugins JS File -->
+<script src="{{ asset('Home/assets/js/jquery.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/jquery.hoverIntent.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/jquery.waypoints.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/superfish.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/owl.carousel.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/bootstrap-input-spinner.js') }}"></script>
+<script src="{{ asset('Home/assets/js/jquery.plugin.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/jquery.magnific-popup.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/jquery.countdown.min.js') }}"></script>
+<!-- Main JS File -->
+<script src="{{ asset('Home/assets/js/main.js') }}"></script>
+<script src="{{ asset('Home/assets/js/demos/demo-3.js') }}"></script>
+
+<!-- Dropzone JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.0/dropzone.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'></script>
+
+{{-- fancybox --}}
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+    Fancybox.bind('[data-fancybox]', {
+//
+    });
+</script>
+@yield('script')
+
 {{--update--}}

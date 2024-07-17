@@ -52,6 +52,11 @@
         font-size: 18px;
     }
 
+    .short-info {
+        .short-title {
+            min-width: 150px;
+        }
+    }
 }
 
 
@@ -88,4 +93,141 @@
             background-color: var(--bs-tertiary-bg);
         }
     }
+
+    //form bình luận
+    .rating-form {
+        color: var(--bs-dark-bg-subtle);
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        .label-custom {
+            cursor: pointer;
+
+            &.selected {
+                color: rgb(255, 193, 7);
+            }
+        }
+
+    }
+
+    .dropzone {
+        min-height: auto;
+        text-align: center;
+        cursor: pointer;
+        border: 1px dashed #009ef7;
+        //background-color: #f1faff;
+        border-radius: .475rem !important;
+
+        .dz-message {
+            margin: 0;
+            display: flex;
+            text-align: left;
+
+            .fs-3x {
+                font-size: calc(1.425rem + 2.1vw) !important;
+            }
+
+            @media (min-width: 1200px) {
+                .fs-3x {
+                    font-size: 2rem !important;
+                }
+            }
+        }
+
+        .dz-preview {
+            margin: .75rem;
+
+            .dz-remove {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 1.65rem;
+                width: 1.65rem;
+                font-size: 1rem;
+                text-indent: -9999px;
+                white-space: nowrap;
+                position: absolute;
+                z-index: 2;
+                background-size: 40%;
+                background-color: #fff !important;
+                box-shadow: 0 .1rem 1rem .25rem rgba(0, 0, 0, .05);
+                border-radius: 100%;
+                top: -.825rem;
+                right: -.825rem;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-color: transparent;
+                background-image: url("data:image/svg+xml,%3csvg xmlns= 'http://www.w3.org/2000/svg' viewBox= '0 0 16 16' fill= '%23A1A5B7' %3e%3cpath d= 'M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z' /%3e%3c/svg%3e");
+            }
+        }
+    }
+
+    // hiển thị bình luận của người dùng
+    .show-comment {
+
+        .avatar-comment {
+            width: 40px;
+            height: 40px;
+            min-height: 40px;
+            min-width: 40px;
+
+            img {
+                @include coverImage();
+            }
+        }
+
+        .info-comment {
+
+            .rating {
+                font-size: .8rem;
+                color: rgb(255, 193, 7);
+            }
+
+            .time {
+                font-size: .75rem;
+            }
+
+            .content {
+                .read-more {
+                    color: var(--bs-tertiary-color);
+                    cursor: pointer;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+
+                .hide-less {
+                    @extend .read-more;
+                    display: none;
+                }
+
+                #more {
+                    display: none;
+                }
+            }
+
+            .img-comment {
+                .box-img {
+                    width: 70px;
+                    height: 70px;
+                    margin-right: .8rem;
+                    margin-bottom: .8rem;
+
+                    img {
+                        @include coverImage();
+                    }
+                }
+            }
+
+
+        }
+    }
+
+    .text-muted {
+        display: none;
+    }
+
 }

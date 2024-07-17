@@ -160,8 +160,8 @@
             </div>
         </div>
 
-        <div class="container">
-            <div class="block-detail">
+        <div class="container p-0">
+            <div class="block-detail mb-3">
                 <div class="row">
                     <div class="col-12 col-md-8 col-lg-8">
                         <div class="bg-white border rounded-2 px-3">
@@ -169,31 +169,234 @@
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
                                             data-bs-target="#description-tab-pane" type="button" role="tab"
-                                            aria-controls="description-tab-pane" aria-selected="true">Description
+                                            aria-controls="description-tab-pane" aria-selected="true">Đánh giá
                                     </button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link " id="profile-tab" data-bs-toggle="tab"
                                             data-bs-target="#reviews-tab-pane" type="button" role="tab"
-                                            aria-controls="reviews-tab-pane" aria-selected="false">Reviews
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link " id="contact-tab" data-bs-toggle="tab"
-                                            data-bs-target="#shipping-tab-pane" type="button" role="tab"
-                                            aria-controls="shipping-tab-pane" aria-selected="false">Shipping
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link " id="contact-tab" data-bs-toggle="tab"
-                                            data-bs-target="#about-tab-pane" type="button" role="tab"
-                                            aria-controls="about-tab-pane" aria-selected="false">About seller
+                                            aria-controls="reviews-tab-pane" aria-selected="false">Mô tả chi tiết
                                     </button>
                                 </li>
                             </ul>
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="description-tab-pane" role="tabpanel"
                                      aria-labelledby="home-tab" tabindex="0">
+                                    <div class="py-3">
+                                        {{-- form bình luận --}}
+                                        <div class="mb-3">
+                                            <h5>VIẾT ĐÁNH GIÁ CỦA BẠN: </h5>
+                                            <form action="{{ route('uploadComment') }}" method="POST"
+                                                  enctype="multipart/form-data" id="commentForm">
+                                                @csrf
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="mb-3">
+                                                            <label for="">Đánh giá của bạn <span
+                                                                    class="text-danger">*</span></label>
+                                                            <div class="d-flex rating-form" id="rating-container">
+                                                                <input type="radio" name="rating" id="rating1"
+                                                                       value="1">
+                                                                <label
+                                                                    class="label-custom rating1 form-check-label mx-1"
+                                                                    for="rating1">
+                                                                    <i class="bi bi-star-fill"></i>
+                                                                </label>
+                                                                <input type="radio" name="rating" id="rating2"
+                                                                       value="2">
+                                                                <label
+                                                                    class="label-custom rating2 form-check-label mx-1"
+                                                                    for="rating2">
+                                                                    <i class="bi bi-star-fill"></i>
+                                                                </label>
+                                                                <input type="radio" name="rating" id="rating3"
+                                                                       value="3">
+                                                                <label
+                                                                    class="label-custom rating3 form-check-label mx-1"
+                                                                    for="rating3">
+                                                                    <i class="bi bi-star-fill"></i>
+                                                                </label>
+                                                                <input type="radio" name="rating" id="rating4"
+                                                                       value="4">
+                                                                <label
+                                                                    class="label-custom rating4 form-check-label mx-1"
+                                                                    for="rating4">
+                                                                    <i class="bi bi-star-fill"></i>
+                                                                </label>
+                                                                <input type="radio" name="rating" id="rating5"
+                                                                       value="5">
+                                                                <label
+                                                                    class="label-custom rating5 form-check-label mx-1"
+                                                                    for="rating5">
+                                                                    <i class="bi bi-star-fill"></i>
+                                                                </label>
+                                                            </div>
+                                                            @error('rating')
+                                                            <small class="text-danger">{{$message}}</small>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                    @if(!Auth::check())
+                                                        <div class="col-4">
+                                                            <div class="mb-3">
+                                                                <label for="user_name" class="form-label">Tên <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input type="text" name="user_name" id="user_name"
+                                                                       class="form-control"
+                                                                       value="{{old('user_name')}}">
+                                                                @error('user_name')
+                                                                <small class="text-danger">{{$message}}</small>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="mb-3">
+                                                                <label for="email" class="form-label">Email <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input type="text" name="email" id="email"
+                                                                       class="form-control" value="{{old('email')}}">
+                                                                @error('email')
+                                                                <small class="text-danger">{{$message}}</small>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="mb-3">
+                                                                <label for="password" class="form-label">Mật khẩu <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input type="password" name="password"
+                                                                       class="form-control" id="password">
+                                                                @error('password')
+                                                                <small class="text-danger">{{$message}}</small>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <input type="hidden" name="user_name"
+                                                               value="aaaaaaaaaaaaaaaaaaaaa">
+                                                        <input type="hidden" name="email" value="aaaaaaaa@gmail.com">
+                                                        <input type="hidden" name="password" value="111ooooo">
+                                                    @endif
+                                                    <div class="col-12">
+                                                        <div class="mb-3">
+                                                            <label for="content" class="form-label">Nội dung <span
+                                                                    class="text-danger">*</span></label>
+                                                            <textarea name="comment_content" class="form-control"
+                                                                      rows="3"
+                                                                      id="content">{{ old('comment_content') }}</textarea>
+                                                            @error('comment_content')
+                                                            <small class="text-danger">{{$message}}</small>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="mb-3">
+                                                            <label for="" class="form-label">Hình ảnh</label>
+                                                            <div class="dropzone" id="dropzone">
+                                                                <div class="dz-message needsclick">
+                                                                    <!--begin::Icon-->
+                                                                    <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
+                                                                    <!--end::Icon-->
+                                                                    <!--begin::Info-->
+                                                                    <div class="ms-3">
+                                                                        <h3 class="fs-6 fw-bolder mb-1">Thả tập tin vào
+                                                                            đây hoặc bấm vào để tải lên.</h3>
+                                                                        <span class="fw-medium text-primary opacity-75">Tải lên tối đa 5 tệp</span>
+                                                                    </div>
+                                                                    <!--end::Info-->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                    <div class="col-12">
+                                                        <button id="submit-btn" class="btn btn-primary" type="submit">
+                                                            Gửi đánh giá
+                                                        </button>
+
+                                                        <button id="loading-btn"
+                                                                class="btn btn-primary disabled d-none">
+                                                            <span class="spinner-border spinner-border-sm text-light"
+                                                                  role="status"> </span> Đang tải ảnh
+                                                        </button>
+
+                                                        <button id="upload-btn" class="btn btn-primary disabled d-none">
+                                                            <span class="spinner-border spinner-border-sm text-light"
+                                                                  role="status"> </span> Đang gửi yêu cầu
+                                                        </button>
+
+                                                    </div>
+
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <hr>
+                                        {{-- hiển thị bình luận của người dùng --}}
+                                        @if(count($listComment) > 0)
+                                            @foreach($listComment as $itemComment)
+                                                <div class="d-flex show-comment mb-3">
+                                                    <div class="avatar-comment me-2">
+                                                        <img class="rounded-circle"
+                                                             src="{{ $itemComment->user->avatar ?? 'https://t4.ftcdn.net/jpg/00/64/67/27/240_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}"
+                                                             alt="">
+                                                    </div>
+                                                    <div class="info-comment">
+                                                        <div class="fw-medium">{{ $itemComment->user->name }}</div>
+                                                        <div class="rating">
+                                                            @if($itemComment->rating == 1)
+                                                                <i class="bi bi-star-fill"></i>
+                                                            @elseif($itemComment->rating == 2)
+                                                                <i class="bi bi-star-fill"></i>
+                                                                <i class="bi bi-star-fill"></i>
+                                                            @elseif($itemComment->rating == 3)
+                                                                <i class="bi bi-star-fill"></i>
+                                                                <i class="bi bi-star-fill"></i>
+                                                                <i class="bi bi-star-fill"></i>
+                                                            @elseif($itemComment->rating == 4)
+                                                                <i class="bi bi-star-fill"></i>
+                                                                <i class="bi bi-star-fill"></i>
+                                                                <i class="bi bi-star-fill"></i>
+                                                                <i class="bi bi-star-fill"></i>
+                                                            @else
+                                                                <i class="bi bi-star-fill"></i>
+                                                                <i class="bi bi-star-fill"></i>
+                                                                <i class="bi bi-star-fill"></i>
+                                                                <i class="bi bi-star-fill"></i>
+                                                                <i class="bi bi-star-fill"></i>
+                                                            @endif
+
+                                                        </div>
+                                                        <div class="time text-body-tertiary">
+                                                            {{ \Carbon\Carbon::parse($itemComment->created_at)->format('d/m/Y H:i')  }}
+                                                        </div>
+                                                        <div class="content mb-3">
+                                                            <div class="excerpt">
+                                                                {{ $itemComment->content }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="img-comment d-flex flex-wrap">
+                                                            @foreach($itemComment->reviewMedia as $image)
+                                                                <div class="box-img">
+                                                                    <a data-fancybox="gallery"
+                                                                       data-src="{{ $image->review_media }}">
+                                                                        <img src="{{ $image->review_media }}" alt=""/>
+                                                                    </a>
+                                                                </div>
+                                                            @endforeach
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                            {{ $listComment->links() }}
+                                        @else
+                                            <h5>CHƯA CÓ ĐÁNH GIÁ</h5>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="reviews-tab-pane" role="tabpanel"
+                                     aria-labelledby="profile-tab" tabindex="0">
                                     <div class="py-3">
                                         <p>{{ $product->description}}</p>
                                         <div class="table-responsive w-50 my-4">
@@ -216,24 +419,6 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="reviews-tab-pane" role="tabpanel"
-                                     aria-labelledby="profile-tab" tabindex="0">
-                                    <div class="py-3">
-                                        tab review
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="shipping-tab-pane" role="tabpanel"
-                                     aria-labelledby="contact-tab" tabindex="0">
-                                    <div class="py-3">
-                                        tab shipping
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="about-tab-pane" role="tabpanel"
-                                     aria-labelledby="about-tab" tabindex="0">
-                                    <div class="py-3">
-                                        tab about
                                     </div>
                                 </div>
                             </div>
@@ -260,7 +445,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -431,3 +615,140 @@
 
 @endsection
 {{--update--}}
+
+@section('script')
+    <script>
+        var link = window.location.href; // Lấy URL hiện tại
+        //----- drop zone
+        Dropzone.options.dropzone = {
+            url: link,
+            maxFiles: 5,
+            maxFilesize: 12,
+            renameFile: function (file) {
+                var dt = new Date();
+                var time = dt.getTime();
+                var fileName = file.name;
+                var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
+                return time + '' + fileName;
+            },
+            acceptedFiles: '.jpeg,.jpg,.png,.gif',
+            addRemoveLinks: true,
+            timeout: 5000,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            init: function () {
+                this.on("addedfile", function () {
+                    document.getElementById('submit-btn').classList.add('d-none');
+                    document.getElementById('loading-btn').classList.remove('d-none');
+                });
+                this.on("success", function (file, response) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/uploadImage',
+                        data: {
+                            filename: file.upload.filename,
+                            filepath: file.dataURL,
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            document.getElementById('submit-btn').classList.remove('d-none');
+                            document.getElementById('loading-btn').classList.add('d-none');
+                        },
+                        error: function (data) {
+                            console.log('Error:', data);
+                            document.getElementById('submit-btn').classList.remove('d-none');
+                            document.getElementById('loading-btn').classList.add('d-none');
+                        }
+                    });
+                });
+                this.on("error", function (file, response) {
+                    return false;
+                });
+                this.on("maxfilesexceeded", function (file) {
+                    this.removeFile(file); // Remove the exceeded file
+                    alert("Bạn chỉ được tải lên tối đa 5 hình ảnh."); // Show an alert or customize as needed
+                });
+                this.on("removedfile", function (file) {
+                    var serverFilename = file.upload.filename; // Retrieve the uploaded file ID or name
+                    $.ajax({
+                        type: 'POST',
+                        url: '/deleteImage',
+                        data: {
+                            filename: serverFilename,
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            if (file.previewElement != null) {
+                                if (file.previewElement.parentNode != null) {
+                                    file.previewElement.parentNode.removeChild(file.previewElement);
+                                }
+                            }
+                            document.getElementById('submit-btn').classList.remove('d-none');
+                            document.getElementById('loading-btn').classList.add('d-none');
+                        },
+                        error: function (data) {
+                            console.log('Error:', data);
+                        }
+                    });
+                });
+            }
+        };
+        // Xử lý khi submit form
+        document.getElementById('commentForm').addEventListener('submit', function () {
+            document.getElementById('submit-btn').classList.add('d-none');
+            document.getElementById('loading-btn').classList.add('d-none');
+            document.getElementById('upload-btn').classList.remove('d-none');
+        });
+
+        //----- Đánh giá
+        (function () {
+            function StarRating(containerId, valueContainerId) {
+                const container = document.getElementById(containerId);
+                const radios = container.querySelectorAll('input[type="radio"]');
+                const labels = container.querySelectorAll('.label-custom');
+                const ratingValue = document.getElementById(valueContainerId);
+                let selectedRating = 0;
+
+                radios.forEach(radio => {
+                    radio.addEventListener('change', function () {
+                        selectedRating = this.value;
+                        // ratingValue.textContent = `Đánh giá của bạn: ${selectedRating} sao`;
+                        updateStars(selectedRating);
+                    });
+                });
+
+                labels.forEach((label, index) => {
+                    label.addEventListener('mouseover', function () {
+                        updateStars(index + 1);
+                    });
+
+                    label.addEventListener('mouseout', function () {
+                        updateStars(selectedRating);
+                    });
+                });
+
+                function updateStars(rating) {
+                    labels.forEach((label, index) => {
+                        if (index < rating) {
+                            label.classList.add('selected');
+                        } else {
+                            label.classList.remove('selected');
+                        }
+                    });
+                }
+            }
+
+            // Khởi tạo hệ thống đánh giá sao
+            document.addEventListener('DOMContentLoaded', function () {
+                new StarRating('rating-container', 'rating-value');
+            });
+        })();
+    </script>
+@endsection

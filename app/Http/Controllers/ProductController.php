@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\ProductMedia;
 use App\Models\ProductVariation;
 use App\Models\ProductVariationValue;
+use App\Models\Review;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -96,14 +97,28 @@ class ProductController extends Controller
             $favoriteProduct->formattedRegularPrice = number_format($favoriteProduct->regular_price, 0, ',', '.');
             $favoriteProduct->formattedSalePrice = number_format($favoriteProduct->sale_price, 0, ',', '.');
         }
-        return view('layouts.product', [
-            'products' => $products,
-            'Brands' => $Brands,
-            'Categories' => $Categories,
-            'productVariations' => $productVariations],
-            compact('products', 'itemsPerPage'));
+
+        Session::forget('uploaded_files');
+        //show comment
+        $listComment = Review::with('user')
+            ->with('reviewMedia')
+            ->where('product_id', $id)
+            ->paginate(5);
+
+        return view('layouts.detail', [
+            'product' => $product,
+            'productMedia' => $productMedia,
+            'productVariations' => $productVariations,
+            'formattedRegularPrice' => $formattedRegularPrice,
+            'formattedSalePrice' => $formattedSalePrice,
+            'favoriteProducts' => $favoriteProducts,
+            'listComment' => $listComment,
+        ]);
     }
 
+    public function showPost()
+    {
+    }
     public function filter(Request $request)
     {
         $categoryId = $request->input('category_id');
@@ -181,3 +196,4 @@ class ProductController extends Controller
         return redirect()->route('cart.view');
     }
 
+}

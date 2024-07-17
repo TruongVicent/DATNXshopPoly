@@ -23,5 +23,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/slick-master/slick/slick.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/slick-master/slick/slick-theme.css') }}" />
 
+    <!-- Dropzone CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.0/dropzone.min.css">
+    <!-- Fancybox css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"/>
 </head>
 {{--update--}}
