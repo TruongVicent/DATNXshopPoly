@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignIdFor(District::class)->nullable()->comment('Id địa chỉ');
             $table->foreignIdFor(Ward::class)->nullable()->comment('Id địa chỉ');
             $table->string('address_specific')->nullable()->comment('Địa chỉ cụ thể');
-            $table->string('is_default')->nullable()->comment('Địa chỉ mặc định');
+            $table->tinyInteger('is_default')->default(0)->comment('Địa chỉ mặc định');
             $table->foreignIdFor(User::class)->comment('Mã người dùng');
             $table->timestamps();
         });

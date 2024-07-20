@@ -19,6 +19,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Supplier::class)->comment('Mã NCC');
             $table->foreignIdFor(Category::class)->comment('Mã danh mục');
+            $table->foreignIdFor(Shop::class)->nullable()->comment('Mã nhà bán');
             $table->foreignIdFor(Shop::class)->comment('Mã nhà bán');
             $table->foreignIdFor(Brand::class)->comment('Mã thương hiệu');
             $table->string('name')->nullable(false)->comment('Tên sản phẩm');
