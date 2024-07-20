@@ -94,3 +94,37 @@
 .user-profile li i {
     color: black;
 }
+
+// profile address
+
+.modal-header h1 {
+    font-size: 1.5rem;
+}
+
+.modal-body {
+    padding: 1rem 1.5rem;
+}
+
+.form-control {
+    margin-bottom: 1rem;
+}
+
+.dropdown-menu {
+    //width: 100%;
+    padding: 0.5rem;
+}
+
+.address-select {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.address-select select {
+    flex: 1;
+}
+
+.address-list {
+    max-height: 350px;
+    overflow-y: auto;
+}

@@ -1,4 +1,3 @@
-
 <header>
     <div class="header-wrapper">
         <div class="logo"><img class="mobile-menu" src="." alt="menu"><a aria-current="page" class="active"
@@ -7,8 +6,7 @@
                                                                                                         src="{{ asset('image/logo-doanvth-pro 1.png') }}"
                                                                                                         alt="brand"></a>
         </div>
-        <form action="{{ route('search') }}" method="GET">
-            <input class="input" type="text" name="query" placeholder="Search">
+        <form><input class="input" type="text" placeholder="Search">
             <div class="search-category">
                 <p> All category</p><img width="24px" height="24px"
                                          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACzSURBVHgB7Y+xDkExFIb/cwd3MfRRvILHEItVDBhY1XpFrkXYOgkbb+AVPIrNIFqnJuGW9s7nS5o2+U//rwUEQQiijVHF9jD8N1esd72yNCqUZ6GgecuPZB+rxWY/C80sOSOCueeNU7LAOjfm7QpndZXEl1vOyPkZjEI9hB/w91v8wjMfFSjTk35n/llugfZ00L3UElRJstfv4sqjBF8SfymyPFrwLuFyxJYn4yV+QRCEJJ4dZFRfSSCAagAAAABJRU5ErkJggg=="
@@ -27,9 +25,9 @@
 
                 @auth
                     <p class="nav-link dropdown-toggle"
-                       data-bs-toggle="dropdown">{{ Str::title(Auth::user()->name) }}</p>
+                       data-bs-toggle="dropdown">{{ Str::title(Str::limit(Auth::user()->name, 10)) }}</p>
                     <ul class="dropdown-menu user-menu">
-                        <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Xem hồ sơ</a></li>
+                        <li><a class="dropdown-item" href="{{ url('profile/edit') }}">Xem hồ sơ</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -144,4 +142,3 @@
     </nav>
 </header>
 {{--update--}}
-
