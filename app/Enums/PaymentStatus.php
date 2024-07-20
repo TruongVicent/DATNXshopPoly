@@ -19,6 +19,7 @@ enum PaymentStatus: string implements HasLabel, HasIcon, HasColor
         };
     }
 
+
     public function getColor(): string|array|null
     {
         return match ($this) {
