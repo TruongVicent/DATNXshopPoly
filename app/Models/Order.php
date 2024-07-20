@@ -79,32 +79,10 @@ class Order extends Model
         return $this->hasMany(OrderDetail::class, 'order_id');
     }
 
-    public function calculateTotalPrice()
-    {
-        $totalPrice = 0;
-        if ($this->OrderDetail) {
-            foreach ($this->OrderDetail as $detail) {
-                $totalPrice += $detail->product->regular_price * $detail->product_quantity;
-            }
-            $this->total_price = $totalPrice;
-        }
-
-    }
 
 
     protected static function booted()
     {
-        static::created(function ($order) {
-            $user = Auth::user();
-            if ($user) {
-                $order->shop_id = $user->shop_id;
-                $order->save();
-            }
-        });
-
-        static::saving(function ($order) {
-            $order->calculateTotalPrice(); // Tính toán tổng tiền trước khi lưu
-        });
 
         static::saved(function ($order) {
             if ($order->status == OrderStatus::Cancelled) {
