@@ -19,6 +19,8 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Http\Middleware\RedirectloggeInApp;
 use Filament\Navigation\MenuItem;
+use App\Http\Middleware\RedirectRegistrationApp;
+
 
 class AppPanelProvider extends PanelProvider
 {
@@ -65,6 +67,7 @@ class AppPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 RedirectloggeInApp::class,
+                RedirectRegistrationApp::class, // chuyển hướng đăng ký chờ xét duyệt
             ])
             ->authMiddleware([
                 Authenticate::class,
