@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Mail\BrowseShopMail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,7 +15,9 @@ use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\BrowseAdmin;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -123,11 +126,43 @@ class User extends Authenticatable implements FilamentUser
 
     public static function boot()
     {
-        parent::boot(); // Call parent's boot method first
+        parent::boot();
 
-        static::creating(function ($shop) {
+        static::creating(function ($user) {
+           // Thêm id người tạo
+            if (Auth::check()) {
+                $useradmin = Auth::user();
+                $user->created_by = Auth::id();
+                $user->shop_id = $useradmin->shop_id;
+            }
+        });
 
-            $shop->created_by = Auth::id();
+        static::created(function ($user) {
+            // Đăng ký tài khoản shop
+            if (!Auth::check() && Request::path() === 'livewire/update') {
+                // Create Shop object and assign necessary values
+                $shop = new Shop;
+                $shop->name = $user->name;
+                $shop->email = $user->email;
+                $shop->status = 0;
+                $shop->save();
+
+                // Assign Shop ID to User and update User
+                $user->shop_id = $shop->id;
+                $user->save();
+
+                // Assign User ID to Shop and update Shop
+                $shop->user_id = $user->id;
+                $shop->save();
+
+                // Get all users with the 'super_admin' role
+                $superAdmins = User::role('super_admin')->get();
+
+                // Send email notification to all super_admins
+                foreach ($superAdmins as $admin) {
+                    Mail::to($admin->email)->send(new BrowseAdmin($user));
+                }
+            }
         });
     }
 }
