@@ -18,15 +18,23 @@ class RedirectloggeInAdmin
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
-        if (Auth::user() && $user->hasRole('super_admin')) {
+
+        // Kiểm tra vai trò super_admin
+        if ($user && $user->hasRole('super_admin')) {
             return $next($request);
         }
-        if (Auth::user() && $user->hasRole('admin') || Auth::user() && $user->hasRole('staff')){
+
+        // Kiểm tra vai trò admin hoặc staff
+        if ($user && ($user->hasRole('admin') || $user->hasRole('staff'))) {
             return redirect('/app');
         }
-//        if (Auth::user() && $user->hasRole('')){
-//             abort(403,'Bạn không có quyền đăng nhâp');
-//        }
+
+        // Nếu người dùng không có quyền đăng nhập, trả về lỗi 403
+        if ($user) {
+            return abort(403, 'Bạn không có quyền đăng nhập');
+        }
+
         return $next($request);
     }
+
 }
