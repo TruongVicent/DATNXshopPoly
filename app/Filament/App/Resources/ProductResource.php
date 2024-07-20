@@ -24,16 +24,25 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
 
     protected static ?string $navigationGroup = 'Sản phẩm';
 
     protected static ?string $label = 'Sản phẩm';
+
+    public static function getNavigationBadge(): ?string
+    {
+        $user = Auth::user();
+        // Đếm số lượng sản phẩm có cùng shop_id
+        $count = static::getModel()::where('shop_id', $user->shop_id)->count();
+        return (string) $count; // Trả về số lượng đơn hàng
+    }
 
     public static function form(Form $form): Form
     {
@@ -48,10 +57,6 @@ class ProductResource extends Resource
                     ->required()
                     ->relationship(name: 'Category' ,titleAttribute: 'name')
                     ->label('Danh mục'),
-                Select::make('shop_id')
-                    ->required()
-                    ->relationship(name: 'Shop', titleAttribute: 'name')
-                    ->label('Nhà bán'),
                 TextInput::make('name')
                     ->required()
                     ->label('Tên sản phẩm'),
@@ -151,8 +156,16 @@ class ProductResource extends Resource
                     ->searchable()
                     ->label('Danh mục'),
                 TextColumn::make('regular_price')
+                    ->badge()
+                    ->separator(',') ->formatStateUsing(function ($state) {
+                        return number_format($state, 0, ',', '.') . ' VND';
+                    })
                     ->label('Giá'),
                 TextColumn::make('sale_price')
+                    ->badge()
+                    ->formatStateUsing(function ($state) {
+                        return number_format($state, 0, ',', '.') . ' VND';
+                    })
                     ->label('Giá giảm'),
                 TextColumn::make('sku')
                     ->label('Mã SKU'),

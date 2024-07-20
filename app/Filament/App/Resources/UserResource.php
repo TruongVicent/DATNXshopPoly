@@ -6,6 +6,7 @@ use App\Filament\App\Resources\UserResource\Pages;
 use App\Filament\App\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
+use App\Models\Role;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -27,6 +28,7 @@ use Filament\Forms\Get;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -34,13 +36,20 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
 
     protected static ?string $navigationGroup = 'Thông tin người dùng';
 
     protected static ?string $label = 'Người dùng';
 
 
+    public static function getNavigationBadge(): ?string
+    {
+        $user = Auth::user();
+        // Đếm số lượng user có cùng shop_id
+        $count = static::getModel()::where('shop_id', $user->shop_id)->count();
+        return (string) $count; // Trả về số lượng đơn hàng
+    }
     public static function form(Form $form): Form
     {
         return $form
@@ -82,11 +91,6 @@ class UserResource extends Resource
                     ->label('Giới tính')
                     ->required(),
 
-                Select::make('shop_id')
-                    ->relationship(name: 'shop', titleAttribute: 'name')
-                    ->required()
-                    ->label('Cửa hàng'),
-
                 TextInput::make('verification_code')
                     ->hidden()
                     ->label('Mã xác thực tài khoản'),
@@ -124,7 +128,10 @@ class UserResource extends Resource
                     ->multiple()
                     ->preload()
                     ->searchable()
-
+                    ->options(function () {
+                        return Role::whereNotIn('name', ['admin', 'super_admin'])
+                            ->pluck('name', 'id');
+                    })
             ]);
     }
 

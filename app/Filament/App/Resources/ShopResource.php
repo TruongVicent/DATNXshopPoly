@@ -30,7 +30,7 @@ class ShopResource extends Resource
 {
     protected static ?string $model = Shop::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-home-modern';
     protected static ?string $navigationGroup = 'Cửa hàng';
     protected static ?string $label = 'Cửa hàng';
 
@@ -45,32 +45,36 @@ class ShopResource extends Resource
                     ->required()
                     ->columnSpan(2),
                 TextInput::make('name')
+                    ->maxLength(110)
                     ->label('Tên cửa hàng')
-                    ->required(),
-                TextInput::make('email')
-                    ->label('Email')
-                    ->required(),
+                    ->required()
+                    ->validationMessages([
+                        'maxLength' => 'Tên shop chỉ giới hạn trong 200 ký tự'
+                    ]),
+//                TextInput::make('email')
+//                    ->label('Email')
+//                    ->required(),
                 TextInput::make('phone')
                     ->label('Số điện thoại')
                     ->required(),
                 TextInput::make('address')
                     ->label('Địa chỉ')
                     ->required(),
-                TextInput::make('follower')
-                    ->label('Người theo dỏi   ')
-                    ->required()
-                    ->numeric()
-                    ->rules('min:0'),
-                TextInput::make('rating')
-                    ->label('Đánh giá')
-                    ->required(),
+//                TextInput::make('follower')
+//                    ->label('Người theo dỏi   ')
+//                    ->required()
+//                    ->numeric()
+//                    ->rules('min:0'),
+//                TextInput::make('rating')
+//                    ->label('Đánh giá')
+//                    ->required(),
                 RichEditor::make('description')
                     ->label('Mô tả')
                     ->required()
                     ->columnSpan(2),
-                Toggle::make('status')
-                    ->label('Trạng thái')
-                    ->inline(false),
+//                Toggle::make('status')
+//                    ->label('Trạng thái')
+//                    ->inline(false),
 
 
             ]);
@@ -147,58 +151,12 @@ class ShopResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\Action::make('Duyệt')
-                    ->label('Duyệt')
-                    ->color('success')
-                    ->modalSubmitActionLabel('Duyệt')
-                    ->form([
-                        Section::make('Thông tin cửa hàng')
-                            ->schema([
-                                Placeholder::make('Tên cửa hàng')
-                                    ->content(fn($record): string => $record->name),
-                                Placeholder::make('Email')
-                                    ->content(fn($record): string => $record->email),
-                                Placeholder::make('Số điện thoại')
-                                    ->content(fn($record): string => $record->phone),
-                                Placeholder::make('Địa chỉ')
-                                    ->content(fn($record): string => $record->address),
-                                Placeholder::make('Đánh giá')
-                                    ->content(fn($record): string => $record->rating),
-                                Placeholder::make('Mô tả')
-                                    ->content(fn($record): string => $record->description)
-                                    ->columnSpan(2),
-                            ])->columns(2),
-
-                    ])
-                    ->action(function (array $data, $record): void {
-                        $record->status = 1;
-                        $record->save();
-                        Notification::make()
-                            ->title('Duyệt thành công')
-                            ->success()
-                            ->send();
-
-                    }),
-                Tables\Actions\Action::make('Hủy')
-                    ->label('Tạm dừng')
-                    ->color('danger')
-                    ->action(function (array $data, $record): void {
-                        $record->status = 0;
-                        $record->save();
-                        Notification::make()
-                            ->title('Đã tạm dừng')
-                            ->success()
-                            ->send();
-
-                    }),
-
                 Tables\Actions\ViewAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\EditAction::make(),
             ]);
+
+
+
     }
 
 
@@ -213,7 +171,7 @@ class ShopResource extends Resource
     {
         return [
             'index' => Pages\ListShops::route('/'),
-            'create' => Pages\CreateShop::route('/create'),
+//            'create' => Pages\CreateShop::route('/create'),
             'view' => Pages\ViewShop::route('/{record}'),
             'edit' => Pages\EditShop::route('/{record}/edit'),
         ];

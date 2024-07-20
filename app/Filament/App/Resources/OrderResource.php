@@ -11,6 +11,7 @@ use App\Mail\OrderOnHoldMail;
 use App\Mail\OrderPaidMail;
 use App\Mail\OrderProcessingMail;
 use App\Mail\OrderShippedMail;
+use Filament\Notifications\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\UserAddress;
@@ -39,6 +40,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Actions\Action;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Filament\Infolists\Components\IconEntry;
 use Illuminate\Support\Carbon;
@@ -48,14 +50,22 @@ use Filament\Infolists\Components\Section;
 class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
-    protected static ?string $recordTitleAttribute = 'number';
-    protected static ?int $navigationSort = 1;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
     protected static ?string $navigationGroup = 'Đơn hàng';
 
     protected static ?string $label = 'Đơn hàng';
+
+    public static function getNavigationBadge(): ?string
+    {
+        $user = Auth::user();
+        // Đếm số lượng đơn hàng có cùng shop_id
+        $count = static::getModel()::where('shop_id', $user->shop_id)->count();
+        return (string) $count; // Trả về số lượng đơn hàng
+    }
+
+
 
 
     public static function form(Form $form): Form
@@ -126,26 +136,47 @@ class OrderResource extends Resource
                                         ->label('Trạng thái đơn hàng')
                                         ->afterStateUpdated(function ($state, callable $set, callable $get, $record) {
                                             if ($state === OrderStatus::Cancelled->value) {
+                                                Notification::make()
+                                                    ->title('Đơn hàng đã bị huỷ bỏ')
+                                                    ->color('danger')
+                                                    ->success()
+                                                    ->send();
                                                 $set('cancel_reason', '');
                                             }
 
                                             if ($state === OrderStatus::New->value) {
                                                 // Gửi email khi đơn hàng mới được tạo
+                                                Notification::make()
+                                                    ->title('Trạng thái đơn hàng mới')
+                                                    ->success()
+                                                    ->send();
                                                 Mail::to($record->user->email)->send(new OrderNewMail($record));
                                             }
 
                                             if ($state === OrderStatus::Processing->value) {
                                                 // Gửi email khi đơn hàng đang được xử lý
+                                                Notification::make()
+                                                    ->title('Trạng thái đơn hàng đang được xử lý')
+                                                    ->success()
+                                                    ->send();
                                                 Mail::to($record->user->email)->send(new OrderProcessingMail($record));
                                             }
 
                                             if ($state === OrderStatus::Shipped->value) {
                                                 // Gửi email khi đơn hàng đã được giao
+                                                Notification::make()
+                                                    ->title('Trạng thái đơn hàng đã được giao')
+                                                    ->success()
+                                                    ->send();
                                                 Mail::to($record->user->email)->send(new OrderShippedMail($record));
                                             }
 
                                             if ($state === OrderStatus::Delivered->value) {
                                                 // Gửi email khi đơn hàng đã được giao thành công
+                                                Notification::make()
+                                                    ->title('Trạng thái đơn hàng đã được giao thành công')
+                                                    ->success()
+                                                    ->send();
                                                 Mail::to($record->user->email)->send(new OrderDeliveredMail($record));
                                             }
                                             $record->status = $state;
@@ -154,17 +185,32 @@ class OrderResource extends Resource
                                     ToggleButtons::make('is_paid')
                                         ->columnSpanFull()
                                         ->required()
-                                        ->default(false)
+                                        ->default(function ($record) {
+                                            if ($record == 0) {
+                                                return PaymentStatus::Unpaid->value; // Giá trị mặc định nếu không có bản ghi
+                                            }else{
+                                                return PaymentStatus::Paid->value;
+                                            }
+                                        })
                                         ->inline()
                                         ->options(PaymentStatus::class)
                                         ->reactive()
                                         ->label('Trạng thái thanh toán')
                                         ->afterStateUpdated(function ($state, callable $set, callable $get, $record) {
+
                                             if ($state === PaymentStatus::Paid->value) {
+                                                Notification::make()
+                                                    ->title('Đơn hàng đã thanh toán')
+                                                    ->success()
+                                                    ->send();
                                                 $record->is_paid = true;
                                                 $record->on_hold = false;
                                                 Mail::to($record->user->email)->send(new OrderPaidMail($record));
                                             } else {
+                                                Notification::make()
+                                                    ->title('Đơn hàng chưa thanh toán')
+                                                    ->success()
+                                                    ->send();
                                                 $record->is_paid = false;
                                                 $record->on_hold = true;
                                                 Mail::to($record->user->email)->send(new OrderOnHoldMail($record));
