@@ -1,8 +1,10 @@
 <?php
 
+
 use App\Http\Controllers\Auth\Logout;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\Client\Body;
 use App\Http\Controllers\Client\GoogleController;
 use App\Http\Controllers\Client\Home;
@@ -10,8 +12,10 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Gmail\OrderController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileAddressController;
+use App\Http\Controllers\ProfileEditController;
+use App\Http\Controllers\RedirectloggeInAppController;
 use Illuminate\Support\Facades\Route;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -56,15 +60,35 @@ Route::prefix('/dashboard')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/edit', [ProfileEditController::class, 'index'])->name('profile.edit');
+    Route::get('/profile/edit', [ProfileEditController::class, 'edit']);
+    Route::put('/profile/update', [ProfileEditController::class, 'update'])->name('profile.update');
+    // show layout end display address
+    Route::get('/profile/address', [ProfileAddressController::class, 'index'])->name('profile.address');
+    Route::get('/profile/address/districts/{provinceId}', [ProfileAddressController::class, 'getDistricts']);
+    Route::get('/profile/address/wards/{districtId}', [ProfileAddressController::class, 'getWards']);
+    Route::post('/profile/address/search', [ProfileAddressController::class, 'searchAddress'])->name('profile.address.search');
+    // create, update, delete address
+    Route::post('/address/store', [ProfileAddressController::class, 'store'])->name('addresses.store');
+    Route::get('/profile/address/{id}', [ProfileAddressController::class, 'index'])->name('addresses.edit');
+    Route::put('/profile/address/{id}', [ProfileAddressController::class, 'update'])->name('addresses.update');
+    Route::delete('/address/delete/{id}', [ProfileAddressController::class, 'delete'])->name('addresses.delete');
+    // is_default địa chỉ mặc định
+    Route::post('/addresses/{id}/default', [ProfileAddressController::class, 'setDefault'])->name('addresses.setDefault');
+    // change password (đổi mật khẩu)
+    Route::get('profile/change-password', [ChangePasswordController::class, 'index'])->name('change_password');
+    Route::post('profile/update-password', [ChangePasswordController::class, 'update'])->name('update_password');
+
+
     Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 
 });
+// chuyển hướng đăng ký của shop admin
+Route::get('/wait', [RedirectloggeInAppController::class, 'index'])->name('wait');
+Route::get('/stop-shop', [RedirectloggeInAppController::class, 'stop'])->name('stop.shop');
 
 /// login google
 Route::get('/auth/google', [GoogleController::class, 'googlepage']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
 
 require __DIR__ . '/auth.php';
-
