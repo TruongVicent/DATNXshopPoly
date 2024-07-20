@@ -33,32 +33,51 @@
                             <div class="row gy-3 overflow-hidden">
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
-                                        <input type="name" class="form-control border-0 border-bottom rounded-0"
-                                               name="name" id="name" placeholder="Họ Tên" required>
+                                        <input type="name" class="form-control border-2 border-bottom rounded-0"
+                                               name="name" id="name" placeholder="Họ Tên">
                                         <label for="name" class="form-label">Họ Tên</label>
+                                        @if($errors->any('name'))
+                                            <div id="name" class="form-text text-danger">{{ $errors->first('name') }}.
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
-                                        <input type="email" class="form-control border-0 border-bottom rounded-0"
-                                               name="email" id="email" placeholder="ten@gmail.com" required>
+                                        <input type="email" class="form-control border-2 border-bottom rounded-0"
+                                               name="email" id="email" placeholder="ten@gmail.com">
                                         <label for="email" class="form-label">Email</label>
+                                        @if($errors->any('email'))
+                                            <div id="email" class="form-text text-danger">{{ $errors->first('email') }}
+                                                .
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
-                                        <input type="password" class="form-control border-0 border-bottom rounded-0"
-                                               name="password" id="password" value="" placeholder="Nhập mật khẩu"
-                                               required>
+                                        <input type="password" class="form-control border-2 border-bottom rounded-0"
+                                               name="password" id="password" value="" placeholder="Nhập mật khẩu">
                                         <label for="password" class="form-label">Mật khẩu</label>
+                                        @if($errors->any('password'))
+                                            <div id="password"
+                                                 class="form-text text-danger">{{ $errors->first('password') }}.
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
-                                        <input type="password" class="form-control border-0 border-bottom rounded-0"
+                                        <input type="password" class="form-control border-2 border-bottom rounded-0"
                                                name="password_confirmation" id="password_confirmation" value=""
-                                               placeholder="Nhập lại mật khẩu" required>
+                                               placeholder="Nhập lại mật khẩu">
                                         <label for="password_confirmation" class="form-label">Nhập lại Mật khẩu</label>
+                                        @if($errors->any('password_confirmation'))
+                                            <div id="password_confirmation"
+                                                 class="form-text text-danger">{{ $errors->first('password_confirmation') }}
+                                                .
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="col-12">
