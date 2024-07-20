@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\Order;
+use App\Models\Shop;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -10,31 +10,33 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OrderPaidMail extends Mailable
+class BrowseShopMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public Order $order;
-
-
-    public function __construct(Order $order)
+    public Shop $shop;
+    /**
+     * Create a new message instance.
+     */
+    public function __construct($shop)
     {
-        $this->order = $order;
+        $this->shop = $shop;
     }
 
+    /**
+     * Get the message envelope.
+     */
     public function build()
     {
-        $orderDetails = $this->order->OrderDetail; // Giả sử 'details' là mối quan hệ giữa Order và OrderDetail
-        return $this->subject('Đơn hàng đã thanh toán')
-            ->markdown('emails.order_paid', [
-                'order' => $this->order,
-                'orderDetails' => $orderDetails,
-            ]);
+        return $this->view('emails.browse_shop')
+            ->with(['shop' => $this->shop])
+            ->subject('Shop của bạn đã được duyệt');
     }
+
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Đơn hàng đã thanh toán',
+            subject: 'Shop của bạn đã được duyệt',
         );
     }
 
@@ -44,7 +46,7 @@ class OrderPaidMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.order_paid',
+            view: 'emails.browse_shop',
         );
     }
 

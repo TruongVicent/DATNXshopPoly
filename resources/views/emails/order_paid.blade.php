@@ -201,27 +201,18 @@
                             </tr>
                             </thead>
                             <tbody class="table-group-divider">
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>IPhone 15 pro max titanium</td>
-                                <td>1</td>
-                                <td>60.000.000.VND</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Tủ lạnh samsum nhật bản Tosiva 2023 xám</td>
-                                <td>1</td>
-                                <td>136.000.000.VND</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>Củ sạc iphone 2023 macpro x2T4</td>
-                                <td>2</td>
-                                <td>4.000.000.VND</td>
-                            </tr>
+                            @foreach ($orderDetails as $index => $detail)
+                                <tr>
+                                    <th scope="row">{{ $index + 1 }}</th>
+                                    <td>{{ $detail->product->name }}</td>
+                                    <td>{{ $detail->product_quantity }}</td>
+                                    <td>{{ number_format($detail->product_price, 0, ',', '.') }} VNĐ</td>
+                                </tr>
+                            @endforeach
                             <tr>
                                 <th scope="row">Tổng Tiền:</th>
-                                <td colspan="2">{{ $order->total_price }} VNĐ</td>
+                                <td colspan="2"></td>
+                                <td>{{ number_format($order->total_price, 0, ',', '.') }} VNĐ</td>
                             </tr>
                             </tbody>
                         </table>

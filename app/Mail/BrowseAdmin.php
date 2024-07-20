@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -10,31 +9,31 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OrderPaidMail extends Mailable
+class BrowseAdmin extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public Order $order;
+    public $user;
 
-
-    public function __construct(Order $order)
+    public function __construct($user)
     {
-        $this->order = $order;
+        $this->user = $user;
     }
 
     public function build()
     {
-        $orderDetails = $this->order->OrderDetail; // Giả sử 'details' là mối quan hệ giữa Order và OrderDetail
-        return $this->subject('Đơn hàng đã thanh toán')
-            ->markdown('emails.order_paid', [
-                'order' => $this->order,
-                'orderDetails' => $orderDetails,
-            ]);
+        return $this->view('emails.browse_admin')
+            ->with(['user' => $this->user])
+            ->subject('Có shop mới đăng ký chờ bạn xét duyệt');
     }
+
+    /**
+     * Get the message envelope.
+     */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Đơn hàng đã thanh toán',
+            subject: 'Có shop mới đăng ký chờ bạn xét duyệt',
         );
     }
 
@@ -44,7 +43,7 @@ class OrderPaidMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.order_paid',
+            view: 'emails.browse_admin',
         );
     }
 
