@@ -23,7 +23,9 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\BrowseShopMail;
+use App\Mail\StopShopMail;
 
 class ShopResource extends Resource
 {
@@ -137,9 +139,19 @@ class ShopResource extends Resource
 
                 IconColumn::make('status')
                     ->label('Trạng thái')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-badge')
-                    ->falseIcon('heroicon-o-clock'),
+                    ->color(fn (string $state): string => match ($state) {
+                        '0' => 'danger',
+                        '1' => 'success',
+                        '2' => 'warning',
+                    })
+                    ->icon(fn (string $state): string => match ($state) {
+                        '0' => 'heroicon-o-clock',
+                        '1' => 'heroicon-o-check-badge',
+                        '2' => 'heroicon-o-clock',
+                    }),
+//                    ->boolean()
+//                    ->trueIcon('heroicon-o-check-badge')
+//                    ->falseIcon('heroicon-o-clock'),
 
 
             ])
@@ -158,21 +170,23 @@ class ShopResource extends Resource
                                     ->content(fn($record): string => $record->name),
                                 Placeholder::make('Email')
                                     ->content(fn($record): string => $record->email),
-                                Placeholder::make('Số điện thoại')
-                                    ->content(fn($record): string => $record->phone),
-                                Placeholder::make('Địa chỉ')
-                                    ->content(fn($record): string => $record->address),
-                                Placeholder::make('Đánh giá')
-                                    ->content(fn($record): string => $record->rating),
-                                Placeholder::make('Mô tả')
-                                    ->content(fn($record): string => $record->description)
-                                    ->columnSpan(2),
+//                                Placeholder::make('Số điện thoại')
+//                                    ->content(fn($record): string => $record->phone),
+//                                Placeholder::make('Địa chỉ')
+//                                    ->content(fn($record): string => $record->address),
+//                                Placeholder::make('Đánh giá')
+//                                    ->content(fn($record): string => $record->rating),
+//                                Placeholder::make('Mô tả')
+//                                    ->content(fn($record): string => $record->description)
+//                                    ->columnSpan(2),
                             ])->columns(2),
 
                     ])
                     ->action(function (array $data, $record): void {
                         $record->status = 1;
                         $record->save();
+                        // gửi gmail xét duyệt
+                        Mail::to($record->email)->send(new BrowseShopMail($record));
                         Notification::make()
                             ->title('Duyệt thành công')
                             ->success()
@@ -183,8 +197,10 @@ class ShopResource extends Resource
                     ->label('Tạm dừng')
                     ->color('danger')
                     ->action(function (array $data, $record): void {
-                        $record->status = 0;
+                        $record->status = 2;
                         $record->save();
+                        // gửi gmail tạm dừng
+                        Mail::to($record->email)->send(new StopShopMail($record));
                         Notification::make()
                             ->title('Đã tạm dừng')
                             ->success()

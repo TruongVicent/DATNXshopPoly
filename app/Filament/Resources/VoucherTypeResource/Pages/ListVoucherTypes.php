@@ -16,4 +16,6 @@ class ListVoucherTypes extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
+
 }
