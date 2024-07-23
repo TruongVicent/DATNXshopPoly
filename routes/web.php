@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Http\Controllers\Auth\Logout;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\CartController;
@@ -17,8 +18,19 @@ use App\Http\Controllers\ProfileAddressController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileEditController;
 use App\Http\Controllers\RedirectloggeInAppController;
+use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
 
 Route::prefix('/')->group(function () {
     Route::get('/', [HomeController::class, 'home']);
@@ -26,7 +38,7 @@ Route::prefix('/')->group(function () {
     Route::get('/search', [ProductController::class, 'search'])->name('product.search');
     Route::get('/product', [ProductController::class, 'index'])->name('product.index');
     Route::get('/products/category/{category}', [ProductController::class, 'showByCategory'])->name('products.category');
-    Route::get('/products/{id}', [ProductController::class, 'show'])->name('product.detail');
+    Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.detail');
     Route::post('/add-to-cart', [ProductController::class, 'addToCart'])->name('product.addToCart');
     Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
     Route::post('/update-cart', [CartController::class, 'updateCart'])->name('cart.update');
@@ -37,6 +49,8 @@ Route::prefix('/')->group(function () {
     Route::post('/deleteImage', [CommentController::class, 'deleteImage'])->name('deleteImage');
     Route::post('/uploadComment', [CommentController::class, 'uploadComment'])->name('uploadComment');
 
+    Route::get('/shop/{id}', [ShopController::class, 'index'])->name('shop');
+    Route::get('/shop/{shopId}/category/{categoryId}', [ShopController::class, 'getProductsByCategory'])->name('shop.category');
 
 });
 Route::get('/post', [PostController::class, 'index']);
@@ -95,4 +109,3 @@ Route::get('/auth/google', [GoogleController::class, 'googlepage']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
 
 require __DIR__ . '/auth.php';
-

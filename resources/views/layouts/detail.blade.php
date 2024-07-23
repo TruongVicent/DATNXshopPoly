@@ -149,7 +149,8 @@
                                 <button class="btn btn-primary add-to-cart-btn w-100" type="submit">Thêm vào giỏ hàng
                                 </button>
                             </form>
-                            <button class="btn btn-light text-primary" type="button">Seller’s profile</button>
+                            <a href="{{ route('shop', $product->shop_id) }}" class="btn btn-light text-primary">Xem cửa
+                                hàng</a>
                         </div>
                     </div>
 
