@@ -19,6 +19,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileEditController;
 use App\Http\Controllers\RedirectloggeInAppController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\WishListController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,6 +53,9 @@ Route::prefix('/')->group(function () {
     Route::get('/shop/{id}', [ShopController::class, 'index'])->name('shop');
     Route::get('/shop/{shopId}/category/{categoryId}', [ShopController::class, 'getProductsByCategory'])->name('shop.category');
 
+    Route::get('/wishlist', [WishListController::class, 'index'])->name('wishlist');
+    Route::post('/wishlist/insert', [WishListController::class, 'insertWishlist'])->name('wishlist.insert');
+    Route::get('/wishlist/count', [WishListController::class, 'countWishlist'])->name('wishlist.count');
 });
 Route::get('/post', [PostController::class, 'index']);
 Route::get('/post-detail/{id}', [PostController::class, 'detail'])->name('detailPost');

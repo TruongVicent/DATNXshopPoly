@@ -1,8 +1,7 @@
 <div class="product-item border rounded-2 mb-3">
     @if($productItem->sale_price != 0)
         <div class="sale-off fw-bolder">
-            -{{ round(100 - ($productItem->sale_price * 100 / $productItem->regular_price))  }}
-            %
+            -{{ round(100 - ($productItem->sale_price * 100 / $productItem->regular_price))  }}%
         </div>
     @endif
     <div class="item-img">
@@ -26,8 +25,15 @@
                     @endfor
                 </div>
             </div>
-            <div class="item-favorite">
-                <a href=""><i class="far fa-heart"></i></a>
+            <div class="item-favorite border rounded">
+                @if(Auth::check())
+                    <a onclick="insertWishlist({{ $productItem->id }}, '{{ addslashes($productItem->name) }}')"
+                       id="wishlist-{{ $productItem->id }}"><i
+                            class="{{ in_array($productItem->id, $wishlistItems) ? 'fas fa-heart' : 'far fa-heart' }}"></i></a>
+                @else
+                    <a onclick="insertWishlist({{ $productItem->id }}, '{{ addslashes($productItem->name) }}')"><i
+                            class="far fa-heart"></i></a>
+                @endif
             </div>
         </div>
         <div class="item-title">

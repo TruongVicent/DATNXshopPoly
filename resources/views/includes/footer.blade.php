@@ -116,3 +116,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js"></script>
 
 {{--update--}}
+<script src="{{ asset('assets/js/wishlist.js') }}"></script>
+<!-- Dropzone JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.0/dropzone.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'></script>
+
+{{-- fancybox --}}
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+    Fancybox.bind('[data-fancybox]', {
+//
+    });
+</script>
+@stack('script')

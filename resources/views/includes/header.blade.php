@@ -51,15 +51,13 @@
                     </ul>
                 @endguest
             </div>
-            <div class="desktop-icons"><img width="20px" height="19px"
-                                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACmSURBVHgB7ZOxDcIwEEXvLhkgI4SNaCkYADEAonMqFFFAQygpEDAWHoGSgvijUCAIEQTll3mVdbKe/GxZ8+I4jIAdVBLphtdInZlgRZBVpCixtmohPBITMnF9cFMbzCcjLy1YbE9pjHB+nTWc8Crt+dyry+IAIdInf09uSqzzZ/Lv66An038KW+hpQoVcoGX29soBIZtNx046YEzZU8iSPcg3eydE7rDFSy8sJIitAAAAAElFTkSuQmCC"
-                                            alt="icon">
-                <p>Message</p>
-            </div>
-            <div class="desktop-icons"><img width="20px" height="19px"
-                                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAASCAYAAABfJS4tAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFhSURBVHgBrZQ/TsMwFMa/5/6Ze4QcAY6QE0BHilCVqYoQogMFdWunSoghC6qYgAFYewPSE8ARcoTMbWLjF3ASNU0pIb8ltmP/9Ok92YQcs/mj1UB7SIqOAGWRQgiBxRqr6dh1At5ze/9yIAQuIXGsCB29FBDBz+9hyAzuHl77iJT3s7kIiQmRDJWEh+2E1KDh1aD3nIo5aUu2P0ql+xNGtDrk5IJnTdWa1CBlOlxKHojvOde0HnRf+jlxLWmRdxlxiPoIMzGpJWpCKSwzMZSHmiApvVQ8cs98veTjn+iL8jS6YFdWY0REjv4EqE6whpiaSSoeuyeBrk8XFRrJV5/PsqMgZq7PTz91kbr4I3GTnORsDrG5ietNkHslT5JS7NwMeovCv7JD/IrpZryj5PKwVAL2ZtLSxAY+oOtmY3tDg13SnYkNs/mb1VSSk1tGGpGw842qJDbyBmTyasUQ3m9S5gu/n4bL9wQCCQAAAABJRU5ErkJggg=="
-                                            alt="icon">
-                <p>Orders</p>
+            <div class="desktop-icons">
+                <a href="{{ route('wishlist') }}" id="wishlist-link">
+                    <img width="20px" height="19px"
+                         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAASCAYAAABfJS4tAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFhSURBVHgBrZQ/TsMwFMa/5/6Ze4QcAY6QE0BHilCVqYoQogMFdWunSoghC6qYgAFYewPSE8ARcoTMbWLjF3ASNU0pIb8ltmP/9Ok92YQcs/mj1UB7SIqOAGWRQgiBxRqr6dh1At5ze/9yIAQuIXGsCB29FBDBz+9hyAzuHl77iJT3s7kIiQmRDJWEh+2E1KDh1aD3nIo5aUu2P0ql+xNGtDrk5IJnTdWa1CBlOlxKHojvOde0HnRf+jlxLWmRdxlxiPoIMzGpJWpCKSwzMZSHmiApvVQ8cs98veTjn+iL8jS6YFdWY0REjv4EqE6whpiaSSoeuyeBrk8XFRrJV5/PsqMgZq7PTz91kbr4I3GTnORsDrG5ietNkHslT5JS7NwMeovCv7JD/IrpZryj5PKwVAL2ZtLSxAY+oOtmY3tDg13SnYkNs/mb1VSSk1tGGpGw842qJDbyBmTyasUQ3m9S5gu/n4bL9wQCCQAAAABJRU5ErkJggg=="
+                         alt="icon">
+                    <p>Yêu thích <span class="badge rounded-pill text-bg-primary" id="count-wishlist">0</span></p>
+                </a>
             </div>
             <div class="desktop-icons">
                 <a class="" href="/cart">

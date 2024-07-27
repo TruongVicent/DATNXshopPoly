@@ -197,6 +197,7 @@
                                                 <i class="fa fa-star star-gray"></i>
                                             </label>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -308,6 +309,7 @@
                             @endif
                         </div>
                         <div class="product">
+
                             <div id="productGrid" class="product-grid">
                                 <div class="row">
                                     @foreach ($products as $product)
@@ -357,7 +359,14 @@
                                                                 </div>
                                                             </div>
                                                             <div class="product-favorite d-flex align-items-center">
-                                                                <a href=""><i class="far fa-heart"></i></a>
+                                                                @if(Auth::check())
+                                                                    <a onclick="insertWishlist({{ $product->id }}, '{{ addslashes($product->name) }}')"
+                                                                       id="wishlist-{{ $product->id }}"><i
+                                                                            class="{{ in_array($product->id, $wishlistItems) ? 'fas fa-heart' : 'far fa-heart' }}"></i></a>
+                                                                @else
+                                                                    <a onclick="insertWishlist({{ $product->id }}, '{{ addslashes($product->name) }}')"><i
+                                                                            class="far fa-heart"></i></a>
+                                                                @endif
                                                             </div>
 
                                                         </div>
@@ -397,7 +406,14 @@
                                                     <div class="product-title-item">
                                                         <p class="product-title">{{ $product->name }}</p>
                                                         <div class="product-favorite d-flex align-items-center">
-                                                            <a href=""><i class="far fa-heart"></i></a>
+                                                            @if(Auth::check())
+                                                                <a onclick="insertWishlist({{ $product->id }}, '{{ addslashes($product->name) }}')"
+                                                                   id="wishlist-{{ $product->id }}"><i
+                                                                        class="{{ in_array($product->id, $wishlistItems) ? 'fas fa-heart' : 'far fa-heart' }}"></i></a>
+                                                            @else
+                                                                <a onclick="insertWishlist({{ $product->id }}, '{{ addslashes($product->name) }}')"><i
+                                                                        class="far fa-heart"></i></a>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                     <div class="price-item">

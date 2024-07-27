@@ -149,13 +149,23 @@
                                 <button class="btn btn-primary add-to-cart-btn w-100" type="submit">Thêm vào giỏ hàng
                                 </button>
                             </form>
-                            <a href="{{ route('shop', $product->shop_id) }}" class="btn btn-light text-primary">Xem cửa
-                                hàng</a>
+                            <a href="{{ route('shop', $product->shop_id) }}"
+                               class="btn btn-light text-primary text-decoration-none">Xem cửa hàng</a>
                         </div>
                     </div>
 
                     <div class="text-center text-primary fw-medium mt-5">
-                        <i class="bi bi-suit-heart "></i><span class="ms-2">Save for later</span>
+                        @if(Auth::check())
+                            <a onclick="insertWishlist({{ $product->id }}, '{{ addslashes($product->name) }}')"
+                               id="wishlist-{{ $product->id }}"><i
+                                    class="{{ in_array($product->id, $wishlistItems) ? 'fas fa-heart' : 'far fa-heart' }}"></i>
+                                <span
+                                    class="wishlist-status">{{ in_array($product->id, $wishlistItems) ? 'Đã yêu thích' : 'Thêm vào yêu thích' }}</span>
+                            </a>
+                        @else
+                            <a onclick="insertWishlist({{ $product->id }}, '{{ addslashes($product->name) }}')"><i
+                                    class="far fa-heart"></i> Thêm vào yêu thích</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -617,7 +627,7 @@
 @endsection
 {{--update--}}
 
-@section('script')
+@push('script')
     <script>
         var link = window.location.href; // Lấy URL hiện tại
         //----- drop zone
@@ -752,4 +762,4 @@
             });
         })();
     </script>
-@endsection
+@endpush
