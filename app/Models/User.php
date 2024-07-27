@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Request;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
+
 class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -163,7 +164,6 @@ class User extends Authenticatable implements FilamentUser
             }
         });
     }
-
     public function followerShop()
     {
         return $this->belongsToMany(Shop::class);
