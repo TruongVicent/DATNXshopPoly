@@ -14,9 +14,10 @@ class CartItem extends Model
         'id',
         'price',
         'quantity',
-        'sku',
         'product_id',
+        'product_stock_id',
         'shop_id',
+        'media',
         'cart_id',
     ];
 

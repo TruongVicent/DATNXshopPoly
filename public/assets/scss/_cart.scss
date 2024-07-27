@@ -1,3 +1,19 @@
+.main {
+    padding-top: 0;
+}
+
+.address {
+    border: none; /* Bỏ viền */
+    background: none; /* Bỏ màu nền */
+    color: inherit; /* Giữ nguyên màu chữ hiện tại */
+    padding: 0; /* Bỏ padding */
+    margin: 0; /* Bỏ margin */
+    font: inherit; /* Giữ nguyên font hiện tại */
+    cursor: pointer; /* Đặt con trỏ chuột thành con trỏ tay */
+    text-decoration: none; /* Bỏ gạch chân nếu có */
+}
+
+
 
 .section-cart {
 
@@ -191,6 +207,23 @@
         border-radius: 6px;
     }
 
+    /* Loại bỏ nền, viền và chỉ để lại màu chữ đen cho các nút */
+    .Address {
+        color: black; /* Màu chữ */
+        background-color: transparent; /* Nền trong suốt */
+        border: none; /* Loại bỏ viền */
+        box-shadow: none; /* Loại bỏ bóng đổ */
+        padding: 0; /* Loại bỏ khoảng cách bên trong nút */
+    }
+
+    /* Đảm bảo nút không có nền, viền và bóng đổ khi hover hoặc focus */
+    .Address,
+    .Address {
+        background-color: transparent; /* Nền trong suốt khi hover */
+        color: black; /* Màu chữ */
+        border: none; /* Loại bỏ viền */
+        box-shadow: none; /* Loại bỏ bóng đổ */
+    }
 
 
 }

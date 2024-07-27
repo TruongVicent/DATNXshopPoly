@@ -22,6 +22,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\WishListController;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,13 +42,16 @@ Route::prefix('/')->group(function () {
     Route::get('/products/category/{category}', [ProductController::class, 'showByCategory'])->name('products.category');
     Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.detail');
     Route::post('/add-to-cart', [ProductController::class, 'addToCart'])->name('product.addToCart');
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('product.detail');
+    Route::post('/get-retail-price', [ProductController::class, 'getRetailPrice']);
+    Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('product.addToCart');
     Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
-    Route::post('/update-cart', [CartController::class, 'updateCart'])->name('cart.update');
-    Route::delete('/cart/remove/{product_id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
-
-    Route::post('/product/{id}', [ProductController::class, 'showPost']);
-    Route::post('/uploadImage', [CommentController::class, 'uploadImage']);
-    Route::post('/deleteImage', [CommentController::class, 'deleteImage'])->name('deleteImage');
+    Route::post('/update-cart', [CartController::class, 'updateQuantity'])->name('update.cart');
+    Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/update-quantity/{cartItemId}', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
+    Route::post('/cart/retail-price', [CartController::class, 'getRetailPrice'])->name('cart.getRetailPrice');
+    Route::post('/cart/update-selected-items', [CartController::class, 'updateSelectedItems'])->name('cart.update-selected-items');
+    Route::post('/wishlist/toggle/{productId}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
     Route::post('/uploadComment', [CommentController::class, 'uploadComment'])->name('uploadComment');
 
     Route::get('/wishlist', [WishListController::class, 'index'])->name('wishlist');
@@ -57,8 +61,12 @@ Route::prefix('/')->group(function () {
 Route::get('/post', [PostController::class, 'index']);
 Route::get('/post-detail/{id}', [PostController::class, 'detail'])->name('detailPost');
 Route::get('/category-post/{id}', [CategoryPostController::class, 'postByCategory'])->name('postByCategory');
+Route::get('/post', [PostController::class, 'index']);
+Route::get('/post-detail/{id}', [PostController::class, 'detail'])->name('detailPost');
+Route::get('/category-post/{id}', [CategoryPostController::class, 'postByCategory'])->name('postByCategory');
 Route::post('/orders/{orderId}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 Route::post('/orders/{orderId}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+
 //Dashboard
 Route::prefix('/dashboard')->group(function () {
     Route::get('/', function () {
@@ -114,3 +122,4 @@ Route::get('/auth/google', [GoogleController::class, 'googlepage']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
 
 require __DIR__ . '/auth.php';
+

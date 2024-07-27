@@ -152,7 +152,7 @@ class ProfileAddressController extends Controller
         // Đặt địa chỉ được chọn thành mặc định
         UserAddress::where('id', $id)->update(['is_default' => 1]);
 
-        return redirect()->route('profile.address')->with('success', 'Đã thiết lập địa chỉ mặc định thành công!');
+        return redirect()->route('cart.view')->with('success', 'Đã thiết lập địa chỉ mặc định thành công!');
     }
 
 }
