@@ -50,9 +50,6 @@ Route::prefix('/')->group(function () {
     Route::post('/deleteImage', [CommentController::class, 'deleteImage'])->name('deleteImage');
     Route::post('/uploadComment', [CommentController::class, 'uploadComment'])->name('uploadComment');
 
-    Route::get('/shop/{id}', [ShopController::class, 'index'])->name('shop');
-    Route::get('/shop/{shopId}/category/{categoryId}', [ShopController::class, 'getProductsByCategory'])->name('shop.category');
-
     Route::get('/wishlist', [WishListController::class, 'index'])->name('wishlist');
     Route::post('/wishlist/insert', [WishListController::class, 'insertWishlist'])->name('wishlist.insert');
     Route::get('/wishlist/count', [WishListController::class, 'countWishlist'])->name('wishlist.count');
@@ -95,6 +92,10 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
+
+    Route::get('/shop/{id}', [ShopController::class, 'index'])->name('shop');
+    Route::get('/shop/{shopId}/category/{categoryId}', [ShopController::class, 'getProductsByCategory'])->name('shop.category');
+    Route::post('/shop-follow', [ShopController::class, 'followShop']);
 
 });
 // chuyển hướng đăng ký của shop admin
