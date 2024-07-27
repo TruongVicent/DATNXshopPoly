@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductAttribute;
 use App\Models\ProductMedia;
+use App\Models\ProductStock;
 use App\Models\ProductVariation;
 use App\Models\ProductVariationValue;
-use App\Models\Review;
+use App\Models\Shop;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 
 class ProductController extends Controller
 {
@@ -185,68 +186,75 @@ class ProductController extends Controller
             $favoriteProduct->formattedRegularPrice = number_format($favoriteProduct->regular_price, 0, ',', '.');
             $favoriteProduct->formattedSalePrice = number_format($favoriteProduct->sale_price, 0, ',', '.');
         }
-
-        Session::forget('uploaded_files');
-        //show comment
-        $listComment = Review::with('user')
-            ->with('reviewMedia')
-            ->where('product_id', $id)
-            ->paginate(5);
-
+        $isFavorite = Wishlist::where('user_id', auth()->id())->where('product_id', $id)->exists();
+        $selected_variation_id = $productVariations->isEmpty() ? null : $productVariations->first()->id;
+        $shop = Shop::findOrFail($product->shop_id);
         return view('layouts.detail', [
-            'product' => $products,
+            'product' => $product,
             'productMedia' => $productMedia,
             'productVariations' => $productVariations,
             'formattedRegularPrice' => $formattedRegularPrice,
             'formattedSalePrice' => $formattedSalePrice,
             'favoriteProducts' => $favoriteProducts,
-            'listComment' => $listComment,
+            'selected_variation_id' => $selected_variation_id,
+            'shop' => $shop,
+            'isFavorite' => $isFavorite,
         ]);
+
     }
 
-    public function showPost()
+    public function getRetailPrice(Request $request)
     {
-    }
+        $selectedVariations = $request->input('selectedVariations');
 
-    public function addToCart(Request $request)
-    {
-        $productId = $request->input('product_id');
-        $product = Product::findOrFail($productId);
-        $productMedia = ProductMedia::where('product_id', $product->id)->where('is_main', 1)->first();
-        $productImage = $productMedia ? $productMedia->media : null;
+        if (count($selectedVariations) == 0) {
+            return response()->json(['error' => 'Cần chọn ít nhất một biến thể.'], 400);
+        }
 
-        $productVariation = ProductVariation::where('product_id', $productId)->first();
-        $variationName = null;
-        $variationValueName = null;
-        if ($productVariation) {
-            $variationName = $productVariation->variation_name;
-            $variationValue = ProductVariationValue::where('product_variation_id', $productVariation->id)->first();
-            if ($variationValue) {
-                $variationValueName = $variationValue->variation_value_name;
+        $variationIds = array_keys($selectedVariations);
+        $variationValues = array_values($selectedVariations);
+
+        // Tìm kiếm tất cả các ProductAttribute phù hợp với biến thể đã chọn
+        $productAttributes = ProductAttribute::whereIn('variation_id', $variationIds)
+            ->whereHas('productVariationValue', function ($query) use ($variationValues) {
+                $query->whereIn('variation_value_name', $variationValues);
+            })
+            ->get();
+
+        // Tạo một mảng để lưu trữ các product_stock_id phù hợp với tất cả các biến thể
+        $matchedStockIds = [];
+
+        foreach ($productAttributes as $productAttribute) {
+            $stockId = $productAttribute->product_stock_id;
+
+            if (!isset($matchedStockIds[$stockId])) {
+                $matchedStockIds[$stockId] = 0;
+            }
+
+            $matchedStockIds[$stockId]++;
+        }
+
+        // Tìm product_stock_id xuất hiện đúng số lần bằng với số lượng biến thể đã chọn
+        foreach ($matchedStockIds as $stockId => $count) {
+            if ($count == count($selectedVariations)) {
+                $productStock = ProductStock::find($stockId);
+
+                if ($productStock) {
+                    $retailPriceFormatted = number_format($productStock->retail_price, 0, ',', '.');
+                    $media = $productStock->media;
+
+                    return response()->json([
+                        'retailPriceFormatted' => $retailPriceFormatted,
+                        'media' => $media,
+                    ]);
+                }
             }
         }
-        $cartItems = Session::get('cartItems', []);
-        $found = false;
-        foreach ($cartItems as &$cartItem) {
-            if ($cartItem['id'] == $product->id) {
-                $cartItem['quantity'] += 1;
-                $found = true;
-                break;
-            }
-        }
-        if (!$found) {
-            $cartItems[] = [
-                'id' => $product->id,
-                'name' => $product->name,
-                'price' => $product->sale_price,
-                'quantity' => 1,
-                'image' => $productImage,
-                'variation_name' => $variationName,
-                'variation_value_name' => $variationValueName,
-            ];
-        }
-        Session::put('cartItems', $cartItems);
-        return redirect()->route('cart.view');
+
+        // Nếu không tìm thấy giá và hình ảnh cho bất kỳ biến thể sản phẩm nào
+        return response()->json(['error' => 'Không tìm thấy giá và hình ảnh cho biến thể sản phẩm này.'], 404);
     }
+
+
 }
 

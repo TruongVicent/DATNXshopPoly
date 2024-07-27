@@ -46,15 +46,18 @@
                                 <span class="ms-2">66</span>
                             </div>
                             <div class="text-body-tertiary pe-3 me-3 border-end">
-                                <i class="bi bi-chat-left-dots"></i> <span class="ms-2">32 reviews</span>
+                                <i class="bi bi-chat-left-dots"></i> <span class="ms-2">{{ $product->sold_count }} Lượt xem</span>
                             </div>
-                            <div class="text-body-tertiary ">
-                                <i class="bi bi-bag-check"></i> <span class="ms-2">1.8k đã bán</span>
+                            <div class="text-body-tertiary">
+                                <i class="bi bi-bag-check"></i> <span
+                                    class="ms-2">{{ $product->view_count }} Đã bán</span>
                             </div>
                         </div>
-                        <div class="trade-price d-flex bg-warning-subtle  p-3 mt-3 ">
+                        <div class="trade-price d-flex bg-warning-subtle p-3 mt-3">
                             <div class="border-end pe-5 me-3">
-                                <div class="price fw-bold text-danger">{{ $formattedRegularPrice }} VNĐ</div>
+                                <div class="price fw-bold text-danger" id="retail-price">{{ $formattedRegularPrice }}
+                                    VNĐ
+                                </div>
                             </div>
                             <div>
                                 <div class="price fw-bold"><s>{{ $formattedSalePrice }} VNĐ</s></div>
@@ -62,63 +65,105 @@
                         </div>
                         <div class="short-info mt-3">
                             @foreach($productVariations as $productVariation)
-                                <div class="pb-3">
+                                <div class="pb-3 variation-container" data-variation-id="{{ $productVariation->id }}">
                                     <div class="d-flex align-items-center">
                                         <div class="short-title text-body-tertiary">
                                             {{ $productVariation->variation_name }}:
                                         </div>
-                                        <div class="short-content text-secondary ms-2"
-                                             id="variation-value-{{ $productVariation->id }}">
-                                            @foreach($productVariation->productVariationValue as $variationValue)
-                                                {{ $variationValue->variation_value_name }}
-                                            @endforeach
-                                        </div>
                                     </div>
                                     <div class="short-color d-flex flex-wrap mt-2">
-                                        <!-- Các nút ví dụ cho màu sắc hoặc các thuộc tính khác có thể ở đây -->
                                         @foreach($productVariation->productVariationValue as $variationValue)
-                                            @if($productVariation->variation_name == 'Color')
-                                                <button type="button" class="btn btn-outline-secondary me-2"
-                                                        style="background-color: {{ $variationValue->color }};"
-                                                        title="{{ $variationValue->variation_value_name }}"
-                                                        onclick="updateVariationValue({{ $productVariation->id }}, '{{ $variationValue->variation_value_name }}')">
-                                                    {{ $variationValue->variation_value_name }}
-                                                </button>
-                                            @elseif($productVariation->variation_name == 'Size')
-                                                <button type="button" class="btn btn-outline-secondary me-2"
-                                                        onclick="updateVariationValue({{ $productVariation->id }}, '{{ $variationValue->variation_value_name }}')">
-                                                    {{ $variationValue->variation_value_name }}
-                                                </button>
-                                            @else
-                                                <button type="button" class="btn btn-outline-secondary me-2"
-                                                        onclick="updateVariationValue({{ $productVariation->id }}, '{{ $variationValue->variation_value_name }}')">
-                                                    {{ $variationValue->variation_value_name }}
-                                                </button>
-                                            @endif
+                                            <button type="button"
+                                                    class="btn btn-outline-secondary me-2 variation-button"
+                                                    style="{{ $productVariation->variation_name == 'Color' ? 'background-color: ' . $variationValue->color . ';' : '' }}"
+                                                    title="{{ $variationValue->variation_value_name }}"
+                                                    onclick="updateVariationValue({{ $productVariation->id }}, '{{ $variationValue->variation_value_name }}')"
+                                                    id="variation-{{ $productVariation->id }}-{{ $variationValue->variation_value_name }}">
+                                                {{ $variationValue->variation_value_name }}
+                                                <i class="bi bi-check-lg check-icon" style="display: none;"></i>
+                                            </button>
                                         @endforeach
                                     </div>
                                 </div>
                             @endforeach
 
-                            <script>
-                                function updateVariationValue(variationId, variationValueName) {
-                                    var variationValueElement = document.getElementById('variation-value-' + variationId);
-                                    variationValueElement.textContent = variationValueName;
-                                }
-                            </script>
                         </div>
                     </div>
                 </div>
+
+                <script>
+                    let selectedVariations = {};
+
+                    function updateVariationValue(variationId, variationValueName) {
+                        // Remove 'selected' class and hide check icon from all buttons of the same variation
+                        document.querySelectorAll(`[id^='variation-${variationId}-']`).forEach(button => {
+                            button.classList.remove('selected');
+                            button.querySelector('.check-icon').style.display = 'none';
+                        });
+
+                        // Add 'selected' class and show check icon to the clicked button
+                        const selectedButton = document.getElementById(`variation-${variationId}-${variationValueName}`);
+                        selectedButton.classList.add('selected');
+                        selectedButton.querySelector('.check-icon').style.display = 'inline';
+
+                        selectedVariations[variationId] = variationValueName;
+
+                        // Update hidden fields in the form
+                        updateCartForm();
+
+                        // Fetch retail price and image
+                        fetch('/get-retail-price', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                selectedVariations: selectedVariations
+                            })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.error) {
+                                    console.error('Error:', data.error);
+                                } else {
+                                    document.getElementById('retail-price').textContent = data.retailPriceFormatted + ' VNĐ';
+                                    if (data.media) {
+                                        document.getElementById('change_image').src = '{{ asset('storage/') }}' + '/' + data.media;
+                                        document.getElementById('product_image').value = data.media;
+                                    }
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    }
+
+                    function updateCartForm() {
+                        const variationIds = Object.keys(selectedVariations);
+                        let variationsHTML = '';
+
+                        variationIds.forEach(id => {
+                            const variationValue = selectedVariations[id];
+                            // Cập nhật dữ liệu biến thể trong form
+                            variationsHTML += `<input type="hidden" name="variations[${id}][value]" value="${variationValue}">`;
+                        });
+
+                        document.getElementById('variations-container').innerHTML = variationsHTML;
+                    }
+
+
+                </script>
+
                 <div class="col-12 col-md-3 col-lg-3">
                     <div class="box-right border rounded-2 p-3">
                         <div class="d-flex">
                             <div class="avatar-img">
-                                <img
-                                    src="https://didongviet.vn/dchannel/wp-content/uploads/2023/08/hinh-nen-3d-hinh-nen-iphone-dep-3d-didongviet@2x-576x1024.jpg"
-                                    alt="">
+                                <img src="{{ asset('storage/' . $shop->avatar)}}" alt="{{ $shop->name }}">
                             </div>
                             <div class="ms-2">
-                                Supplier <br> Guanjoi Trading LLC
+                                <h5 class="fs-5">Nhà cung cấp</h5>
+                                <span>{{ $shop->name }}</span>
                             </div>
                         </div>
                         <hr>
@@ -134,18 +179,23 @@
                             <div class="icon text-body-tertiary">
                                 <i class="bi bi-shield-check"></i>
                             </div>
-                            <div class="text-body-tertiary ms-2">Verified Seller</div>
+                            <div class="text-body-tertiary ms-2">Người bán đã được xác minh</div>
                         </div>
                         <div class="d-flex mb-2">
                             <div class="icon text-body-tertiary">
                                 <i class="bi bi-globe"></i>
                             </div>
-                            <div class="text-body-tertiary ms-2">Worldwide shipping</div>
+                            <div class="text-body-tertiary ms-2">Giao hàng trên toàn thế giới</div>
                         </div>
                         <div class="d-grid gap-2 mt-4">
-                            <form action="{{ route('product.addToCart') }}" method="POST">
+                            <form id="add-to-cart-form" method="POST" action="{{ route('product.addToCart') }}">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <input type="hidden" name="product_name" value="{{ $product->name }}">
+                                <input type="hidden" name="product_price" value="{{ $product->sale_price }}">
+                                <input type="hidden" name="product_image" id="product_image"
+                                       value="{{ $product->main_image }}">
+                                <div id="variations-container"></div>
                                 <button class="btn btn-primary add-to-cart-btn w-100" type="submit">Thêm vào giỏ hàng
                                 </button>
                             </form>
@@ -155,17 +205,20 @@
                     </div>
 
                     <div class="text-center text-primary fw-medium mt-5">
-                        @if(Auth::check())
-                            <a onclick="insertWishlist({{ $product->id }}, '{{ addslashes($product->name) }}')"
-                               id="wishlist-{{ $product->id }}"><i
-                                    class="{{ in_array($product->id, $wishlistItems) ? 'fas fa-heart' : 'far fa-heart' }}"></i>
-                                <span
-                                    class="wishlist-status">{{ in_array($product->id, $wishlistItems) ? 'Đã yêu thích' : 'Thêm vào yêu thích' }}</span>
-                            </a>
-                        @else
-                            <a onclick="insertWishlist({{ $product->id }}, '{{ addslashes($product->name) }}')"><i
-                                    class="far fa-heart"></i> Thêm vào yêu thích</a>
-                        @endif
+                        <form action="{{ route('wishlist.toggle', $product->id) }}" method="POST"
+                              style="display: inline;">
+                            @csrf
+                            <ul class="featured__item__pic__hover d-flex">
+                                <li>
+                                    <button class="d-flex justify-content-center" type="submit"
+                                            style="border: none; background: none;">
+                                        <i class="fa fa-heart {{ $isFavorite ? 'text-white' : '' }}"></i>
+                                        <span
+                                            class="my-2 ms-2">{{ $isFavorite ? 'Thích sảng phầm' : 'Tiết kiệm cho sau này' }} </span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -437,17 +490,19 @@
                     </div>
                     <div class="col-12 col-md-4 col-lg-4 mb-3">
                         <div class="bg-white rounded-2 border p-3">
-                            <div class="fw-bold mb-3">You may like</div>
-                            @foreach($favoriteProducts as $favoriteProduct)
+                            <div class="fw-bold mb-3">Bạn có thể thích</div>
+                            @foreach ($favoriteProducts as $favoriteProduct)
                                 <div class="border d-flex align-items-center p-2 my-2">
                                     <div class="avatar-img">
-                                        <img src="{{ $favoriteProduct->main_image }}" width="50px" height="70px" alt="">
+                                        <img src="{{ asset('storage/' .$favoriteProduct->main_image )}}" width="50px"
+                                             height="70px" alt="{{ $favoriteProduct->name }}">
                                     </div>
                                     <div class="ms-3 flex-grow-1 d-flex align-items-center">
                                         <div class="d-flex flex-column">
                                             <div class="fw-bold font-weight-bold">{{ $favoriteProduct->name }}</div>
                                             <div class="price">{{ $favoriteProduct->formattedRegularPrice }}
-                                                - {{ $favoriteProduct->formattedSalePrice }}</div>
+                                                VNĐ-{{ $favoriteProduct->formattedSalePrice }}VNĐ
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -590,38 +645,56 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Bắt sự kiện click vào nút Thêm vào giỏ hàng
-            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-                button.addEventListener('click', function () {
-                    // Lấy ID của sản phẩm từ thuộc tính data-product-id
-                    const productId = this.getAttribute('data-product-id');
-                    // Gửi yêu cầu AJAX để thêm sản phẩm vào giỏ hàng
-                    addToCart(productId);
-                });
-            });
+            document.querySelector('.add-to-cart-btn').addEventListener('click', function (event) {
+                event.preventDefault();
 
-            // Hàm gửi yêu cầu AJAX để thêm sản phẩm vào giỏ hàng
-            function addToCart(productId) {
-                // Tạo yêu cầu AJAX
+                const form = document.getElementById('add-to-cart-form');
+                const formData = new FormData(form);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Sản phẩm đã được thêm vào giỏ hàng!');
+                        } else {
+                            alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng!');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Lỗi:', error);
+                        alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng!');
+                    });
+            });
+        });
+
+        function addToCart(productId, productName, productPrice, productImage, variations) {
                 const xhr = new XMLHttpRequest();
-                // Định nghĩa phương thức và đường dẫn
-                xhr.open('POST', '/cart/add/' + productId, true);
-                // Thiết lập header để xác định yêu cầu AJAX
+            xhr.open('POST', '/add-to-cart', true);
                 xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-                // Xử lý kết quả khi yêu cầu thành công
+            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
                 xhr.onload = function () {
                     if (xhr.status === 200) {
-                        // Thành công, cập nhật giao diện hoặc hiển thị thông báo
                         alert('Sản phẩm đã được thêm vào giỏ hàng!');
                     } else {
-                        // Xảy ra lỗi, hiển thị thông báo lỗi
                         alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng!');
                     }
                 };
-                // Gửi yêu cầu
-                xhr.send();
+            xhr.send(JSON.stringify({
+                product_id: productId,
+                product_name: productName,
+                product_price: productPrice,
+                product_image: productImage,
+                variations: variations
+            }));
             }
         });
+
     </script>
 
 @endsection
