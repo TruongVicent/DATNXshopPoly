@@ -10,9 +10,11 @@ use App\Models\ProductMedia;
 use App\Models\ProductStock;
 use App\Models\ProductVariation;
 use App\Models\ProductVariationValue;
+use App\Models\Review;
 use App\Models\Shop;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class ProductController extends Controller
 {
@@ -188,9 +190,15 @@ class ProductController extends Controller
         }
         $isFavorite = Wishlist::where('user_id', auth()->id())->where('product_id', $id)->exists();
         $selected_variation_id = $productVariations->isEmpty() ? null : $productVariations->first()->id;
-        $shop = Shop::findOrFail($product->shop_id);
+        $shop = Shop::findOrFail($products->shop_id);
+        Session::forget('uploaded_files');
+        //show comment
+        $listComment = Review::with('user')
+            ->with('reviewMedia')
+            ->where('product_id', $id)
+            ->paginate(5);
         return view('layouts.detail', [
-            'product' => $product,
+            'product' => $products,
             'productMedia' => $productMedia,
             'productVariations' => $productVariations,
             'formattedRegularPrice' => $formattedRegularPrice,
@@ -199,6 +207,7 @@ class ProductController extends Controller
             'selected_variation_id' => $selected_variation_id,
             'shop' => $shop,
             'isFavorite' => $isFavorite,
+            'listComment' => $listComment,
         ]);
 
     }

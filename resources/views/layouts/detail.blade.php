@@ -408,28 +408,9 @@
                                                     <div class="info-comment">
                                                         <div class="fw-medium">{{ $itemComment->user->name }}</div>
                                                         <div class="rating">
-                                                            @if($itemComment->rating == 1)
-                                                                <i class="bi bi-star-fill"></i>
-                                                            @elseif($itemComment->rating == 2)
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                            @elseif($itemComment->rating == 3)
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                            @elseif($itemComment->rating == 4)
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                            @else
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                            @endif
-
+                                                            @for ($i = 1; $i <= 5; $i++)
+                                                                <i class="bi bi-star{{ $i <= $itemComment->rating ? '-fill' : '' }}"></i>
+                                                            @endfor
                                                         </div>
                                                         <div class="time text-body-tertiary">
                                                             {{ \Carbon\Carbon::parse($itemComment->created_at)->format('d/m/Y H:i')  }}
@@ -821,9 +802,9 @@
                 function updateStars(rating) {
                     labels.forEach((label, index) => {
                         if (index < rating) {
-                            label.classList.add('selected');
+                            label.classList.add('selected_rating');
                         } else {
-                            label.classList.remove('selected');
+                            label.classList.remove('selected_rating');
                         }
                     });
                 }
