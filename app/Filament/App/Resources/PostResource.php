@@ -24,6 +24,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\RichEditor;
+use Illuminate\Support\Facades\Auth;
 
 class PostResource extends Resource
 {
@@ -34,6 +35,8 @@ class PostResource extends Resource
     protected static ?string $navigationGroup = 'Bài viết';
 
     protected static ?string $label = 'Bài viết';
+    // Chức năng search ( thanh tìm kiếm )
+    protected static ?string $recordTitleAttribute = 'title';
 
     public static function form(Form $form): Form
     {
@@ -43,7 +46,11 @@ class PostResource extends Resource
                     ->columnSpan(2)
                     ->label('Ảnh đại diện'),
                 Select::make('category_post_id')
-                    ->relationship(name: 'CategoryPost', titleAttribute: 'name')
+                    ->relationship('CategoryPost','name',function ($query){
+                        // lấy ra những danh mục của chính shop đó
+                        $shopId = Auth::user()->shop_id;
+                        return $query->where('shop_id',$shopId);
+                    })
                     ->required()
                     ->options(CategoryPost::all()->pluck('name', 'id'))
                     ->searchable()
@@ -135,6 +142,17 @@ class PostResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (Auth::check()) {
+            $shopId = Auth::user()->shop_id;
+            return $query->where('shop_id', $shopId);
+        }
+
+        return $query;
     }
     public static function getRelations(): array
     {

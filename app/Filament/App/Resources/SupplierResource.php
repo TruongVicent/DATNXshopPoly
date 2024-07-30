@@ -17,6 +17,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class SupplierResource extends Resource
 {
@@ -25,6 +26,8 @@ class SupplierResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
     protected static ?string $navigationGroup = 'Sản phẩm';
     protected static ?string $label = 'Nhà cung cấp';
+    // Chức năng search ( thanh tìm kiếm )
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Form $form): Form
     {
@@ -105,6 +108,17 @@ class SupplierResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (Auth::check()) {
+            $shopId = Auth::user()->shop_id;
+            return $query->where('shop_id', $shopId);
+        }
+
+        return $query;
     }
 
     public static function getRelations(): array
