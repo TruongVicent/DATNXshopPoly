@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
+use App\Filament\App\Resources\OrderResource\Widgets\OrderStatus;
 
 
 class ListOrders extends ListRecords
@@ -21,6 +22,10 @@ class ListOrders extends ListRecords
         return [
             Actions\CreateAction::make(),
         ];
+    }
+    protected function getHeaderWidgets(): array
+    {
+        return [OrderStatus::class];
     }
     protected function getTableQuery(): ?Builder
     {
