@@ -24,7 +24,7 @@ class GoogleController extends Controller
 
             if ($findUser) {
                 Auth::login($findUser);
-                return redirect()->intended('dashboard');
+                return redirect('/');
             } else {
                 $existingUser = User::where('email', $googleUser->email)->first();
                 if ($existingUser) {
@@ -36,11 +36,13 @@ class GoogleController extends Controller
                         'name' => $googleUser->name,
                         'email' => $googleUser->email,
                         'google_id' => $googleUser->id,
-                        'password' => encrypt('123456')
+                        'password' => encrypt('123456'),
                     ]);
+                    $newUser->syncRoles(''); // gán vai trò mặc định
+
                     Auth::login($newUser);
                 }
-                return redirect()->intended('dashboard');
+                return redirect('/');
             }
         } catch (Exception $e) {
             echo $e->getMessage();
