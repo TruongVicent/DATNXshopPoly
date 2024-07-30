@@ -31,7 +31,7 @@ class Product extends Model
         'meta_title',
         'meta_description',
         'meta_keyword',
-
+        'pause'
     ];
     protected $casts = [
         'meta_keyword' => 'array',
@@ -51,7 +51,7 @@ class Product extends Model
 
     public function Brand(): BelongsTo
     {
-        return $this->BelongsTo(Category::class);
+        return $this->BelongsTo(Brand::class);
     }
 
     public function review(): HasMany
@@ -74,22 +74,68 @@ class Product extends Model
         return $this->hasMany(Wishlist::class);
     }
 
+
     protected static function booted()
     {
         static::created(function ($product) {
             $user = Auth::user();
+
             if ($user) {
+                // Thiết lập shop_id cho sản phẩm
                 $product->shop_id = $user->shop_id;
                 $product->save();
-            }
-        });
-        static::created(function ($product) {
-            if ($product->shop_id) {
-                $product->supplier->shop_id = $product->shop_id;
-                $product->supplier->save();
+
+                // Thiết lập shop_id cho nhà cung cấp nếu có
+                if ($product->supplier) {
+                    $product->supplier->shop_id = $product->shop_id;
+                    $product->supplier->save();
+                }
+                // Hàm để thêm danh mục hiện tại vào shop nếu chưa tồn tại
+                self::addCategoryToShop($product->category_id, $user->shop_id);
+
+                // Lấy danh mục cấp cha đầu tiên của danh mục sản phẩm
+                $productCategory = $product->category;
+                $rootParentCategory = $productCategory->getRootParent();
+                if ($rootParentCategory->name === 'Thực Phẩm & Đồ Uống' || $rootParentCategory->name === 'Sức Khỏe & Sắc Đẹp') {
+                    $product->pause = 1;
+                    $product->save();
+                    if ($product->pause == 1) {
+                        // Gửi thông báo tới các quản trị viên super_admin
+                        $superAdmins = User::role('super_admin')->get();
+                        foreach ($superAdmins as $admin) {
+                            Notification::make()
+                                ->title('Có một sản phẩm thuộc danh mục chờ duyệt ,Danh mục: ' . $rootParentCategory->name)
+                                ->icon('heroicon-o-squares-2x2')
+                                ->body('Sản phẩm Chờ bạn vào xét duyệt : ' . $product->name)
+                                ->sendToDatabase($admin);
+                        }
+                    }
+                }
             }
         });
     }
+
+
+    // Hàm để thêm danh mục hiện tại vào shop nếu chưa tồn tại
+    protected static function addCategoryToShop($categoryId, $shopId)
+    {
+        $category = Category::find($categoryId);
+
+        if ($category) {
+            // Kiểm tra nếu danh mục hiện tại đã tồn tại trong shop
+            $existingCategoryShop = CategoryShop::where('category_id', $category->id)
+                ->where('shop_id', $shopId)
+                ->first();
+
+            if (!$existingCategoryShop) {
+                CategoryShop::create([
+                    'category_id' => $category->id,
+                    'shop_id' => $shopId,
+                ]);
+            }
+        }
+    }
+
 
     public function productVariation(): HasMany
     {
@@ -99,5 +145,11 @@ class Product extends Model
     public function productStock(): HasMany
     {
         return $this->HasMany(ProductStock::class);
+    }
+
+    // Hàm đêm số lượng chờ duyệt
+    public static function countPendingApproval()
+    {
+        return self::where('pause', 1)->count();
     }
 }

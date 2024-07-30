@@ -7,8 +7,6 @@ use App\Models\Role;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Contracts\View\View;
 
 
 class ListRoles extends ListRecords
@@ -18,7 +16,8 @@ class ListRoles extends ListRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->visible(fn() => auth()->user()->hasRole('super_admin') || auth()->user()->hasRole('admin')),
         ];
     }
     protected function getTableQuery(): Builder

@@ -8,18 +8,19 @@ use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Enums\FiltersLayout;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 
@@ -147,6 +148,7 @@ class ProductResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(Product::query()->where('pause', 1))
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
@@ -169,23 +171,43 @@ class ProductResource extends Resource
                     ->label('Lượt bán'),
             ])
             ->filters([
-                SelectFilter::make('supplier_id')
-                    ->label('Nhà cung cấp')
-                    ->relationship('Supplier', 'name'),
-                SelectFilter::make('Brand_id')
-                    ->label('Thương hiệu')
-                    ->relationship('Brand', 'name'),
-                SelectFilter::make('category_id')
-                    ->label('Danh Mục')
-                    ->relationship('Category', 'name'),
-                SelectFilter::make('shop_id')
-                    ->label('Nhà bán')
-                    ->relationship('Shop', 'name'),
-            ], layout: FiltersLayout::AboveContent)
+            ])
             ->actions([
+                Tables\Actions\Action::make('Duyệt')
+                    ->label('Duyệt')
+                    ->color('success')
+                    ->modalSubmitActionLabel('Duyệt')
+                    ->form([
+                        Section::make('Thông tin cửa hàng')
+                            ->schema([
+                                Placeholder::make('Tên sản phẩm')
+                                    ->content(fn($record): string => $record->name),
+                                Placeholder::make('Danh mục')
+                                    ->content(fn($record): string => $record->category->parent->name),
+                                Placeholder::make('Thương hiệu')
+                                    ->content(fn($record): string => $record->Brand->name),
+                                Placeholder::make('Shop')
+                                    ->content(fn($record): string => $record->Shop->name)
+                                    ->columnSpan(2),
+                            ])->columns(2),
+                    ])
+                    ->action(function (array $data, $record): void {
+                        $record->pause = 0;
+                        $record->save();
+                        $shopOwner = $record->shop->user;
+                        // gửi thông báo xét duyệt thành công
+                        Notification::make()
+                            ->title(' Sản phẩm Duyệt thành công')
+                            ->icon('heroicon-o-squares-2x2')
+                            ->success()
+                            ->body('Sản phẩm Đã được xét duyệt : ' . $record->name)
+                            ->sendToDatabase($shopOwner);
+
+                    }),
+
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+//                Tables\Actions\EditAction::make(),
+//                Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Auth;
 
 class Shop extends Model
@@ -37,9 +38,9 @@ class Shop extends Model
         return $this->HasMany(Category::class);
     }
 
-    public function shopInfo(): HasMany
+    public function shopInfo(): HasOne
     {
-        return $this->HasMany(ShopInfo::class);
+        return $this->hasOne(ShopInfo::class);
     }
     public static function boot()
     {

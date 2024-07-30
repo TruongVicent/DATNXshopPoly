@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\Shield;
 
+use App\Filament\Resources\Shield\RoleResource\Pages;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use BezhanSalleh\FilamentShield\Facades\FilamentShield;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use BezhanSalleh\FilamentShield\Forms\ShieldSelectAllToggle;
-use App\Filament\Resources\Shield\RoleResource\Pages;
 use BezhanSalleh\FilamentShield\Support\Utils;
 use Filament\Forms;
 use Filament\Forms\Components\Component;
@@ -107,6 +107,9 @@ class RoleResource extends Resource implements HasShieldPermissions
             ->actions([
                 Tables\Actions\EditAction::make(),
 //                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->visible(fn() => auth()->user()->hasRole('super_admin') || auth()->user()->hasRole('admin')), // Ẩn hoặc hiện nút dựa trên quyền
+
             ])
             ->bulkActions([
 //                Tables\Actions\DeleteBulkAction::make(),

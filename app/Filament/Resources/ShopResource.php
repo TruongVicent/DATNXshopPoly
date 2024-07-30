@@ -4,13 +4,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ShopResource\Pages;
 use App\Filament\Resources\ShopResource\RelationManagers;
+use App\Mail\BrowseShopMail;
+use App\Mail\StopShopMail;
 use App\Models\Shop;
-use App\Models\User;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -24,8 +24,6 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\BrowseShopMail;
-use App\Mail\StopShopMail;
 
 class ShopResource extends Resource
 {
@@ -170,15 +168,11 @@ class ShopResource extends Resource
                                     ->content(fn($record): string => $record->name),
                                 Placeholder::make('Email')
                                     ->content(fn($record): string => $record->email),
-//                                Placeholder::make('Số điện thoại')
-//                                    ->content(fn($record): string => $record->phone),
-//                                Placeholder::make('Địa chỉ')
-//                                    ->content(fn($record): string => $record->address),
-//                                Placeholder::make('Đánh giá')
-//                                    ->content(fn($record): string => $record->rating),
-//                                Placeholder::make('Mô tả')
-//                                    ->content(fn($record): string => $record->description)
-//                                    ->columnSpan(2),
+                                Placeholder::make('Số điện thoại')
+                                    ->content(fn($record): string => $record->phone),
+                                Placeholder::make('Mô tả')
+                                    ->content(fn($record): string => $record->description)
+                                    ->columnSpan(2),
                             ])->columns(2),
 
                     ])
