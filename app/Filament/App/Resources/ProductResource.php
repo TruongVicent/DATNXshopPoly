@@ -4,7 +4,7 @@ namespace App\Filament\App\Resources;
 
 use App\Enums\RatingRole;
 use App\Filament\App\Resources\ProductResource\Pages;
-use App\Filament\App\Resources\ProductResource\RelationManagers;
+use  App\Filament\App\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
@@ -25,6 +25,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Category;
 
 class ProductResource extends Resource
 {
@@ -35,6 +36,8 @@ class ProductResource extends Resource
     protected static ?string $navigationGroup = 'Sản phẩm';
 
     protected static ?string $label = 'Sản phẩm';
+    // Chức năng search ( thanh tìm kiếm )
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function getNavigationBadge(): ?string
     {
@@ -51,12 +54,48 @@ class ProductResource extends Resource
                 Select::make('supplier_id')
                     ->required()
                     ->searchable()
-                    ->relationship(name: 'Supplier', titleAttribute: 'name')
+                    ->relationship('Supplier','name',function ($query){
+                        // lấy ra những nhà cung cấp của chính shop đó
+                       $shopId = Auth::user()->shop_id;
+                       return $query->where('shop_id',$shopId);
+                    })
                     ->label('Nhà cung cấp'),
                 Select::make('category_id')
+                    ->options(function () {
+                        $categories = Category::whereNull('parent_id')->with('children')->get();
+                        $options = [];
+
+                        // Hàm đệ quy để lấy danh mục con
+                        $addChildrenToOptions = function ($categories, $indentation = '') use (&$options, &$addChildrenToOptions) {
+                            foreach ($categories as $category) {
+                                // Thêm thụt lề vào danh mục
+                                $options[$category->id] = $indentation . $category->name;
+                                if ($category->children) {
+                                    // Thêm một khoảng thụt lề cho các cấp con
+                                    $newIndentation = $indentation . '_ '; // Thêm khoảng trắng để thụt lề
+                                    $addChildrenToOptions($category->children, $newIndentation);
+                                }
+                            }
+                        };
+
+                        // Gọi hàm đệ quy với danh mục cấp 1
+                        $addChildrenToOptions($categories);
+
+                        return $options;
+                    })
+
+                    ->searchable()
+                    ->label('Thuộc danh mục'),
+                Select::make('brand_id')
                     ->required()
-                    ->relationship(name: 'Category' ,titleAttribute: 'name')
-                    ->label('Danh mục'),
+                    // lấy những thương hiệu của shop đó
+                    ->relationship('Brand', 'name', function ($query){
+                        $shopId = Auth::user()->shop_id;
+                        return $query->where('shop_id',$shopId);
+                    })
+                    ->searchable()
+                    ->label('Thương hiệu'),
+
                 TextInput::make('name')
                     ->required()
                     ->label('Tên sản phẩm'),
@@ -87,10 +126,7 @@ class ProductResource extends Resource
                     ->label('Lượt bán'),
                 MarkdownEditor::make('description')->columnSpan('full')
                     ->label('Mô tả'),
-                Select::make('rating')
-                    ->options(RatingRole::class)
-                    ->required()
-                    ->label('Đánh giá'),
+
                 TagsInput::make('meta_keyword')
                     ->label('Từ khóa SEO')
                     ->required(),
@@ -110,19 +146,27 @@ class ProductResource extends Resource
     {
         return $infolist
             ->schema([
-                TextEntry::make('Supplier.name')
-                    ->label('Nhà cung cấp'),
-                TextEntry::make('Category.name')
-                    ->label('Danh mục'),
                 TextEntry::make('Shop.name')
                     ->label('Nhà bán'),
+                TextEntry::make('Supplier.name')
+                    ->label('Nhà cung cấp'),
+                TextEntry::make('Brand.name')
+                    ->label('Thương hiệu'),
+                TextEntry::make('Category.name')
+                    ->label('Danh mục'),
                 TextEntry::make('name')
                     ->label('Tên sản phẩm'),
                 TextEntry::make('slug')
                     ->label('Đường dẫn SP'),
                 TextEntry::make('regular_price')
+                    ->badge()
+                    ->separator(',')
+                    ->money('VND')
                     ->label('Giá'),
                 TextEntry::make('sale_price')
+                    ->badge()
+                    ->separator(',')
+                    ->money('VND')
                     ->label('Giá giảm'),
                 TextEntry::make('sku')
                     ->label('Mã SKU'),
@@ -155,20 +199,19 @@ class ProductResource extends Resource
                 TextColumn::make('Category.name')
                     ->searchable()
                     ->label('Danh mục'),
+                TextColumn::make('Brand.name')
+                    ->searchable()
+                    ->label('Thương hiệu'),
                 TextColumn::make('regular_price')
                     ->badge()
-                    ->separator(',') ->formatStateUsing(function ($state) {
-                        return number_format($state, 0, ',', '.') . ' VND';
-                    })
+                    ->separator(',')
+                    ->money('VND')
                     ->label('Giá'),
                 TextColumn::make('sale_price')
                     ->badge()
-                    ->formatStateUsing(function ($state) {
-                        return number_format($state, 0, ',', '.') . ' VND';
-                    })
+                    ->separator(',')
+                    ->money('VND',)
                     ->label('Giá giảm'),
-                TextColumn::make('sku')
-                    ->label('Mã SKU'),
                 TextColumn::make('rating')
                     ->label('Đánh giá'),
                 TextColumn::make('view_count')
@@ -180,13 +223,13 @@ class ProductResource extends Resource
                 SelectFilter::make('supplier_id')
                     ->label('Nhà cung cấp')
                     ->relationship('Supplier', 'name'),
+                SelectFilter::make('Brand_id')
+                    ->label('Thương hiệu')
+                    ->relationship('Brand', 'name'),
                 SelectFilter::make('category_id')
                     ->label('Danh Mục')
                     ->relationship('Category', 'name'),
-                SelectFilter::make('shop_id')
-                    ->label('Nhà bán')
-                    ->relationship('Shop', 'name'),
-            ], layout: FiltersLayout::AboveContent)
+            ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -199,10 +242,22 @@ class ProductResource extends Resource
             ]);
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (Auth::check()) {
+            $shopId = Auth::user()->shop_id;
+            return $query->where('shop_id', $shopId);
+        }
+
+        return $query;
+    }
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\ProductMediaRelationManager::class,
+            RelationManagers\ProductStockRelationManager::class,
         ];
     }
 

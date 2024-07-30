@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 
 
 class ProductVariation extends Model
@@ -15,7 +16,8 @@ class ProductVariation extends Model
     protected $table = 'product_variations';
     protected $fillable = [
         'variation_name',
-        'product_id'
+        'product_id',
+        'shop_id'
     ];
 
     public function product(): BelongsTo
@@ -27,6 +29,15 @@ class ProductVariation extends Model
     {
         return $this->hasMany(ProductVariationValue::class);
     }
-
+    protected static function booted()
+    {
+        static::created(function ($ProductVariation) {
+            $user = Auth::user();
+            if ($user) {
+                $ProductVariation->shop_id = $user->shop_id;
+                $ProductVariation->save();
+            }
+        });
+    }
 
 }
