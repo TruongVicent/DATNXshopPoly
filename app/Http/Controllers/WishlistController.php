@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductMedia;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class WishlistController extends Controller
+class WishListController extends Controller
 {
     public function index()
     {
@@ -74,24 +75,5 @@ class WishlistController extends Controller
         }
     }
 
-    public function toggle($productId)
-    {
-        $userId = Auth::id();
-        $product = Product::findOrFail($productId);
 
-        $wishlistItem = Wishlist::where('user_id', $userId)->where('product_id', $productId)->first();
-
-        if ($wishlistItem) {
-            $wishlistItem->delete();
-            return redirect()->back()->with('success', 'Product removed from wishlist');
-        } else {
-            Wishlist::create([
-                'name' => $product->name,
-                'user_id' => $userId,
-                'product_id' => $productId,
-            ]);
-            return redirect()->back()->with('success', 'Product added to wishlist');
-        }
-    }
 }
-

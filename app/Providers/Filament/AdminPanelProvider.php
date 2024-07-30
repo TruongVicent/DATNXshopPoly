@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\RedirectloggeInAdmin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -17,7 +18,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Http\Middleware\RedirectloggeInAdmin;
+
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -43,6 +44,7 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])
+            ->databaseNotifications(true)
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

@@ -2,9 +2,13 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\App\Pages\Auth\Registration;
+use App\Http\Middleware\RedirectloggeInApp;
+use App\Http\Middleware\RedirectRegistrationApp;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -17,10 +21,6 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Http\Middleware\RedirectloggeInApp;
-use Filament\Navigation\MenuItem;
-use App\Http\Middleware\RedirectRegistrationApp;
-
 
 class AppPanelProvider extends PanelProvider
 {
@@ -30,7 +30,7 @@ class AppPanelProvider extends PanelProvider
             ->id('app')
             ->path('app')
             ->login()
-            ->registration()
+            ->registration(Registration::class)
             ->passwordReset()
             ->emailVerification()
             ->profile()
@@ -56,6 +56,7 @@ class AppPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])
+            ->databaseNotifications(true)
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

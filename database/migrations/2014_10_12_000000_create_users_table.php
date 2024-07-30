@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->string('name')->nullable(false)->comment('Tên người dùng');
             $table->date('birthday')->nullable()->comment('Sinh nhật');
             $table->string('gender')->nullable()->comment('Giới tính');
-            $table->string('phone')->nullable()->comment('Số điện thoại người dùng');
+            $table->string('phone')->unique()->nullable()->comment('Số điện thoại người dùng');
             $table->string('password')->nullable(false)->comment('Mật khẩu');
             $table->foreignIdFor(UserAddress::class)->nullable()->comment('Id địa chỉ');
             $table->foreignIdFor(Province::class)->nullable()->comment('Id địa chỉ');

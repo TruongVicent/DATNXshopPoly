@@ -3,9 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Filament\Resources\ShopResource;
 use App\Mail\BrowseAdmin;
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Notifications\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,7 +19,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Request;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -42,8 +44,8 @@ class User extends Authenticatable implements FilamentUser
         'shop_id',
         'verification_code',
         'payment_method',
-        'created_by'
-
+        'created_by',
+        'description'
     ];
 
     /**
@@ -144,6 +146,8 @@ class User extends Authenticatable implements FilamentUser
                 $shop->name = $user->name;
                 $shop->email = $user->email;
                 $shop->status = 0;
+                $shop->phone = $user->phone;
+                $shop->description = $user->description;
                 $shop->save();
 
                 // Assign Shop ID to User and update User
@@ -160,6 +164,25 @@ class User extends Authenticatable implements FilamentUser
                 // Send email notification to all super_admins
                 foreach ($superAdmins as $admin) {
                     Mail::to($admin->email)->send(new BrowseAdmin($user));
+                }
+                // Gửi thông báo tới người dùng mới được tạo
+                Notification::make()
+                    ->title('Bạn cần cập nhật thông tin của cửa hàng')
+                    ->body('Bạn vào đây để cập nhật thông tin mới được đăng bán sản phẩm')
+                    ->actions([
+                        Action::make('Xem')
+                            ->url(ShopResource::getUrl('edit', ['record' => $shop])),
+                    ])
+                    ->sendToDatabase($user);
+
+                // Gửi thông báo tới các quản trị viên super_admin
+                $superAdmins = User::role('super_admin')->get();
+                foreach ($superAdmins as $admin) {
+                    Notification::make()
+                        ->title('Có một shop mới vừa đăng ký tài khoản')
+                        ->icon('heroicon-o-home-modern')
+                        ->body('Chờ bạn vào xét duyệt : ' . $shop->name)
+                        ->sendToDatabase($admin);
                 }
             }
         });
