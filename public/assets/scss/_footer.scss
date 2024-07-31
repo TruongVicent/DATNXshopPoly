@@ -13,15 +13,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-    
+
             i{
                 color: white;
             }
         }
-    
+
         .menu-footer{
-            width: calc(20%);
-            
+            width: calc(35%);
+
             @media screen and (max-width: 540px){
                 margin-top: 20px;
                 img{
@@ -34,13 +34,13 @@
                     margin-top: 20px;
                     font-size: .75rem;
                 }
-                
+
             }
 
             ul{
                 list-style-type: none;
-                padding: 0px;
-    
+                padding: 5px;
+
                 a{
                     @media screen and (max-width: 540px){
                         font-size: .75rem;
@@ -49,10 +49,10 @@
                 }
             }
 
-           
+
         }
     }
-   
+
     .footer-bottom{
         padding: 1.5rem;
         background-color: #EFF2F4;

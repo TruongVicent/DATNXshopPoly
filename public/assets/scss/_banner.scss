@@ -27,8 +27,15 @@
 
             .list-group-item {
                 margin: 0 1.25rem;
+                transition: border 0.3s; /* Thêm hiệu ứng chuyển tiếp */
+            }
+
+            .list-group-item:hover {
+                border: 2px solid #007bff; /* Viền xanh khi rê chuột */
+                border-radius: 4px; /* Tùy chọn: làm bo viền cho đẹp */
             }
         }
+
 
         .image-banner {
             position: relative;

@@ -18,9 +18,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     {{--  --}}
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/js/cart.js') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/slick-master/slick/slick.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/slick-master/slick/slick-theme.css') }}" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.css">
+
 </head>
 {{--update--}}

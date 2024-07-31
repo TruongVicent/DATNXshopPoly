@@ -7,7 +7,11 @@
                     <div class="box-img">
                         <img src="{{ asset('image/logo-doanvth-pro 1.png') }}" alt="">
                     </div>
-                    <div class="my-4">Best information about the company gies here but now lorem ipsum is</div>
+                    <div class="my-4"><i class="bi bi-geo-alt-fill"></i> 468/29 Hẻm 468 Đồng Khởi, Tân Hiệp, Biên Hòa,
+                        Đồng Nai.
+                    </div>
+                    <div class="my-4"><i class="bi bi-telephone-fill"></i> 0762345979</div>
+                    <div class="my-4"><i class="bi bi-envelope-fill"></i> donashop@gmail.com</div>
                     <div class="icon-contact d-flex">
                         <div class="icon">
                             <i class="fa-brands fa-facebook-f"></i>
@@ -29,39 +33,23 @@
                 <div class="col-12 col-lg-9">
                     <div class="d-flex">
                         <div class="menu-footer">
-                            <h6 class="footer-title">About</h6>
+                            <h6 class="footer-title">THÔNG TIN</h6>
                             <ul>
-                                <li><a href="" class="text-decoration-none">About us</a></li>
-                                <li><a href="" class="text-decoration-none">Find store</a></li>
-                                <li><a href="" class="text-decoration-none">Categories</a></li>
-                                <li><a href="" class="text-decoration-none">Blogs</a></li>
+                                <li><a href="" class="text-decoration-none">Hướng dẫn</a></li>
+                                <li><a href="" class="text-decoration-none">Chính sách</a></li>
+                                <li><a href="{{ url('/user-agreement') }}" class="text-decoration-none">Thỏa thuận người
+                                        dùng</a></li>
+                                <li><a href="{{ url('/condition') }}" class="text-decoration-none">Điều khoản & điều
+                                        kiện</a></li>
                             </ul>
                         </div>
                         <div class="menu-footer">
-                            <h6 class="footer-title">Partnership</h6>
+                            <h6 class="footer-title">KHÁCH HÀNG</h6>
                             <ul>
-                                <li><a href="" class="text-decoration-none">About us</a></li>
-                                <li><a href="" class="text-decoration-none">Find store</a></li>
-                                <li><a href="" class="text-decoration-none">Categories</a></li>
-                                <li><a href="" class="text-decoration-none">Blogs</a></li>
-                            </ul>
-                        </div>
-                        <div class="menu-footer">
-                            <h6 class="footer-title">Information</h6>
-                            <ul>
-                                <li><a href="" class="text-decoration-none">About us</a></li>
-                                <li><a href="" class="text-decoration-none">Find store</a></li>
-                                <li><a href="" class="text-decoration-none">Categories</a></li>
-                                <li><a href="" class="text-decoration-none">Blogs</a></li>
-                            </ul>
-                        </div>
-                        <div class="menu-footer">
-                            <h6 class="footer-title">For users</h6>
-                            <ul>
-                                <li><a href="" class="text-decoration-none">About us</a></li>
-                                <li><a href="" class="text-decoration-none">Find store</a></li>
-                                <li><a href="" class="text-decoration-none">Categories</a></li>
-                                <li><a href="" class="text-decoration-none">Blogs</a></li>
+                                <li><a href="" class="text-decoration-none">Thương hiệu</a></li>
+                                <li><a href="" class="text-decoration-none">Phiếu quà tặng</a></li>
+                                <li><a href="" class="text-decoration-none">Khuyến mãi</a></li>
+                                <li><a href="" class="text-decoration-none">Đổi trả hàng</a></li>
                             </ul>
                         </div>
                         <div class="menu-footer">
@@ -111,4 +99,20 @@
 <script src="{{ asset('assets/js/script.js') }}"></script>
 <script src="{{ asset('assets/js/slick.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Plugins JS File -->
+<script src="{{ asset('Home/assets/js/jquery.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/jquery.hoverIntent.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/jquery.waypoints.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/superfish.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/owl.carousel.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/bootstrap-input-spinner.js') }}"></script>
+<script src="{{ asset('Home/assets/js/jquery.plugin.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/jquery.magnific-popup.min.js') }}"></script>
+<script src="{{ asset('Home/assets/js/jquery.countdown.min.js') }}"></script>
+<!-- Main JS File -->
+<script src="{{ asset('Home/assets/js/main.js') }}"></script>
+<script src="{{ asset('Home/assets/js/demos/demo-3.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js"></script>
+
 {{--update--}}
