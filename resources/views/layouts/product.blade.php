@@ -12,15 +12,24 @@
             </nav>
             <div class="container-fluid">
                 <div class="row">
-
                     <div class="col-md-3 sidebar">
-                        <div class="accordion accordion-flush" id="accordionFlush">
+                        <form id="filterForm" action="{{ route('product.index') }}" method="GET">
+                            <div class="filter-heading">
+                                <i class="fas fa-filter"></i> Bộ lọc tìm kiếm
+                            </div>
+                            <input type="hidden" name="category_id" id="selectedCategoryId"
+                                   value="{{ request('category_id') }}">
+                            @foreach(request('brand_ids', []) as $brandId)
+                                <input type="hidden" name="brand_ids[]" value="{{ $brandId }}">
+                            @endforeach
+                            <input type="hidden" name="sort" id="selectedSort" value="{{ request('sort', '0') }}">
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    <button class="accordion-button custom-button collapsed" type="button"
+                                            data-bs-toggle="collapse"
                                             data-bs-target="#flush-collapseOne" aria-expanded="false"
                                             aria-controls="flush-collapseOne">
-                                        Danh mục sản phẩm
+                                        <span>Danh mục sản phẩm</span>
                                     </button>
                                 </h2>
                                 <div id="flush-collapseOne" class="accordion-collapse collapse"
@@ -33,204 +42,106 @@
                                             @foreach($Categories as $category)
                                                 <li class="category-item" data-category="{{ $category->id }}"
                                                     style="{{ $displayedCategories < 5 ? '' : 'display:none;' }}">
-                                                    <a href="#" class="category-link">{{ $category->name }}</a>
+                                                    <a href="#" class="category-link"
+                                                       data-id="{{ $category->id }}">{{ $category->name }}</a>
                                                 </li>
                                                 @php
                                                     $displayedCategories++;
                                                 @endphp
                                             @endforeach
                                         </ul>
-                                        <button class="seeAllButton" id="seeAllButtonCategories">Xem Tất Cả</button>
-                                        <button class="seeAllButton" id="backToTopCategories">Quay lại</button>
+                                        <button type="button" class="seeAllButton" id="seeAllButtonCategories">Xem Tất
+                                            Cả
+                                        </button>
+                                        <button type="button" class="seeAllButton" id="backToTopCategories">Quay lại
+                                        </button>
                                     </div>
                                 </div>
-
                             </div>
+
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    <button class="accordion-button custom-button collapsed" type="button"
+                                            data-bs-toggle="collapse"
                                             data-bs-target="#flush-collapseTwo" aria-expanded="false"
                                             aria-controls="flush-collapseTwo">
-                                        Thương hiệu
+                                        <span>Thương hiệu</span>
                                     </button>
                                 </h2>
                                 <div id="flush-collapseTwo" class="accordion-collapse collapse"
                                      data-bs-parent="#accordionFlush2">
                                     <div class="accordion-body">
                                         @foreach($Brands as $Brand)
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="samsungCheckbox">
-                                                <label class="form-check-label" for="samsungCheckbox">
-                                                    {{ $Brand->name }}
-                                                </label>
-                                            </div>
                                             <div class="form-check"
                                                  style="{{ $loop->index < 5 ? '' : 'display:none;' }}">
                                                 <input class="form-check-input brand-checkbox" type="checkbox"
-                                                       value="{{ $Brand->id }}" id="brand{{ $Brand->id }}">
+                                                       name="brand_ids[]" value="{{ $Brand->id }}"
+                                                       id="brand{{ $Brand->id }}" {{ in_array($Brand->id, request('brand_ids', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="brand{{ $Brand->id }}">
                                                     {{ $Brand->name }}
                                                 </label>
                                             </div>
                                         @endforeach
-                                        <button class="seeAllButton" id="seeAllButtonBrands">Xem Tất Cả</button>
-                                        <button class="seeAllButton" id="backToTopBrands">Quay lại</button>
-
+                                        <button type="button" class="seeAllButton" id="seeAllButtonBrands">Xem Tất Cả
+                                        </button>
+                                        <button type="button" class="seeAllButton" id="backToTopBrands">Quay lại
+                                        </button>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    <button class="accordion-button custom-button collapsed" type="button"
+                                            data-bs-toggle="collapse"
                                             data-bs-target="#flush-collapsePrice" aria-expanded="false"
                                             aria-controls="flush-collapsePrice">
-                                        Giá
+                                        <span>Giá</span>
                                     </button>
                                 </h2>
                                 <div id="flush-collapsePrice" class="accordion-collapse collapse"
                                      data-bs-parent="#accordioncollapsePrice">
                                     <div class="accordion-body">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value=""
-                                                   id="metallicCheckbox">
-                                            <label class="form-check-label" for="metallicCheckbox">
-                                                Metallic
-                                            </label>
-                                        <div class="range-slider">
-                                            <label for="customRange2"></label><input type="range" class="form-range"
-                                                                                     min="0" max="1000" value="0"
-                                                                                     step="1"
-                                                                                     id="customRange2">
+                                        <div class="price-buttons">
+                                            <button type="button" class="price-button" data-min="0" data-max="500000">
+                                                Dưới 500.000
+                                            </button>
+                                            <button type="button" class="price-button" data-min="500000"
+                                                    data-max="1000000">500.000 - 1.000.000
+                                            </button>
+                                            <button type="button" class="price-button" data-min="1000000"
+                                                    data-max="5000000">1.000.000 - 5.000.000
+                                            </button>
+                                            <button type="button" class="price-button" data-min="5000000">Trên
+                                                5.000.000
+                                            </button>
                                         </div>
                                         <div class="range-inputs">
-                                            <label for="minRangeInput"></label><input type="number"
-                                                                                      class="form-control small-input"
-                                                                                      id="minRangeInput"
-                                                                                      placeholder="0">
-                                            <label for="maxRangeInput"></label><input type="number"
-                                                                                      class="form-control small-input"
-                                                                                      id="maxRangeInput"
-                                                                                      placeholder="1000">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="plasticCheckbox">
-                                                <label class="form-check-label" for="plasticCheckbox">
-                                                    Plastic cover
-                                                </label>
-                                        </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="ramCheckbox">
-                                                <label class="form-check-label" for="ramCheckbox">
-                                                    8GB Ram
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="powerCheckbox">
-                                                <label class="form-check-label" for="powerCheckbox">
-                                                    Super power
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="memoryCheckbox">
-                                                <label class="form-check-label" for="memoryCheckbox">
-                                                    Large Memory
-                                                </label>
-                                            </div>
-                                            <button class="seeAllButton" id="seeAllButtonFeatures">See All</button>
-                                        <button id="applyButton" class="apply-button">Apply</button>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#flush-collapseFeatures" aria-expanded="false"
-                                            aria-controls="flush-collapseFeatures">
-                                        Đặt trưng
-                                    </button>
-                                </h2>
-                                <div id="flush-collapseFeatures" class="accordion-collapse collapse"
-                                     data-bs-parent="#accordionFlushFeatures">
-                                    <div class="accordion-body">
-                                        @foreach($productVariations as $productVariation)
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="metallicCheckbox">
-                                                <label class="form-check-label" for="metallicCheckbox">
-                                                    {{ $productVariation->variation_name }}
-                                                </label>
-                                            </div>
-                                        @endforeach
-                                        <button class="seeAllButton" id="seeAllButtonFeatures">See All</button>
-
-                                            <div class="range-slider">
-                                                <input type="range" class="form-range" min="0" max="5" value="0"
-                                                       step="1"
-                                                       id="customRange2">
-                                            </div>
-                                            <div class="range-inputs">
+                                            <div class="input-group">
+                                                <label for="minRangeInput">Giá tối thiểu:</label>
                                                 <input type="number" class="form-control small-input" id="minRangeInput"
-                                                       placeholder="0">
-                                                <input type="number" class="form-control small-input" id="maxRangeInput"
-                                                       placeholder="999999999 ">
+                                                       min="0" step="1">
                                             </div>
-                                            <button class="apply-button">Apply</button>
+                                            <div class="input-group">
+                                                <label for="maxRangeInput">Giá tối đa:</label>
+                                                <input type="number" class="form-control small-input" id="maxRangeInput"
+                                                       min="0" step="1">
+                                            </div>
+                                        </div>
+                                        <button type="button" class="apply-button">Áp dụng</button>
+                                        <!-- Nút áp dụng vẫn hiện -->
                                     </div>
                                 </div>
                             </div>
+
+
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#flush-collapseCondition" aria-expanded="false"
-                                            aria-controls="flush-collapseCondition">
-                                        Tình trạng
-                                    </button>
-                                </h2>
-                                <div id="flush-collapseCondition" class="accordion-collapse collapse"
-                                     data-bs-parent="#accordioncollapseCondition">
-                                    <div class="accordion-body">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                   id="flexRadioDefault1">
-                                            <label class="form-check-label" for="flexRadioDefault1">
-                                                Any
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                   id="flexRadioDefault2" checked>
-                                            <label class="form-check-label" for="flexRadioDefault2">
-                                                Refurbished
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                   id="flexRadioDefault3">
-                                            <label class="form-check-label" for="flexRadioDefault3">
-                                                Brand new
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                   id="flexRadioDefault4">
-                                            <label class="form-check-label" for="flexRadioDefault4">
-                                                Old items
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    <button class="accordion-button custom-button collapsed" type="button"
+                                            data-bs-toggle="collapse"
                                             data-bs-target="#flush-collapseRating" aria-expanded="false"
                                             aria-controls="flush-collapseRating">
-                                        Xếp hạng
+                                        <span>Xếp hạng</span>
                                     </button>
                                 </h2>
                                 <div id="flush-collapseRating" class="accordion-collapse collapse"
@@ -286,35 +197,52 @@
                                                 <i class="fa fa-star star-gray"></i>
                                             </label>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
+                        </form>
                     </div>
                     <div class="col-md-9 content">
                         <div class="content-top">
                             <div class="row align-items-center">
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-center"> 12,911 items in&nbsp; <strong> Mobile
-                                            accessory</strong></div>
+                                <div id="filteredItemCount" class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        @php
+                                            $filteredItemCount = $products->total();
+                                        @endphp
+                                        <strong>{{ $filteredItemCount }}</strong> &nbsp; Sản phẩm &nbsp; <strong>
+                                            @if(request('category_id'))
+                                                @php
+                                                    $category = \App\Models\Category::find(request('category_id'));
+                                                @endphp
+                                                @if($category)
+                                                    <span class="filter-btn">{{ $category->name }}</span>
+                                                @endif
+                                            @endif
+                                        </strong>
+                                    </div>
                                 </div>
+
                                 <div class="col-md-6">
                                     <div class="d-flex align-items-center justify-content-end">
-                                        <div class="form-check me-3">
-                                            <input class="form-check-input" type="checkbox" value=""
-                                                   id="verifiedCheckbox">
-                                            <label class="form-check-label" for="verifiedCheckbox">
-                                                Chọn
-                                            </label>
-                                        </div>
-                                        <div class="form-group me-3">
-                                            <select class="form-select" id="featuredSelect">
-                                                <option>Đặt trưng</option>
-                                                <option>Không đặt trưng</option>
-                                            </select>
-                                        </div>
+                                        <form id="sort-form" method="GET" action="{{ route('product.index') }}">
+                                            <div class="form-group me-3">
+                                                <select class="form-select" name="sort" aria-label="Sắp xếp theo">
+                                                    <option value="0" @if(request('sort', '0') == '0') selected @endif>
+                                                        Nổi bật
+                                                    </option>
+                                                    <option value="1" @if(request('sort', '0') == '1') selected @endif>
+                                                        Giá thấp đến cao
+                                                    </option>
+                                                    <option value="2" @if(request('sort', '0') == '2') selected @endif>
+                                                        Giá cao đến thấp
+                                                    </option>
+                                                    <option value="3" @if(request('sort', '0') == '3') selected @endif>
+                                                        Khuyến mãi
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </form>
                                         <div class="btn-group me-3 switchView">
                                             <div id="gridButton" onclick="switchView('grid')"><i
                                                     class="bi bi-grid-3x3-gap-fill"></i></div>
@@ -327,10 +255,59 @@
                             </div>
                         </div>
                         <div class="filters-applied">
-                            <button class="seeAllButton" id="Clearallfilter">Xóa tất cả bộ lọc</button>
+                            @if(request('query'))
+                                <p>
+                                    <i class="bi bi-search"></i>
+                                    Kết quả tìm kiếm cho từ khóa "<span
+                                        style="color: red;">{{ request('query') }}</span>"
+                                </p>
+                            @endif
+
+                            @if(request('category_id'))
+                                @php
+                                    $category = \App\Models\Category::find(request('category_id'));
+                                @endphp
+                                @if($category)
+                                    <span class="filter-btn">
+                {{ $category->name }}
+                <button type="button" class="remove-filter" data-filter-type="category"
+                        data-filter-value="{{ request('category_id') }}">x</button>
+            </span>
+                                @endif
+                            @endif
+
+                            @php
+                                $brandIds = request('brand_ids', []);
+                                $brands = \App\Models\Brand::whereIn('id', $brandIds)->get();
+                            @endphp
+
+                            @foreach($brands as $brand)
+                                <span class="filter-btn">
+            {{ $brand->name }}
+            <button type="button" class="remove-filter" data-filter-type="brand"
+                    data-filter-value="{{ $brand->id }}">x</button>
+        </span>
+                            @endforeach
+
+                            @if(request('min_price') || request('max_price'))
+                                <span class="filter-btn">
+            @if(request('min_price') && request('max_price'))
+                                        {{ request('min_price') }} - {{ request('max_price') }}
+                                    @elseif(request('min_price'))
+                                        Từ {{ request('min_price') }}
+                                    @elseif(request('max_price'))
+                                        Dưới {{ request('max_price') }}
+                                    @endif
+            <button type="button" class="remove-filter" data-filter-type="price"
+                    data-filter-value="{{ request('min_price') }}-{{ request('max_price') }}">x</button>
+        </span>
+                            @endif
+
+                            @if(request('category_id') || request('brand_ids') || request('min_price') || request('max_price'))
+                                <button type="button" class="seeAllButton" id="clearFilters">Xóa tất cả bộ lọc</button>
+                            @endif
                         </div>
                         <div class="product">
-
                             <div id="productGrid" class="product-grid">
                                 <div class="row">
                                     @foreach ($products as $product)
@@ -338,93 +315,79 @@
                                              data-category="{{ $product->category_id }}"
                                              data-brand="{{ $product->brand_id }}"
                                              data-price="{{ $product->price }}">
-                                            <div class="product-card h-100">
-                                                <div class="product-img">
-                                                    <img src="{{ asset('storage/' . $product->main_image) }}"
-                                                         alt="Product Image">
-                                                </div>
-                                                <div class="product-info">
-                                                    <div class="product-price-item">
-                                                        <div class="price-item">
-                                                            <div
-                                                                class="product-price">{{ $product->regular_price ? number_format($product->regular_price, 2) : 'Price not available' }}
-                                                                <div
-                                                                    class="product-price-discounted">{{ $product->sale_price ? number_format($product->sale_price, 2) : '' }}</div>
-                                                            </div>
-                                                            <div class="rating">
-                                                                <div class="star">
-                                                                    <i class="bi bi-star-fill"></i>
-                                                                    <i class="bi bi-star-fill"></i>
-                                                                    <i class="bi bi-star-fill"></i>
-                                                                    <i class="bi bi-star-fill"></i>
-                                                                    <i class="bi bi-star-fill"></i>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="product-favorite d-flex align-items-center">
-                                                            <a href=""><i class="far fa-heart"></i></a>
-                                                        </div>
-
-                                                    </div>
-                                                    <p class="product-title">{{ $product->name }}</p>
-                                                    <p class="product-description">{{ $product->description }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 mb-4 ">
                                             <a href="{{ route('product.detail', ['id' => $product->id]) }}"
                                                class="product-link text-decoration-none text-black">
-                                                <div class="product-card">
+                                                <div class="product-card h-100">
                                                     <div class="product-img">
-                                                        <img src="{{ asset('storage/' . $product->main_image) }}"
-                                                             alt="Product Image">
+                                                        @if ($product->main_image)
+                                                            <img src="{{ asset('storage/' . $product->main_image) }}"
+                                                                 alt="Product Image">
+                                                        @else
+                                                            <img
+                                                                src="https://thudaumot.binhduong.gov.vn/Portals/0/images/default.jpg"
+                                                                alt="Default Image">
+                                                        @endif
                                                     </div>
+
                                                     <div class="product-info">
                                                         <div class="product-price-item">
                                                             <div class="price-item">
-                                                                <div
-                                                                    class="product-price">{{ $product->formattedRegularPrice }}
-                                                                    đ
+                                                                <div class="product-price">
+                                                                    {{ $product->formattedDisplayedPrice ? $product->formattedDisplayedPrice : 'Price not available' }}
                                                                     @if($product->sale_price)
-                                                                        <div
-                                                                            class="product-price-discounted">{{ $product->formattedSalePrice }}
-                                                                            đ
+                                                                        <div class="product-price-discounted">
+                                                                            {{ $product->formattedRegularPrice ? $product->formattedRegularPrice : '' }}
                                                                         </div>
                                                                     @endif
                                                                 </div>
+
                                                                 <div class="rating">
-                                                                    <div class="star">
-                                                                        <i class="bi bi-star-fill"></i>
-                                                                        <i class="bi bi-star-fill"></i>
-                                                                        <i class="bi bi-star-fill"></i>
-                                                                        <i class="bi bi-star-fill"></i>
-                                                                        <i class="bi bi-star-fill"></i>
-                                                                    </div>
+                                                                        <?php for ($i = 1;
+                                                                                   $i <= 5;
+                                                                                   $i++): ?>
+                                                                        <?php if ($i <= $product->rating): ?>
+                                                                    <i class="bi bi-star-fill" style="color: gold;"></i>
+                                                                    <?php elseif ($i - $product->rating < 1): ?>
+                                                                    <i class="bi bi-star-half" style="color: gold;"></i>
+                                                                    <?php else: ?>
+                                                                    <i class="bi bi-star-fill"
+                                                                       style="color: lightgray;"></i>
+                                                                    <?php endif; ?>
+                                                                    <?php endfor; ?>
                                                                 </div>
                                                             </div>
                                                             <div class="product-favorite d-flex align-items-center">
-                                                                <a href="{{ route('product.detail', ['id' => $product->id]) }}"><i
-                                                                        class="far fa-heart"></i></a>
+                                                                <a href=""><i class="far fa-heart"></i></a>
                                                             </div>
+
                                                         </div>
                                                         <p class="product-title">{{ $product->name }}</p>
-                                                        <p class="product-title">{{ $product->description }}</p>
+                                                        <p class="product-description">{{ $product->description }}</p>
                                                     </div>
+                                                    @if($product->sale_price != 0)
+                                                        <div class="sale-off fw-bolder">
+                                                            -{{ round(100 - ($product->sale_price * 100 / $product->regular_price))  }}
+                                                            %
+                                                        </div>
+                                                    @endif
                                                 </div>
+
                                             </a>
                                         </div>
 
                                     @endforeach
                                 </div>
                             </div>
-
                             <div id="productColumn" class="product-column">
                                 @foreach ($products as $product)
-                                    <div class="product-card mb-3">
+
+                                    <div class="product-card mb-3 product-item"
+                                         data-category="{{ $product->category_id }}"
+                                         data-brand="{{ $product->brand_id }}"
+                                         data-price="{{ $product->price }}">
                                         <div class="row">
                                             <div class="col-12 col-lg-3">
-                                                <div class="product-img"><a href="index.html"><img
+                                                <div class="product-img"><a href="checkout.blade.php"><img
                                                             src="{{ asset('storage/' . $product->main_image) }}"
                                                             alt="Product 1 Image"></a>
                                                 </div>
@@ -438,12 +401,11 @@
                                                         </div>
                                                     </div>
                                                     <div class="price-item">
-                                                        <div class="product-price">{{ $product->formattedRegularPrice }}
-                                                            đ
+                                                        <div class="product-price">
+                                                            {{ $product->formattedDisplayedPrice ? $product->formattedDisplayedPrice : 'Price not available' }}
                                                             @if($product->sale_price)
-                                                                <div
-                                                                    class="product-price-discounted">{{ $product->formattedSalePrice }}
-                                                                    đ
+                                                                <div class="product-price-discounted">
+                                                                    {{ $product->formattedRegularPrice ? $product->formattedRegularPrice : '' }}
                                                                 </div>
                                                             @endif
                                                         </div>
@@ -473,105 +435,18 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @if($product->sale_price != 0)
+                                            <div class="sale-off fw-bolder">
+                                                -{{ round(100 - ($product->sale_price * 100 / $product->regular_price))  }}
+                                                %
+                                            </div>
+                                        @endif
                                     </div>
 
-                                    <div class="product-card mb-3 product-item"
-                                         data-category="{{ $product->category_id }}"
-                                         data-brand="{{ $product->brand_id }}"
-                                         data-price="{{ $product->price }}">
-                                        <div class="row">
-                                            <div class="col-12 col-lg-3">
-                                                <div class="product-img"><a href="checkout.blade.php"><img
-                                                            src="{{ asset('storage/' . $product->main_image) }}"
-                                                            alt="Product 1 Image"></a>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-lg-9">
-                                                <div class="product-info">
-                                                    <div class="product-title-item">
-                                                        <p class="product-title">{{ $product->name }}</p>
-                                                        <div class="product-favorite d-flex align-items-center">
-                                                            <a href=""><i class="far fa-heart"></i></a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="price-item">
-                                                        <div class="product-price">{{ $product->regular_price }}
-                                                            <div
-                                                                class="product-price-discounted">{{ $product->sale_price }}</div>
-                                                        </div>
-                                                        <div class="rating">
-                                                            <div class="star">
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                                <i class="bi bi-star-fill"></i>
-                                                            </div>
-                                                            <div class="number-star">
-                                                                7.5
-                                                            </div>
-                                                            <div class="order">
-                                                                145 Orders
-                                                            </div>
-                                                            <div class="shipping">
-                                                                Free Ship
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <p class="product-description">{{ $product->description }} </p>
-                                                    <div class="view-detail">
-                                                        <a href="">View Detail</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 @endforeach
-
-                            </div>
-
-                            <div id="noProductMessage" class="no-product-message" style="display: none;">
-
-                                <p><i class="fas fa-exclamation-circle"></i>Không có sản phẩm nào</p>
                             </div>
                             <div class="pagination-menu">
-                                <div class="dropdown">
-                                    <button class="btn dropdown-toggle" type="button" id="showDropdown2"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                        Show {{ $itemsPerPage }}
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="showDropdown">
-                                        <li><a class="dropdown-item phanTrang" href="#" data-value="9">Show 9</a></li>
-                                        <li><a class="dropdown-item phanTrang" href="#" data-value="12">Show 12</a></li>
-                                        <li><a class="dropdown-item phanTrang" href="#" data-value="15">Show 15</a></li>
-                                    </ul>
-                                </div>
-                                <nav aria-label="Page navigation example pb-4">
-                                    <ul class="pagination">
-                                        <li class="page-item {{ $products->currentPage() == 1 ? 'disabled' : '' }}">
-                                            <a class="page-link" href="{{ $products->previousPageUrl() }}"
-                                               aria-label="Previous">
-                                                <span aria-hidden="true">&laquo;</span>
-                                            </a>
-                                        </li>
-                                        @php
-                                            $startPage = max(1, $products->currentPage() - 1);
-                                            $endPage = min($startPage + 2, $products->lastPage());
-                                        @endphp
-                                        @for ($i = $startPage; $i <= $endPage; $i++)
-                                            <li class="page-item {{ $i == $products->currentPage() ? 'active' : '' }}">
-                                                <a class="page-link" href="{{ $products->url($i) }}">{{ $i }}</a>
-                                            </li>
-                                        @endfor
-
-                                        <li class="page-item {{ $products->currentPage() == $products->lastPage() ? 'disabled' : '' }}">
-                                            <a class="page-link" href="{{ $products->nextPageUrl() }}"
-                                               aria-label="Next">
-                                                <span aria-hidden="true">&raquo;</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
+                                {{ $products->render() }}
                             </div>
                         </div>
                     </div>
@@ -579,40 +454,5 @@
             </div>
         </div>
     </div>
-            <script>
-                window.addEventListener('DOMContentLoaded', function () {
-                    var gridButton = document.getElementById('gridButton');
-                    var columnButton = document.getElementById('columnButton');
-                    var productGrid = document.getElementById('productGrid');
-                    var productColumn = document.getElementById('productColumn');
-
-                    gridButton.disabled = true;
-                    columnButton.disabled = false;
-                    productGrid.style.display = 'block';
-                    productColumn.style.display = 'none';
-
-                    gridButton.addEventListener('click', function () {
-                        gridButton.disabled = true;
-                        columnButton.disabled = false;
-                        productGrid.style.display = 'block';
-                        productColumn.style.display = 'none';
-                    });
-
-                    columnButton.addEventListener('click', function () {
-                        gridButton.disabled = false;
-                        columnButton.disabled = true;
-                        productGrid.style.display = 'none';
-                        productColumn.style.display = 'block';
-                    });
-                });
-
-                // Lắng nghe sự kiện click cho mỗi sản phẩm
-                document.querySelectorAll('.product-link').forEach(item => {
-                    item.addEventListener('click', event => {
-                        // Chuyển hướng người dùng đến trang chi tiết tương ứng
-                        window.location.href = item.getAttribute('href');
-                    });
-                });
-            </script>
 @endsection
 {{--update--}}

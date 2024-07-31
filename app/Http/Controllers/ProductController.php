@@ -18,45 +18,133 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $itemsPerPage = $request->input('items_per_page', 9);
-        $products = Product::paginate($itemsPerPage);
+        $categoryId = $request->input('category_id');
+        $brandIds = $request->input('brand_ids', []);
+        $minPrice = $request->input('min_price', 0);
+        $maxPrice = $request->input('max_price', 500000000); // Set a default max price if not provided
+        $sortBy = $request->input('sort', '0'); // Default sorting option
+
+        $query = Product::query();
+
+        $query->select('*')->selectRaw('IF(sale_price IS NOT NULL, sale_price, regular_price) AS displayedPrice');
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        if (!empty($brandIds)) {
+            $query->whereIn('brand_id', $brandIds);
+        }
+
+        if ($minPrice !== null && $maxPrice !== null) {
+            $query->havingBetween('displayedPrice', [(float)$minPrice, (float)$maxPrice]);
+        } elseif ($minPrice !== null) {
+            $query->having('displayedPrice', '>=', (float)$minPrice);
+        } elseif ($maxPrice !== null) {
+            $query->having('displayedPrice', '<=', (float)$maxPrice);
+        }
+
+        switch ($sortBy) {
+            case '1':
+                $query->orderBy('displayedPrice', 'asc');
+                break;
+            case '2':
+                $query->orderBy('displayedPrice', 'desc');
+                break;
+            case '3':
+                $query->whereNotNull('sale_price')
+                    ->orderByRaw('(100 - (sale_price * 100 / regular_price)) DESC');
+                break;
+            default:
+                $query->latest();
+                break;
+        }
+
+        $products = $query->paginate($itemsPerPage)->appends($request->except('page'));
+
         $Categories = Category::all();
         $Brands = Brand::all();
         $productVariations = ProductVariation::all();
         $productProductVariationValue = ProductVariationValue::all();
+        $maxProductPrice = Product::max('sale_price');
+
         foreach ($products as $product) {
             $productMedia = ProductMedia::where('product_id', $product->id)->where('is_main', 1)->first();
             $product->main_image = $productMedia ? $productMedia->media : null;
             $product->formattedRegularPrice = number_format($product->regular_price, 0, ',', '.');
             $product->formattedSalePrice = number_format($product->sale_price, 0, ',', '.');
+
+            $product->displayedPrice = $product->sale_price ? $product->sale_price : $product->regular_price;
+            $product->formattedDisplayedPrice = number_format($product->displayedPrice, 0, ',', '.');
         }
+
         return view('layouts.product', [
             'products' => $products,
             'Brands' => $Brands,
             'Categories' => $Categories,
-
+            'productVariations' => $productVariations,
+            'itemsPerPage' => $itemsPerPage,
+            'selectedCategory' => $categoryId,
+            'selectedBrands' => $brandIds,
+            'minPrice' => $minPrice,
+            'maxPrice' => $maxPrice,
+            'maxProductPrice' => $maxProductPrice,
+            'sortBy' => $sortBy,
         ]);
     }
+
 
     public function search(Request $request)
     {
         $query = $request->input('query');
-        $Categories = Category::where('name', 'like', '%' . $query . '%')->get();
-        $products = Product::where('name', 'like', '%' . $query . '%')->get();
-        $Brands = Brand::all();
+        $itemsPerPage = $request->input('items_per_page', 9);
+        $sortBy = $request->input('sort', '0'); // Default sorting option
+
+        $queryBuilder = Product::query();
+        $queryBuilder->where('name', 'like', '%' . $query . '%')
+            ->select('*')
+            ->selectRaw('IF(sale_price IS NOT NULL, sale_price, regular_price) AS displayedPrice');
+
+        switch ($sortBy) {
+            case '1':
+                $queryBuilder->orderBy('displayedPrice', 'asc');
+                break;
+            case '2':
+                $queryBuilder->orderBy('displayedPrice', 'desc');
+                break;
+            case '3':
+                $queryBuilder->whereNotNull('sale_price')
+                    ->orderByRaw('(100 - (sale_price * 100 / regular_price)) DESC');
+                break;
+            default:
+                $queryBuilder->latest();
+                break;
+        }
+
+        $products = $queryBuilder->paginate($itemsPerPage)->appends($request->except('page'));
+
         foreach ($products as $product) {
             $productMedia = ProductMedia::where('product_id', $product->id)->where('is_main', 1)->first();
             $product->main_image = $productMedia ? $productMedia->media : null;
             $product->formattedRegularPrice = number_format($product->regular_price, 0, ',', '.');
             $product->formattedSalePrice = number_format($product->sale_price, 0, ',', '.');
+            $product->displayedPrice = $product->sale_price ? $product->sale_price : $product->regular_price;
+            $product->formattedDisplayedPrice = number_format($product->displayedPrice, 0, ',', '.');
         }
+
+        $Categories = Category::all();
+        $Brands = Brand::all();
 
         return view('layouts.product', [
             'products' => $products,
             'Brands' => $Brands,
             'Categories' => $Categories,
             'searchQuery' => $query,
+            'sortBy' => $sortBy,
+            'itemsPerPage' => $itemsPerPage,
         ]);
     }
+
 
     public function showByCategory($categoryId)
     {
@@ -79,14 +167,14 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::findOrFail($id);
-        $product->view_count++;
-        $product->save();
-        $productMedia = ProductMedia::where('product_id', $product->id)->get();
-        $product->main_image = $productMedia->isNotEmpty() ? $productMedia->first()->media : null;
-        $formattedRegularPrice = number_format($product->regular_price, 0, ',', '.');
-        $formattedSalePrice = number_format($product->sale_price, 0, ',', '.');
-        $productVariations = ProductVariation::where('product_id', $product->id)->with('productVariationValue')->get();
+        $products = Product::findOrFail($id);
+        $products->view_count++;
+        $products->save();
+        $productMedia = ProductMedia::where('product_id', $products->id)->get();
+        $products->main_image = $productMedia->isNotEmpty() ? $productMedia->first()->media : null;
+        $formattedRegularPrice = number_format($products->regular_price, 0, ',', '.');
+        $formattedSalePrice = number_format($products->sale_price, 0, ',', '.');
+        $productVariations = ProductVariation::where('product_id', $products->id)->with('productVariationValue')->get();
 
 
         $favoriteProductIds = Wishlist::where('user_id', auth()->id())->pluck('product_id');
@@ -106,7 +194,7 @@ class ProductController extends Controller
             ->paginate(5);
 
         return view('layouts.detail', [
-            'product' => $product,
+            'product' => $products,
             'productMedia' => $productMedia,
             'productVariations' => $productVariations,
             'formattedRegularPrice' => $formattedRegularPrice,
@@ -119,41 +207,6 @@ class ProductController extends Controller
     public function showPost()
     {
     }
-    public function filter(Request $request)
-    {
-        $categoryId = $request->input('category_id');
-        $brandId = $request->input('brand_id');
-
-        $query = Product::query();
-
-        if ($categoryId) {
-            $query->whereHas('category', function ($q) use ($categoryId) {
-                $q->where('id', $categoryId);
-            });
-        }
-
-        if ($brandId) {
-            $query->whereHas('brand', function ($q) use ($brandId) {
-                $q->where('id', $brandId);
-            });
-        }
-
-        $products = $query->paginate(9);
-
-        return view('layouts.product', compact('products', 'Categories', 'Brands'));
-
-        return view('layouts.detail', [
-            'product' => $product,
-            'productMedia' => $productMedia,
-            'productVariations' => $productVariations,
-            'formattedRegularPrice' => $formattedRegularPrice,
-            'formattedSalePrice' => $formattedSalePrice,
-            'favoriteProducts' => $favoriteProducts,
-
-        ]);
-
-    }
-
 
     public function addToCart(Request $request)
     {
@@ -195,5 +248,5 @@ class ProductController extends Controller
         Session::put('cartItems', $cartItems);
         return redirect()->route('cart.view');
     }
-
 }
+

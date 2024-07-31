@@ -1,61 +1,4 @@
 // ---------------
-// count down
-// ---------------
-
-
-let dateupto = new Date("Sep 30, 2024 23:59:59:999");
-
-if (dateupto < new Date()) {
-    $("#countdown").hide();
-    $("#countdownbtn").hide();
-    $("#normalbtn").show();
-} else {
-    $("#countdown").show();
-    $("#normalbtn").hide();
-}
-
-
-let $days = document.getElementById('days');
-let $hours = document.getElementById('hours');
-let $minutes = document.getElementById('minutes');
-let $seconds = document.getElementById('seconds');
-
-setInterval(function () {
-    // Calculate the remaining time
-    var now = new Date();
-    var timeLeft = (dateupto - now) / 1000;
-    updateClock(timeLeft);
-}, 1000);
-
-function updateClock(remainingTime) {
-    // calculate (and subtract) whole days
-    let days = Math.floor(remainingTime / 86400);
-    remainingTime -= days * 86400;
-
-    // calculate (and subtract) whole hours
-    let hours = Math.floor(remainingTime / 3600) % 24;
-    remainingTime -= hours * 3600;
-
-    // calculate (and subtract) whole minutes
-    let minutes = Math.floor(remainingTime / 60) % 60;
-    remainingTime -= minutes * 60;
-
-    // what's left is seconds
-    let seconds = Math.floor(remainingTime % 60);
-
-    // pad numbers if needed
-    $days.innerHTML = padNumber(days);
-    $hours.innerHTML = padNumber(hours);
-    $minutes.innerHTML = padNumber(minutes);
-    $seconds.innerHTML = padNumber(seconds);
-}
-
-function padNumber(number) {
-    return number < 10 ? "0" + number : number;
-}
-
-
-// ---------------
 // change image
 // ---------------
 function changeImg(pic) {
@@ -65,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const clearAllButton = document.getElementById('Clearallfilter');
     clearAllButton.style.display = 'none';
 });
+
 
 //Chuyển đổi hiển thị dạng cột và dạng mảng
 window.addEventListener('DOMContentLoaded', function () {
@@ -92,22 +36,9 @@ window.addEventListener('DOMContentLoaded', function () {
         productColumn.style.display = 'block';
     });
 });
-//Phân trang
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll('.phanTrang').forEach(function (item) {
-        item.addEventListener('click', function (event) {
-            event.preventDefault();
-            var itemsPerPage = this.getAttribute('data-value');
-            var currentUrl = window.location.href;
-            var newUrl = currentUrl.replace(/(\?|&)items_per_page=\d+/gi, '');
-            if (newUrl.includes('?')) {
-                newUrl += '&items_per_page=' + itemsPerPage;
-            } else {
-                newUrl += '?items_per_page=' + itemsPerPage;
-            }
-            window.location.href = newUrl;
-        });
-    });
+//Lọc giá trị thấp cao
+document.querySelector('#sort-form select[name="sort"]').addEventListener('change', function () {
+    document.querySelector('#sort-form').submit();
 });
 // Ẩn nút "Quay lại" ban đầu
 document.getElementById('backToTopCategories').style.display = 'none';
@@ -156,156 +87,186 @@ document.getElementById('backToTopBrands').addEventListener('click', function ()
     document.getElementById('seeAllButtonBrands').style.display = 'inline-block';
     this.style.display = 'none';
 });
-
-//bộ lọc
-document.addEventListener('DOMContentLoaded', function () {
-    const categoryLinks = document.querySelectorAll('.category-link');
-    categoryLinks.forEach(link => {
-        link.addEventListener('click', function (event) {
-            event.preventDefault();
-            const categoryId = this.parentElement.getAttribute('data-category');
-            clearCategoryFilters();
-            updateAppliedFilters('category', this.innerText, categoryId);
-            filterProducts();
-        });
+//Lọc theo danh mục
+document.querySelectorAll('.category-link').forEach(link => {
+    link.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.getElementById('selectedCategoryId').value = this.dataset.id;
+        document.getElementById('filterForm').submit();
     });
+});
+// Lọc theo danh mục
+document.querySelectorAll('.category-link').forEach(link => {
+    link.addEventListener('click', function (e) {
+        e.preventDefault();
+        const selectedCategoryId = this.dataset.id;
+        const url = new URL(window.location.href);
 
-    function filterProducts() {
-        const selectedCategory = document.querySelector('.filters-applied .filter-btn[data-filter-type="category"]');
-        const selectedBrands = Array.from(document.querySelectorAll('.brand-checkbox:checked')).map(cb => cb.value);
-        const categoryId = selectedCategory ? selectedCategory.getAttribute('data-filter-value') : 'all';
+        // Cập nhật tham số category_id trong URL
+        url.searchParams.set('category_id', selectedCategoryId);
 
-        const allProducts = document.querySelectorAll('.product-item');
+        // Giữ lại giá nếu đã chọn
+        const minPrice = url.searchParams.get('min_price');
+        const maxPrice = url.searchParams.get('max_price');
+        if (minPrice) {
+            url.searchParams.set('min_price', minPrice);
+        }
+        if (maxPrice) {
+            url.searchParams.set('max_price', maxPrice);
+        }
 
-        let anyProductDisplayed = false; // Flag to track if any product is displayed
+        // Chuyển hướng đến URL mới
+        window.location.href = url.toString();
+    });
+});
 
-        allProducts.forEach(product => {
-            const productCategory = product.getAttribute('data-category');
-            const productBrand = product.getAttribute('data-brand');
+// Lọc theo thương hiệu
+document.querySelectorAll('.brand-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', function () {
+        const url = new URL(window.location.href);
 
-            const matchesCategory = categoryId === 'all' || productCategory === categoryId;
-            const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(productBrand);
+        // Lấy tất cả các brand_ids đã chọn
+        let brandIds = url.searchParams.getAll('brand_ids[]');
 
-            if (matchesCategory && (selectedBrands.length === 0 || matchesBrand)) {
-                product.style.display = '';
-                anyProductDisplayed = true; // Set flag to true if any product is displayed
-            } else {
-                product.style.display = 'none';
-            }
-        });
-
-        if (!anyProductDisplayed) {
-            // No product displayed, show the message
-            document.getElementById('noProductMessage').style.display = 'block';
+        // Nếu checkbox được chọn, thêm vào brandIds; nếu không, xóa khỏi brandIds
+        if (this.checked) {
+            brandIds.push(this.value);
         } else {
-            // Products are displayed, hide the message
-            document.getElementById('noProductMessage').style.display = 'none';
+            brandIds = brandIds.filter(id => id !== this.value);
         }
 
-        checkAndRemoveEmptyFilterGroup();
-    }
+        // Cập nhật tham số brand_ids trong URL
+        url.searchParams.delete('brand_ids[]');
+        brandIds.forEach(id => url.searchParams.append('brand_ids[]', id));
 
-    function checkAndDisplayNoProductMessage() {
-        const productGrid = document.getElementById('productGrid');
-        const productColumn = document.getElementById('productColumn');
-        const noProductMessage = document.getElementById('noProductMessage');
+        // Giữ lại giá nếu đã chọn
+        const minPrice = url.searchParams.get('min_price');
+        const maxPrice = url.searchParams.get('max_price');
+        if (minPrice) {
+            url.searchParams.set('min_price', minPrice);
+        }
+        if (maxPrice) {
+            url.searchParams.set('max_price', maxPrice);
+        }
 
-        const displayedProducts = document.querySelectorAll('.product-item[style*="display:"]');
+        // Chuyển hướng đến URL mới
+        window.location.href = url.toString();
+    });
+});
 
-        if (displayedProducts.length === 0) {
-            productGrid.style.display = 'none';
-            productColumn.style.display = 'none';
-            noProductMessage.style.display = ''; // Hiển thị thông báo
+// Lọc theo giá (giữ lại khoảng giá đã chọn khi thay đổi bộ lọc khác)
+document.querySelectorAll('.price-button').forEach(button => {
+    button.addEventListener('click', function () {
+        const minPrice = this.getAttribute('data-min');
+        const maxPrice = this.getAttribute('data-max');
+        const url = new URL(window.location.href);
+
+        // Cập nhật tham số URL cho giá
+        url.searchParams.set('min_price', minPrice);
+        if (maxPrice) {
+            url.searchParams.set('max_price', maxPrice);
         } else {
-            productGrid.style.display = '';
-            productColumn.style.display = '';
-            noProductMessage.style.display = 'none'; // Ẩn thông báo
+            url.searchParams.delete('max_price');
         }
-    }
 
-    const seeAllButtonBrands = document.getElementById('seeAllButtonBrands');
-    seeAllButtonBrands.addEventListener('click', function () {
-        const hiddenBrandItems = document.querySelectorAll('.form-check[style*="display:none;"]');
-        hiddenBrandItems.forEach(item => item.style.display = '');
-        this.style.display = 'none';
+        // Chuyển hướng đến URL mới
+        window.location.href = url.toString();
+    });
+});
+// Sắp xếp
+document.querySelector('#sort-form select').addEventListener('change', function () {
+    const selectedSort = this.value;
+    const url = new URL(window.location.href);
+
+    // Cập nhật tham số sort trong URL
+    url.searchParams.set('sort', selectedSort);
+
+    // Giữ lại tất cả các bộ lọc khác
+    const minPrice = url.searchParams.get('min_price');
+    const maxPrice = url.searchParams.get('max_price');
+    const categoryId = url.searchParams.get('category_id');
+    const brandIds = url.searchParams.getAll('brand_ids[]');
+
+    if (minPrice) {
+        url.searchParams.set('min_price', minPrice);
+    }
+    if (maxPrice) {
+        url.searchParams.set('max_price', maxPrice);
+    }
+    if (categoryId) {
+        url.searchParams.set('category_id', categoryId);
+    }
+    brandIds.forEach(id => {
+        url.searchParams.append('brand_ids[]', id);
     });
 
-    const brandCheckboxes = document.querySelectorAll('.brand-checkbox');
-    brandCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            updateAppliedFilters('brand', this.nextElementSibling.innerText, this.value);
-            filterProducts();
-        });
-    });
+    // Cập nhật giá trị selectedSort
+    document.getElementById('selectedSort').value = selectedSort;
 
-    function updateAppliedFilters(type, name, value) {
-        const filtersApplied = document.querySelector('.filters-applied');
-        const existingFilterBtn = filtersApplied.querySelector(`.filter-btn[data-filter-type="${type}"][data-filter-value="${value}"]`);
+    // Chuyển hướng đến URL mới
+    window.location.href = url.toString();
+});
 
-        if (!existingFilterBtn) {
-            const filterBtn = document.createElement('button');
-            filterBtn.className = 'filter-btn';
-            filterBtn.setAttribute('data-filter-type', type);
-            filterBtn.setAttribute('data-filter-name', name);
-            filterBtn.setAttribute('data-filter-value', value);
-            filterBtn.innerHTML = `${name} <i class="bi bi-x"></i>`;
-            filterBtn.addEventListener('click', function () {
-                this.remove();
-                if (type === 'brand') {
-                    document.querySelector(`.brand-checkbox[value="${value}"]`).checked = false;
-                } else if (type === 'category') {
-                    clearCategoryFilters();
-                }
-                filterProducts();
-                checkAndRemoveEmptyFilterGroup();
-            });
-            filtersApplied.insertBefore(filterBtn, document.getElementById('Clearallfilter'));
-        } else if (type === 'brand' && !document.querySelector(`.brand-checkbox[value="${value}"]`).checked) {
-            existingFilterBtn.remove();
-        }
-        checkAndRemoveEmptyFilterGroup();
+// Xử lý nút "Áp dụng" cho nhập giá
+document.querySelector('.apply-button').addEventListener('click', function () {
+    const minPrice = document.getElementById('minRangeInput').value;
+    const maxPrice = document.getElementById('maxRangeInput').value;
+    const url = new URL(window.location.href);
+
+    // Cập nhật tham số URL cho giá
+    if (minPrice) {
+        url.searchParams.set('min_price', minPrice);
+    } else {
+        url.searchParams.delete('min_price');
     }
 
-    // Xóa tất cả bộ lọc
-    const clearAllButton = document.getElementById('Clearallfilter');
-    clearAllButton.addEventListener('click', function () {
-        document.querySelectorAll('.filter-btn').forEach(btn => btn.remove());
-        brandCheckboxes.forEach(checkbox => checkbox.checked = false);
-        clearCategoryFilters();
-        filterProducts();
-    });
-
-    function checkAndRemoveEmptyFilterGroup() {
-        const filtersApplied = document.querySelector('.filters-applied');
-        if (filtersApplied.querySelectorAll('.filter-btn').length === 0) {
-            filtersApplied.querySelector('#Clearallfilter').style.display = 'none';
-        } else {
-            filtersApplied.querySelector('#Clearallfilter').style.display = '';
-        }
+    if (maxPrice) {
+        url.searchParams.set('max_price', maxPrice);
+    } else {
+        url.searchParams.delete('max_price');
     }
 
-    // Hàm xóa các bộ lọc danh mục
-    function clearCategoryFilters() {
-        const filtersApplied = document.querySelector('.filters-applied');
-        filtersApplied.querySelectorAll('.filter-btn[data-filter-type="category"]').forEach(btn => btn.remove());
-    }
-
-    checkAndRemoveEmptyFilterGroup();
+    // Chuyển hướng đến URL mới
+    window.location.href = url.toString();
 });
 
 
+//Filler
+document.addEventListener('DOMContentLoaded', function () {
+    // Remove individual filters
+    document.querySelectorAll('.remove-filter').forEach(button => {
+        button.addEventListener('click', function () {
+            let filterType = this.getAttribute('data-filter-type');
+            let filterValue = this.getAttribute('data-filter-value');
+            let url = new URL(window.location.href);
 
+            if (filterType === 'category') {
+                url.searchParams.delete('category_id');
+            } else if (filterType === 'brand') {
+                let brandIds = url.searchParams.getAll('brand_ids[]');
+                brandIds = brandIds.filter(id => id !== filterValue);
+                url.searchParams.delete('brand_ids[]');
+                brandIds.forEach(id => url.searchParams.append('brand_ids[]', id));
+            } else if (filterType === 'price') {
+                url.searchParams.delete('min_price');
+                url.searchParams.delete('max_price');
+            }
 
+            window.location.href = url.toString();
+        });
+    });
+    // Clear all filters
+    document.getElementById('clearFilters').addEventListener('click', function () {
+        let url = new URL(window.location.href);
+        url.searchParams.delete('category_id');
+        url.searchParams.delete('brand_ids[]');
+        url.searchParams.delete('min_price');
+        url.searchParams.delete('max_price');
+        url.searchParams.delete('sort');
+        window.location.href = url.toString();
+    });
 
-
-
-
-
-
-
-
-
-
+});
 
 
 

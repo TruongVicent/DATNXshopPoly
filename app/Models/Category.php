@@ -42,9 +42,10 @@ class Category extends Model
         return $this->BelongsTo(Category::class, 'category_id');
     }
 
-    public function post(): BelongsTo
+    public function products()
     {
-        return $this->BelongsTo(Category::class);
+        return $this->hasMany(Product::class);
     }
+
 
 }

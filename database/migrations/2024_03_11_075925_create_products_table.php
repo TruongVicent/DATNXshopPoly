@@ -20,12 +20,11 @@ return new class extends Migration
             $table->foreignIdFor(Supplier::class)->comment('Mã NCC');
             $table->foreignIdFor(Category::class)->comment('Mã danh mục');
             $table->foreignIdFor(Shop::class)->nullable()->comment('Mã nhà bán');
-            $table->foreignIdFor(Shop::class)->comment('Mã nhà bán');
             $table->foreignIdFor(Brand::class)->comment('Mã thương hiệu');
             $table->string('name')->nullable(false)->comment('Tên sản phẩm');
             $table->string('slug')->nullable()->comment('Đường dẫn sản phẩm ');
-            $table->string('regular_price')->nullable(false)->comment('Giá');
-            $table->string('sale_price')->nullable(false)->comment('Giá giảm');
+            $table->decimal('regular_price', 15, 2)->nullable(false)->comment('Giá');
+            $table->decimal('sale_price', 15, 2)->nullable()->comment('Giá giảm');
             $table->string('sku')->nullable(false)->comment('Mã SKU');
             $table->integer('rating')->nullable()->comment('Đánh giá');
             $table->integer('view_count')->nullable()->comment('Lượt xem');

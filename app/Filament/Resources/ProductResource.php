@@ -70,7 +70,6 @@ class ProductResource extends Resource
                     ->suffix('vnđ')
                     ->label('Giá'),
                 TextInput::make('sale_price')
-                    ->required()
                     ->mask(RawJs::make('$money($input)'))
                     ->stripCharacters(',')
                     ->numeric()

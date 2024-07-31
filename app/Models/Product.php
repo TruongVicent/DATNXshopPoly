@@ -13,9 +13,11 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id',
         'supplier_id',
         'category_id',
         'shop_id',
+        'brand_id',
         'name',
         'slug',
         'regular_price',
@@ -29,6 +31,7 @@ class Product extends Model
         'meta_title',
         'meta_description',
         'meta_keyword',
+
     ];
     protected $casts = [
         'meta_keyword' => 'array',
