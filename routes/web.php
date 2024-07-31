@@ -1,9 +1,9 @@
 <?php
 
-
 use App\Http\Controllers\Auth\Logout;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryPostController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\Client\Body;
 use App\Http\Controllers\Client\GoogleController;
@@ -11,28 +11,20 @@ use App\Http\Controllers\Client\Home;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Gmail\OrderController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileAddressController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileEditController;
 use App\Http\Controllers\RedirectloggeInAppController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::prefix('/')->group(function () {
     Route::get('/', [HomeController::class, 'home']);
 
-    Route::get('/search', [ProductController::class, 'search'])->name('search');
-    Route::get('/product', [ProductController::class, 'index',]);
+    Route::get('/search', [ProductController::class, 'search'])->name('product.search');
+    Route::get('/product', [ProductController::class, 'index'])->name('product.index');
     Route::get('/products/category/{category}', [ProductController::class, 'showByCategory'])->name('products.category');
     Route::get('/products/{id}', [ProductController::class, 'show'])->name('product.detail');
     Route::post('/add-to-cart', [ProductController::class, 'addToCart'])->name('product.addToCart');
@@ -45,7 +37,11 @@ Route::prefix('/')->group(function () {
     Route::post('/deleteImage', [CommentController::class, 'deleteImage'])->name('deleteImage');
     Route::post('/uploadComment', [CommentController::class, 'uploadComment'])->name('uploadComment');
 
+
 });
+Route::get('/post', [PostController::class, 'index']);
+Route::get('/post-detail/{id}', [PostController::class, 'detail'])->name('detailPost');
+Route::get('/category-post/{id}', [CategoryPostController::class, 'postByCategory'])->name('postByCategory');
 Route::post('/orders/{orderId}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 Route::post('/orders/{orderId}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 //Dashboard
@@ -87,8 +83,16 @@ Route::middleware('auth')->group(function () {
 Route::get('/wait', [RedirectloggeInAppController::class, 'index'])->name('wait');
 Route::get('/stop-shop', [RedirectloggeInAppController::class, 'stop'])->name('stop.shop');
 
+//Trang nhỏ
+Route::get('/user-agreement', function () {
+    return view('web_content.userAgreement');
+});
+Route::get('/condition', function () {
+    return view('web_content.condition');
+});
 /// login google
 Route::get('/auth/google', [GoogleController::class, 'googlepage']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
 
 require __DIR__ . '/auth.php';
+
