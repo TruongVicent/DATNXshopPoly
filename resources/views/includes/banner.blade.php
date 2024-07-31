@@ -3,16 +3,10 @@
         <div class="section-banner border rounded-2">
             <div class="d-grid group">
                 <div class="category">
-                    <ul class="list-group ">
-                        <li class="list-group-item bg-info-subtle">An item</li>
-                        <li class="list-group-item">A second item</li>
-                        <li class="list-group-item">A third item</li>
-                        <li class="list-group-item">A fourth item</li>
-                        <li class="list-group-item">And a fifth one</li>
-                        <li class="list-group-item">And a fifth one</li>
-                        <li class="list-group-item">And a fifth one</li>
-                        <li class="list-group-item">And a fifth one</li>
-                        <li class="list-group-item">And a fifth one</li>
+                    <ul class="list-group">
+                        @foreach($categoryBanners as $categoryBanner)
+                            <li class="list-group-item">{{ $categoryBanner->name }}</li>
+                        @endforeach
                     </ul>
                 </div>
                 <div class="image-banner">
@@ -25,7 +19,7 @@
                         </div>
                     </div>
                     <div class="box-img">
-                        <img src="https://as2.ftcdn.net/v2/jpg/02/74/79/15/1000_F_274791554_itWhQX0vP746Wwit9BZJ1dA3Ttfp2n1b.jpg" alt="">
+                        <img src="https://d3design.vn/uploads/%C3%A9dfjh30.jpg" alt="">
                     </div>
                 </div>
                 <div class="box">
@@ -35,7 +29,7 @@
                                 <img src="https://t4.ftcdn.net/jpg/05/11/55/91/240_F_511559113_UTxNAE1EP40z1qZ8hIzGNrB0LwqwjruK.jpg" alt="">
                             </div>
                             <div class="text">
-                                Hi, user let's get statedHi
+                                Hi, user let's get started
                             </div>
                         </div>
 
