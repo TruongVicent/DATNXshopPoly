@@ -68,7 +68,10 @@ class Product extends Model
     {
         return $this->hasMany(ProductMedia::class);
     }
-
+    public function productMediashop(): HasMany
+    {
+        return $this->hasMany(ProductMediaShop::class);
+    }
     public function wishlist()
     {
         return $this->hasMany(Wishlist::class);
@@ -152,4 +155,13 @@ class Product extends Model
     {
         return self::where('pause', 1)->count();
     }
+    // lấy ảnh chính
+    public function mainMedia(){
+        return $this->hasOne(ProductMedia::class)->where( 'is_main',1);
+    }
+    // hàm lấy giá
+    public function getPrice(){
+        return $this->sale_price ?? $this->regular_price;
+    }
+
 }

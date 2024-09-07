@@ -11,6 +11,7 @@ use App\Mail\OrderOnHoldMail;
 use App\Mail\OrderPaidMail;
 use App\Mail\OrderProcessingMail;
 use App\Mail\OrderShippedMail;
+use Filament\Forms\Components\Placeholder;
 use Filament\Notifications\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -45,6 +46,8 @@ use Illuminate\Support\Facades\Mail;
 use Filament\Infolists\Components\IconEntry;
 use Illuminate\Support\Carbon;
 use Filament\Infolists\Components\Section;
+use Filament\Tables\Filters\QueryBuilder\Constraints\TextConstraint;
+use Filament\Actions;
 
 
 class OrderResource extends Resource
@@ -333,6 +336,7 @@ class OrderResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+
             ->columns([
                 TextColumn::make('code')
                     ->label('Mã đơn hàng'),
@@ -358,11 +362,7 @@ class OrderResource extends Resource
                 TextColumn::make('created_at')
                     ->label('Đã đặt')
                     ->date('d-m-Y'),
-                IconColumn::make('on_hold')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-badge')
-                    ->falseIcon('heroicon-o-clock')
-                    ->label('Tạm giữ'),
+
                 IconColumn::make('is_paid')
                     ->boolean()
                     ->trueIcon('heroicon-o-check-badge')
@@ -413,9 +413,38 @@ class OrderResource extends Resource
                     }),
             ])
             ->actions([
+                Tables\Actions\Action::make('Chuẩn bị hàng')
+                    ->label('chuẩn bị hàng')
+                    ->color('success')
+                    ->modalSubmitActionLabel('Xác nhận')
+                    ->form([
+                        \Filament\Forms\Components\Section::make('Giao đơn hàng')
+                            ->schema([
+                                TextInput::make('lading_code')
+                                    // mã vận đơn
+                                    ->default(fn() => 'MVD' .random_int(1000000,99999999)),
+                                Placeholder::make('Bạn hãy gửi hàng đến bưu cục vận chuyển')
+
+                            ]),
+                    ])
+                    ->action(function (array $data, $record): void {
+                        $record->status = OrderStatus::Successprocessed;
+                        $record->check_order_shop = 1;
+                        $record->lading_code = $data['lading_code'];
+
+                        $record->save();
+
+                        Notification::make()
+                            ->title('Chuẩn bị hàng thành công')
+                            ->icon('heroicon-o-squares-2x2')
+                            ->success();
+
+                    })
+                    ->hidden(fn($record) => $record->status->value !== 'Chờ lấy hàng'),
+                Tables\Actions\Action::make('In phiếu giao')
+                    ->url(fn (Order $record) => route('order.pdf', $record))
+                    ->openUrlInNewTab(),
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -23,7 +23,7 @@ class CategoryShopResource extends Resource
 
     protected static ?string $label = 'Danh mục';
     protected static ?string $navigationGroup = 'Sản phẩm';
-    protected static ?string $recordTitleAttribute = 'name';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -60,17 +60,7 @@ class CategoryShopResource extends Resource
             ]);
     }
 
-    public static function getEloquentQuery(): Builder
-    {
-        $query = parent::getEloquentQuery();
 
-        if (Auth::check()) {
-            $shopId = Auth::user()->shop_id;
-            return $query->where('shop_id', $shopId);
-        }
-
-        return $query;
-    }
     public static function getRelations(): array
     {
         return [

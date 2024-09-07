@@ -59,7 +59,11 @@ class Shop extends Model
             if ($user) {
                 $user->shop_id = $shop->id;
                 $user->save();
+
             }
+        });
+        static::updated(function ($shop){
+            dd('hihi');
         });
     }
 

@@ -258,6 +258,7 @@ class ProductResource extends Resource
         return [
             RelationManagers\ProductMediaRelationManager::class,
             RelationManagers\ProductStockRelationManager::class,
+            RelationManagers\ProductMediashopRelationManager::class
         ];
     }
 

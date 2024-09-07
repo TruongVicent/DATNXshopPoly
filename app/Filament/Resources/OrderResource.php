@@ -13,9 +13,12 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
 use Filament\Forms;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
@@ -41,6 +44,7 @@ use App\Mail\OrderProcessingMail;
 use App\Mail\OrderShippedMail;
 use App\Mail\OrderDeliveredMail;
 use Filament\Forms\ComponentContainer;
+use Filament\Tables\Columns\SelectColumn;
 
 
 
@@ -192,7 +196,9 @@ class OrderResource extends Resource
                 TextEntry::make('code')
                     ->badge()
                     ->label('Mã đơn hàng'),
-                TextEntry::make('ShippingAddress.name')
+                TextEntry::make('shop.name')
+                    ->label('Đơn hàng của shop'),
+                TextEntry::make('UserAddress.name')
                     ->label('Địa chỉ người dùng'),
                 TextEntry::make('OrderDetail.Product.name')
                     ->label('Sản phẩm'),
@@ -235,9 +241,11 @@ class OrderResource extends Resource
                     ->label('Người dùng'),
                 TextColumn::make('Voucher.name')
                     ->label('Giảm giá'),
-                TextColumn::make('status')
-                    ->searchable()
-                    ->badge()
+                SelectColumn::make('status')
+                    ->options(Order::getOrderStatusOptions())
+                    ->default(function ($record) {
+                        return $record->status->value;
+                    })
                     ->label('Trạng thái đơn hàng'),
                 IconColumn::make('on_hold')
                     ->boolean()
@@ -261,11 +269,39 @@ class OrderResource extends Resource
                 SelectFilter::make('payment_method_id')
                     ->relationship(name: 'PaymentMethod', titleAttribute: 'method_name')
                     ->label('Phương thức thanh toán'),
-            ], layout: FiltersLayout::AboveContent)
+            ])
             ->actions([
+                Tables\Actions\Action::make('Duyệt')
+                    ->label('Duyệt')
+                    ->color('success')
+                    ->modalSubmitActionLabel('Duyệt')
+                    ->form([
+                        Section::make('Thông tin đơn hàng')
+                            ->schema([
+                                Placeholder::make('Mã đơn hàng')
+                                    ->content(fn($record): string => $record->code),
+                                Placeholder::make('Thuộc shop')
+                                    ->content(fn($record): string => $record->shop->name),
+                                Placeholder::make('Phương thức thanh toán')
+                                    ->content(fn($record): string => $record->PaymentMethod->method_name),
+                                Placeholder::make('Thương hiệu')
+                                    ->content(fn($record): string => $record->is_paid == 1 ? 'Đã thanh toán':'Chưa thanh toán'),
+                            ])->columns(2),
+                    ])
+                    ->action(function (array $data, $record): void {
+                        $record->status = OrderStatus::Waitingdelivery->value;
+                        $record->save();
+//                        $shopOwner = $record->shop->user;
+//                        // gửi thông báo xét duyệt thành công
+//                        Notification::make()
+//                            ->title('Sản phẩm Duyệt thành công')
+//                            ->icon('heroicon-o-squares-2x2')
+//                            ->success()
+//                            ->body('Sản phẩm Đã được xét duyệt: ' . $record->name)
+//                            ->sendToDatabase($shopOwner);
+                    })
+                    ->hidden(fn($record) => $record->status->value !== 'Đang xử lý'),
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

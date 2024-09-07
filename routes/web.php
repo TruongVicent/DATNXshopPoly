@@ -21,7 +21,8 @@ use App\Http\Controllers\RedirectloggeInAppController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\WishListController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\MyOrderController;
+use App\Http\Controllers\DownloadpdfOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,7 +98,11 @@ Route::middleware('auth')->group(function () {
     // change password (đổi mật khẩu)
     Route::get('profile/change-password', [ChangePasswordController::class, 'index'])->name('change_password');
     Route::post('profile/update-password', [ChangePasswordController::class, 'update'])->name('update_password');
-
+    // Đơn hàng của tôi
+    Route::get('profile/myorder', [MyOrderController::class, 'index'])->name('myorder');
+    Route::post('/orders/cancel/{id}', [MyOrderController::class, 'updateCancell']);
+    // layout đơn hàng bị huỷ bởi khách hàng
+    Route::get('profile/canceled-order/{id}', [MyOrderController::class, 'showLayoutCanceled'])->name('canceledOrder');
 
     Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 
@@ -120,6 +125,7 @@ Route::get('/condition', function () {
 /// login google
 Route::get('/auth/google', [GoogleController::class, 'googlepage']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
-
+// download pdf order
+Route::get('/{record}/pdf' ,[DownloadpdfOrderController::class,'download'])->name('order.pdf');
 require __DIR__ . '/auth.php';
 
